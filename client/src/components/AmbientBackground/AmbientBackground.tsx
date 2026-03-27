@@ -1,5 +1,5 @@
 import { alpha, Box } from '@mui/material'
-import { dashboardColors } from '../theme'
+import { dashboardColors } from '../../theme'
 
 export function AmbientBackground() {
   return (

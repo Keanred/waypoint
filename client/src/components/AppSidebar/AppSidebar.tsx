@@ -1,9 +1,9 @@
 import type { ReactElement } from 'react'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import { alpha, Box, Button, Stack } from '@mui/material'
-import { dashboardColors } from '../theme'
-import { GradientActionButton } from './gradient-action-button'
-import { WorkspaceIdentity } from './workspace-identity'
+import { dashboardColors } from '../../theme'
+import { GradientActionButton } from '../GradientActionButton'
+import { WorkspaceIdentity } from '../WorkspaceIdentity'
 
 export interface NavigationItem {
   label: string

@@ -25,7 +25,8 @@ db-logs:
     docker compose logs -f postgres
 
 dev: db-up
-    set -a; source .env.local; set +a; npm run dev
+    bash scripts/startup-banner.sh
+    set -a; source .env.local; set +a; npm run dev 2>&1 | cat
 
 typecheck:
     npm run typecheck --workspace=server

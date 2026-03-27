@@ -1,6 +1,6 @@
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { alpha, Box, InputBase } from '@mui/material'
-import { dashboardColors } from '../theme'
+import { dashboardColors } from '../../theme'
 
 export function SearchInput({
   placeholder,

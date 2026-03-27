@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import { Button } from '@mui/material'
 import type { ButtonProps } from '@mui/material/Button'
-import { dashboardColors } from '../theme'
+import { dashboardColors } from '../../theme'
 
 export function TonalActionButton({ children, sx, ...buttonProps }: PropsWithChildren<ButtonProps>) {
   return (

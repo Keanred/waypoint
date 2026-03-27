@@ -18,13 +18,13 @@ import {
   Typography,
 } from '@mui/material'
 import { dashboardColors } from '../theme'
-import { AmbientBackground } from '../components/ambient-background'
-import { GradientActionButton } from '../components/gradient-action-button'
-import { SectionLabel } from '../components/section-label'
-import { StatusOrb } from '../components/status-orb'
-import { SurfacePanel } from '../components/surface-panel'
-import { TonalActionButton } from '../components/tonal-action-button'
-import { WorkspaceIdentity } from '../components/workspace-identity'
+import { AmbientBackground } from '../components/AmbientBackground'
+import { GradientActionButton } from '../components/GradientActionButton'
+import { SectionLabel } from '../components/SectionLabel'
+import { StatusOrb } from '../components/StatusOrb'
+import { SurfacePanel } from '../components/SurfacePanel'
+import { TonalActionButton } from '../components/TonalActionButton'
+import { WorkspaceIdentity } from '../components/WorkspaceIdentity'
 
 export interface ReminderRowData {
   value: string

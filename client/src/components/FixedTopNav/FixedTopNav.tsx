@@ -1,7 +1,7 @@
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded'
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
 import { alpha, Avatar, Box, IconButton, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../theme'
+import { dashboardColors } from '../../theme'
 
 export interface HeaderLinkItem {
   label: string

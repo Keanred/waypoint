@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import { dashboardColors } from '../theme'
+import { dashboardColors } from '../../theme'
 
 export function WorkspaceIdentity({
   title,

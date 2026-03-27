@@ -1,19 +1,20 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-// Example route
-app.get('/', (req: Request, res: Response) => {
+app.get('/api', (_req: Request, res: Response) => {
   res.send('Hello, Waypoint!');
 });
 
-// Global error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  // Handle errors
   console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  res.status(500).send({ error: 'Something went wrong!' });
 });
 
 export default app;

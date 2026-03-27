@@ -30,9 +30,7 @@ export const reminders = pgTable(
   'reminders',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    taskId: uuid('task_id')
-      .notNull()
-      .references(() => tasks.id, { onDelete: 'cascade' }),
+    taskId: uuid('task_id').notNull().references(() => tasks.id, { onDelete: 'cascade' }),
     offsetValue: integer('offset_value').notNull(),
     offsetUnit: offsetUnitEnum('offset_unit').default('DAYS').notNull(),
     sentAt: timestamp('sent_at', { withTimezone: true }),
@@ -40,7 +38,7 @@ export const reminders = pgTable(
   },
   (table) => ({
     taskIdIdx: index('idx_reminders_task_id').on(table.taskId),
-    sentAtIdx: index('idx_reminders_sent_at').on(table.sentAt),
+    sentAtTaskIdIdx: index('idx_reminders_sent_at_task_id').on(table.sentAt, table.taskId),
   }),
 );
 

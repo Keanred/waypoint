@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import { alpha, Paper } from '@mui/material'
 import type { SxProps, Theme } from '@mui/material/styles'
-import { dashboardColors } from '../theme'
+import { dashboardColors } from '../../theme'
 
 type PanelVariant = 'default' | 'low' | 'high' | 'glass'
 

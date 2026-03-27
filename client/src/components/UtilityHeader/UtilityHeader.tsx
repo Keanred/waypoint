@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from '@mui/material'
-import { SearchInput } from './search-input'
+import { SearchInput } from '../SearchInput'
 
 export function UtilityHeader({
   searchPlaceholder,

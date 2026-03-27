@@ -3,7 +3,6 @@ import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded'
 import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded'
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded'
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
@@ -19,28 +18,16 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import type { NavigationItem } from '../components/app-sidebar'
-import { AppSidebar } from '../components/app-sidebar'
-import { UtilityHeader } from '../components/utility-header'
-import { AmbientBackground } from '../components/ambient-background'
-import { StatusOrb } from '../components/status-orb'
-import { SurfacePanel } from '../components/surface-panel'
+import type { NavigationItem } from '../components/AppSidebar'
+import { AppSidebar } from '../components/AppSidebar'
+import { UtilityHeader } from '../components/UtilityHeader'
+import { AmbientBackground } from '../components/AmbientBackground'
+import { SurfacePanel } from '../components/SurfacePanel'
 import { dashboardColors } from '../theme'
+import { QueueReminderCard, type ReminderQueueItem } from '../components/QueueReminderCard'
+import { HistoryItemRow, type ReminderHistoryItem } from '../components/HistoryItemRow'
 
-export interface ReminderQueueItem {
-  title: string
-  offsetLabel: string
-  scheduledAt: string
-  accent: string
-  highlighted?: boolean
-}
-
-export interface ReminderHistoryItem {
-  title: string
-  offsetLabel: string
-  deliveredAt: string
-  channel: string
-}
+export type { ReminderQueueItem, ReminderHistoryItem }
 
 interface RemindersViewProps {
   workspaceName: string
@@ -55,109 +42,6 @@ interface RemindersViewProps {
   tipTitle: string
   tipDescription: string
   tipActionLabel: string
-}
-
-function QueueReminderCard({ item }: { item: ReminderQueueItem }) {
-  return (
-    <SurfacePanel
-      sx={{
-        px: 3,
-        py: 2.5,
-        borderRadius: 3,
-        borderLeft: item.highlighted ? `4px solid ${dashboardColors.primary}` : undefined,
-        transition: 'background-color 180ms ease, transform 180ms ease',
-        '&:hover': {
-          backgroundColor: dashboardColors.surfaceContainerHigh,
-          transform: 'translateY(-1px)',
-        },
-      }}
-    >
-      <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-        <Stack direction="row" spacing={3} alignItems="center" sx={{ minWidth: 0 }}>
-          <Box
-            sx={{
-              width: 48,
-              height: 48,
-              borderRadius: 3,
-              display: 'grid',
-              placeItems: 'center',
-              color: dashboardColors.primary,
-              backgroundColor: dashboardColors.surfaceContainerHighest,
-              flexShrink: 0,
-            }}
-          >
-            <AlarmRoundedIcon />
-          </Box>
-          <Box sx={{ minWidth: 0 }}>
-            <Typography variant="h6" sx={{ mb: 0.5, fontSize: '1.05rem' }}>
-              {item.title}
-            </Typography>
-            <Stack direction="row" spacing={1.5} alignItems="center" useFlexGap flexWrap="wrap">
-              <Stack direction="row" spacing={0.75} alignItems="center">
-                <StatusOrb accent={item.accent} />
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {item.offsetLabel}
-                </Typography>
-              </Stack>
-              <Box sx={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: alpha(dashboardColors.outlineVariant, 0.4) }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Scheduled: {item.scheduledAt}
-              </Typography>
-            </Stack>
-          </Box>
-        </Stack>
-        <IconButton sx={{ color: 'text.secondary', '&:hover': { color: dashboardColors.error } }}>
-          <DeleteRoundedIcon />
-        </IconButton>
-      </Stack>
-    </SurfacePanel>
-  )
-}
-
-function HistoryItemRow({ item, bordered }: { item: ReminderHistoryItem; bordered: boolean }) {
-  return (
-    <Box
-      sx={{
-        px: 3,
-        py: 3,
-        borderBottom: bordered ? `1px solid ${alpha(dashboardColors.outlineVariant, 0.1)}` : undefined,
-        transition: 'background-color 180ms ease',
-        '&:hover': {
-          backgroundColor: dashboardColors.surfaceContainerHigh,
-        },
-      }}
-    >
-      <Stack spacing={1.5}>
-        <Stack direction="row" justifyContent="space-between" spacing={2} alignItems="flex-start">
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-            {item.title}
-          </Typography>
-          <Chip
-            label="Sent"
-            icon={<StatusOrb accent={dashboardColors.tertiary} />}
-            sx={{
-              height: 28,
-              color: dashboardColors.tertiary,
-              fontSize: 11,
-              fontWeight: 800,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              backgroundColor: alpha(dashboardColors.tertiary, 0.1),
-              '& .MuiChip-icon': {
-                ml: 1,
-              },
-            }}
-          />
-        </Stack>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Offset: {item.offsetLabel}
-        </Typography>
-        <Typography variant="caption" sx={{ color: alpha(dashboardColors.textSecondary, 0.6) }}>
-          Delivered: {item.deliveredAt} via {item.channel}
-        </Typography>
-      </Stack>
-    </Box>
-  )
 }
 
 export function RemindersView({
