@@ -1,0 +1,17 @@
+{
+  "name": "waypoint",
+  "version": "0.0.1",
+  "description": "Reminder & task deadline tracker",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client",
+    "schemas"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=server & npm run dev --workspace=client",
+    "build": "npm run build --workspace=schemas && npm run build --workspace=server && npm run build --workspace=client",
+    "test": "npm test --workspace=server && npm test --workspace=client"
+  },
+  "devDependencies": {}
+}
