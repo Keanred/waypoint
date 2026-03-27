@@ -1,5 +1,4 @@
-import { pgTable, text, timestamp, uuid, enum as pgEnum, integer, index } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { pgTable, text, timestamp, uuid, pgEnum, integer, index } from 'drizzle-orm/pg-core';
 
 // Enums
 export const recurrenceEnum = pgEnum('recurrence', ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']);

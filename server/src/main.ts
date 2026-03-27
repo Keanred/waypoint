@@ -1,7 +1,5 @@
-import { createApp } from './app';
+import app from './app';
 import { config } from './config';
-
-const app = createApp();
 
 const server = app.listen(config.port, () => {
   console.log(`🚀 Waypoint server running on http://localhost:${config.port}`);

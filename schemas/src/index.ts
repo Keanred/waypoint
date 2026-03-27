@@ -38,7 +38,6 @@ export const TaskResponse = z.object({
 })
 export type TaskResponse = z.infer<typeof TaskResponse>
 
-// Reminder schemas
 export const CreateReminderInput = z.object({
   offsetValue: z.number().int().positive(),
   offsetUnit: OffsetUnit.default('DAYS'),
@@ -56,7 +55,6 @@ export const ReminderResponse = z.object({
 })
 export type ReminderResponse = z.infer<typeof ReminderResponse>
 
-// Combined response
 export const GetTasksResponse = z.object({
   tasks: z.array(TaskResponse),
   reminders: z.array(ReminderResponse),
