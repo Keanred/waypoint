@@ -6,5 +6,5 @@
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true
   },
-  "include": ["drizzle.config.ts"]
+  "include": ["drizzle.config.ts", "vitest.config.ts"]
 }

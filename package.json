@@ -9,15 +9,25 @@
     "schemas"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace=server & npm run dev --workspace=client; wait",
+    "dev": "bash scripts/startup-banner.sh && (npm run dev --workspace=server & npm run dev --workspace=client; wait)",
     "build": "npm run build --workspace=schemas && npm run build --workspace=server && npm run build --workspace=client",
     "test": "npm test --workspace=server && npm test --workspace=client",
+    "lint": "eslint client server schemas --max-warnings 0",
+    "format": "prettier . --write",
     "db:generate": "npm run db:generate --workspace=server",
     "db:migrate": "npm run db:migrate --workspace=server",
     "db:push": "npm run db:push --workspace=server",
     "db:studio": "npm run db:studio --workspace=server"
   },
   "devDependencies": {
-    "drizzle-orm": "^0.45.1"
+    "drizzle-orm": "^0.45.1",
+    "jiti": "^2.4.2",
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "typescript-eslint": "^8.46.1"
+  },
+  "dependencies": {
+    "eslint": "^10.1.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1"
   }
 }
