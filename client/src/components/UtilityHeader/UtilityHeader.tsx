@@ -6,10 +6,8 @@ export const UtilityHeader = ({ searchPlaceholder, links }: { searchPlaceholder:
     <Box
       sx={{
         display: { xs: 'none', md: 'flex' },
-        position: 'fixed',
+        position: 'sticky',
         top: 0,
-        left: { md: 256 },
-        right: 0,
         height: 64,
         alignItems: 'center',
         justifyContent: 'flex-end',

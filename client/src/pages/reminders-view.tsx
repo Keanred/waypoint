@@ -52,43 +52,51 @@ export const RemindersView = ({
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: dashboardColors.background }}>
       <AmbientBackground />
-      <AppSidebar
-        workspaceName={workspaceName}
-        workspaceTagline={workspaceTagline}
-        navigationItems={navigationItems}
-        footerItems={footerItems}
-        primaryActionLabel="New Task"
-      />
       <UtilityHeader searchPlaceholder="Search notifications..." links={['Docs', 'Status']} />
 
       <Box
-        component="main"
         sx={{
-          ml: { xs: 0, lg: '256px' },
-          minHeight: '100vh',
-          px: { xs: 3, md: 5, xl: 6 },
-          pt: { xs: 4, md: 10, xl: 11 },
-          pb: { xs: 10, md: 8 },
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '256px minmax(0, 1fr)' },
+          minHeight: 'calc(100vh - 64px)',
         }}
       >
-        <RemindersViewHeader title={title} subtitle={subtitle} avatarUrl={avatarUrl} />
+        <AppSidebar
+          workspaceName={workspaceName}
+          workspaceTagline={workspaceTagline}
+          navigationItems={navigationItems}
+          footerItems={footerItems}
+          primaryActionLabel="New Task"
+          topOffset={64}
+        />
 
         <Box
+          component="main"
           sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', xl: 'repeat(12, minmax(0, 1fr))' },
-            gap: 4,
+            px: { xs: 3, md: 5, xl: 6 },
+            pt: { xs: 4, md: 6 },
+            pb: { xs: 10, md: 8 },
           }}
         >
-          <RemindersQueuedSection queuedReminders={queuedReminders} />
+          <RemindersViewHeader title={title} subtitle={subtitle} avatarUrl={avatarUrl} />
 
-          <Box sx={{ gridColumn: { xl: 'span 5' } }}>
-            <RemindersHistorySection historyItems={historyItems} />
-            <RemindersTipCard tipTitle={tipTitle} tipDescription={tipDescription} tipActionLabel={tipActionLabel} />
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', xl: 'repeat(12, minmax(0, 1fr))' },
+              gap: 4,
+            }}
+          >
+            <RemindersQueuedSection queuedReminders={queuedReminders} />
+
+            <Box sx={{ gridColumn: { xl: 'span 5' } }}>
+              <RemindersHistorySection historyItems={historyItems} />
+              <RemindersTipCard tipTitle={tipTitle} tipDescription={tipDescription} tipActionLabel={tipActionLabel} />
+            </Box>
           </Box>
-        </Box>
 
-        <RemindersFloatingAction />
+          <RemindersFloatingAction />
+        </Box>
       </Box>
     </Box>
   );

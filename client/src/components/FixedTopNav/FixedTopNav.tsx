@@ -21,10 +21,8 @@ export const FixedTopNav = ({
     <Box
       component="nav"
       sx={{
-        position: 'fixed',
+        position: 'sticky',
         top: 0,
-        left: 0,
-        right: 0,
         zIndex: 50,
         display: 'flex',
         alignItems: 'center',

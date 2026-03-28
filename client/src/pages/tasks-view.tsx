@@ -49,81 +49,86 @@ export const TasksView = ({
     <Box sx={{ minHeight: '100vh', backgroundColor: dashboardColors.background }}>
       <AmbientBackground />
       <FixedTopNav brandName={brandName} links={headerLinks} avatarUrl={avatarUrl} />
-      <AppSidebar
-        workspaceName={workspaceName}
-        workspaceTagline={workspaceTagline}
-        navigationItems={navigationItems}
-        footerItems={footerItems}
-        primaryActionLabel="New Task"
-      />
-
       <Box
-        component="main"
         sx={{
-          ml: { xs: 0, md: '256px' },
-          pt: 12,
-          pb: 8,
-          px: { xs: 3, md: 4, lg: 5 },
-          minHeight: '100vh',
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '256px minmax(0, 1fr)' },
+          minHeight: 'calc(100vh - 64px)',
         }}
       >
-        <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            justifyContent="space-between"
-            alignItems={{ xs: 'flex-start', md: 'flex-end' }}
-            spacing={3}
-            sx={{ mb: 8, pl: { md: 3 } }}
-          >
-            <Box>
-              <Typography variant="h1" sx={{ fontSize: { xs: '3.5rem', md: '4.75rem' }, lineHeight: 0.95 }}>
-                {title}
-              </Typography>
-              <Typography variant="h6" sx={{ mt: 2.5, color: 'text.secondary', fontWeight: 300, maxWidth: 420 }}>
-                {subtitle}
-              </Typography>
+        <AppSidebar
+          workspaceName={workspaceName}
+          workspaceTagline={workspaceTagline}
+          navigationItems={navigationItems}
+          footerItems={footerItems}
+          primaryActionLabel="New Task"
+          topOffset={64}
+        />
+
+        <Box component="main" sx={{ pb: 8, px: { xs: 3, md: 4, lg: 5 }, pt: { xs: 4, md: 6 } }}>
+          <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
+            <Stack
+              direction={{ xs: 'column', md: 'row' }}
+              justifyContent="space-between"
+              alignItems={{ xs: 'flex-start', md: 'flex-end' }}
+              spacing={3}
+              sx={{ mb: 8, pl: { md: 3 } }}
+            >
+              <Box>
+                <Typography variant="h1" sx={{ fontSize: { xs: '3.5rem', md: '4.75rem' }, lineHeight: 0.95 }}>
+                  {title}
+                </Typography>
+                <Typography variant="h6" sx={{ mt: 2.5, color: 'text.secondary', fontWeight: 300, maxWidth: 420 }}>
+                  {subtitle}
+                </Typography>
+              </Box>
+              <SegmentedFilter />
+            </Stack>
+
+            <FilterBento />
+            <TaskTableSection tasks={tasks} />
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
+                gap: 3,
+                mt: 4,
+              }}
+            >
+              {metrics.map((metric) => (
+                <MetricCard key={metric.label} metric={metric} />
+              ))}
             </Box>
-            <SegmentedFilter />
-          </Stack>
-
-          <FilterBento />
-          <TaskTableSection tasks={tasks} />
-
-          <Box
-            sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' }, gap: 3, mt: 4 }}
-          >
-            {metrics.map((metric) => (
-              <MetricCard key={metric.label} metric={metric} />
-            ))}
           </Box>
-        </Box>
 
-        <Fab
-          sx={{
-            position: 'fixed',
-            right: 32,
-            bottom: 32,
-            width: 64,
-            height: 64,
-            color: '#1a003b',
-            background: `linear-gradient(
-              135deg,
-              ${dashboardColors.primary} 0%,
-              ${dashboardColors.primaryContainer} 100%
-            )`,
-            boxShadow: `0 24px 48px ${alpha(dashboardColors.primary, 0.28)}`,
-            '&:hover': {
+          <Fab
+            sx={{
+              position: 'fixed',
+              right: 32,
+              bottom: 32,
+              width: 64,
+              height: 64,
+              color: '#1a003b',
               background: `linear-gradient(
                 135deg,
                 ${dashboardColors.primary} 0%,
                 ${dashboardColors.primaryContainer} 100%
               )`,
-              transform: 'scale(1.05)',
-            },
-          }}
-        >
-          <AddRoundedIcon sx={{ fontSize: 30 }} />
-        </Fab>
+              boxShadow: `0 24px 48px ${alpha(dashboardColors.primary, 0.28)}`,
+              '&:hover': {
+                background: `linear-gradient(
+                  135deg,
+                  ${dashboardColors.primary} 0%,
+                  ${dashboardColors.primaryContainer} 100%
+                )`,
+                transform: 'scale(1.05)',
+              },
+            }}
+          >
+            <AddRoundedIcon sx={{ fontSize: 30 }} />
+          </Fab>
+        </Box>
       </Box>
     </Box>
   );

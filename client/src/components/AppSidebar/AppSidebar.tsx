@@ -40,29 +40,32 @@ export const AppSidebar = ({
   navigationItems,
   footerItems,
   primaryActionLabel,
+  topOffset = 0,
 }: {
   workspaceName: string;
   workspaceTagline: string;
   navigationItems: NavigationItem[];
   footerItems: NavigationItem[];
   primaryActionLabel: string;
+  topOffset?: number;
 }) => {
   return (
     <Box
       component="aside"
       sx={{
         display: { xs: 'none', md: 'flex' },
-        position: 'fixed',
-        left: 0,
-        top: 0,
+        position: 'sticky',
+        top: topOffset,
+        alignSelf: 'start',
         zIndex: 50,
         width: 256,
-        height: '100vh',
+        height: `calc(100vh - ${topOffset}px)`,
         flexDirection: 'column',
         gap: 2,
         px: 2,
         py: 3,
         backgroundColor: dashboardColors.surfaceLow,
+        overflowY: 'auto',
       }}
     >
       <Box sx={{ px: 1.5, mb: 3 }}>

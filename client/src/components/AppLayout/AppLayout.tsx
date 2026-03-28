@@ -105,6 +105,9 @@ const Sidebar = ({
       component="aside"
       sx={{
         display: { xs: 'none', lg: 'flex' },
+        position: 'sticky',
+        top: 72,
+        alignSelf: 'start',
         flexDirection: 'column',
         height: 'calc(100vh - 72px)',
         borderRight: `1px solid ${alpha(dashboardColors.outlineVariant, 0.18)}`,
