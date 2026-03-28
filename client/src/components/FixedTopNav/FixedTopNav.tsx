@@ -1,11 +1,11 @@
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded'
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
-import { alpha, Avatar, Box, IconButton, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import { alpha, Avatar, Box, IconButton, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
 
 export interface HeaderLinkItem {
-  label: string
-  active?: boolean
+  label: string;
+  active?: boolean;
 }
 
 export function FixedTopNav({
@@ -13,9 +13,9 @@ export function FixedTopNav({
   links,
   avatarUrl,
 }: {
-  brandName: string
-  links: HeaderLinkItem[]
-  avatarUrl: string
+  brandName: string;
+  links: HeaderLinkItem[];
+  avatarUrl: string;
 }) {
   return (
     <Box
@@ -40,12 +40,7 @@ export function FixedTopNav({
       </Typography>
 
       <Stack direction="row" spacing={3} alignItems="center">
-        <Stack
-          direction="row"
-          spacing={3}
-          alignItems="center"
-          sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}
-        >
+        <Stack direction="row" spacing={3} alignItems="center" sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }}>
           {links.map((link) => (
             <Typography
               key={link.label}
@@ -81,5 +76,5 @@ export function FixedTopNav({
         </Stack>
       </Stack>
     </Box>
-  )
+  );
 }

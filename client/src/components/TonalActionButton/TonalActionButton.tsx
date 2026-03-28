@@ -1,7 +1,7 @@
-import type { PropsWithChildren } from 'react'
-import { Button } from '@mui/material'
-import type { ButtonProps } from '@mui/material/Button'
-import { dashboardColors } from '../../theme'
+import { Button } from '@mui/material';
+import type { ButtonProps } from '@mui/material/Button';
+import type { PropsWithChildren } from 'react';
+import { dashboardColors } from '../../theme';
 
 export function TonalActionButton({ children, sx, ...buttonProps }: PropsWithChildren<ButtonProps>) {
   return (
@@ -26,5 +26,5 @@ export function TonalActionButton({ children, sx, ...buttonProps }: PropsWithChi
     >
       {children}
     </Button>
-  )
+  );
 }

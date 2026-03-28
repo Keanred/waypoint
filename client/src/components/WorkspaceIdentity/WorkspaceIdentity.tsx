@@ -1,14 +1,14 @@
-import { Box, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
+import { Box, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
 
 export function WorkspaceIdentity({
   title,
   subtitle,
   titleVariant = 'h4',
 }: {
-  title: string
-  subtitle: string
-  titleVariant?: 'h4' | 'h3' | 'h2'
+  title: string;
+  subtitle: string;
+  titleVariant?: 'h4' | 'h3' | 'h2';
 }) {
   return (
     <Box>
@@ -22,5 +22,5 @@ export function WorkspaceIdentity({
         {subtitle}
       </Typography>
     </Box>
-  )
+  );
 }

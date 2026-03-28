@@ -1,12 +1,12 @@
-import { alpha, Box, Chip, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { StatusOrb } from '../StatusOrb'
+import { alpha, Box, Chip, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { StatusOrb } from '../StatusOrb';
 
 export interface ReminderHistoryItem {
-  title: string
-  offsetLabel: string
-  deliveredAt: string
-  channel: string
+  title: string;
+  offsetLabel: string;
+  deliveredAt: string;
+  channel: string;
 }
 
 export function HistoryItemRow({ item, bordered }: { item: ReminderHistoryItem; bordered: boolean }) {
@@ -52,5 +52,5 @@ export function HistoryItemRow({ item, bordered }: { item: ReminderHistoryItem; 
         </Typography>
       </Stack>
     </Box>
-  )
+  );
 }

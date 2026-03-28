@@ -1,51 +1,42 @@
-import type { ReactNode } from 'react'
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
-import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded'
-import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded'
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
-import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
-import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded'
-import {
-  alpha,
-  Box,
-  IconButton,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material'
-import { dashboardColors } from '../theme'
-import { AmbientBackground } from '../components/AmbientBackground'
-import { GradientActionButton } from '../components/GradientActionButton'
-import { SectionLabel } from '../components/SectionLabel'
-import { StatusOrb } from '../components/StatusOrb'
-import { SurfacePanel } from '../components/SurfacePanel'
-import { TonalActionButton } from '../components/TonalActionButton'
-import { WorkspaceIdentity } from '../components/WorkspaceIdentity'
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
+import { alpha, Box, IconButton, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import type { ReactNode } from 'react';
+import { AmbientBackground } from '../components/AmbientBackground';
+import { GradientActionButton } from '../components/GradientActionButton';
+import { SectionLabel } from '../components/SectionLabel';
+import { StatusOrb } from '../components/StatusOrb';
+import { SurfacePanel } from '../components/SurfacePanel';
+import { TonalActionButton } from '../components/TonalActionButton';
+import { WorkspaceIdentity } from '../components/WorkspaceIdentity';
+import { dashboardColors } from '../theme';
 
 export interface ReminderRowData {
-  value: string
-  unit: string
+  value: string;
+  unit: string;
 }
 
 interface EditTaskViewProps {
-  brandTitle: string
-  brandSubtitle: string
-  title: string
-  subtitle: string
-  taskTitle: string
-  description: string
-  project: string
-  dueDate: string
-  recurrence: string
-  recurringEndDate: string
-  focusTip: string
-  imageAlt: string
-  imageUrl: string
-  reminders: ReminderRowData[]
+  brandTitle: string;
+  brandSubtitle: string;
+  title: string;
+  subtitle: string;
+  taskTitle: string;
+  description: string;
+  project: string;
+  dueDate: string;
+  recurrence: string;
+  recurringEndDate: string;
+  focusTip: string;
+  imageAlt: string;
+  imageUrl: string;
+  reminders: ReminderRowData[];
 }
 
 function fieldInputStyles() {
@@ -68,7 +59,7 @@ function fieldInputStyles() {
     '& .MuiInputBase-input': {
       color: 'text.primary',
     },
-  }
+  };
 }
 
 function FieldShell({ label, children }: { label: string; children: ReactNode }) {
@@ -77,7 +68,7 @@ function FieldShell({ label, children }: { label: string; children: ReactNode })
       <SectionLabel>{label}</SectionLabel>
       {children}
     </Stack>
-  )
+  );
 }
 
 function LeadingIconField({ icon, children }: { icon: ReactNode; children: ReactNode }) {
@@ -99,7 +90,7 @@ function LeadingIconField({ icon, children }: { icon: ReactNode; children: React
       </Box>
       {children}
     </Box>
-  )
+  );
 }
 
 function ReminderRow({ reminder }: { reminder: ReminderRowData }) {
@@ -117,7 +108,9 @@ function ReminderRow({ reminder }: { reminder: ReminderRowData }) {
         },
       }}
     >
-      <Box sx={{ flex: 1, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}>
+      <Box
+        sx={{ flex: 1, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}
+      >
         <TextField
           value={reminder.value}
           type="number"
@@ -159,7 +152,7 @@ function ReminderRow({ reminder }: { reminder: ReminderRowData }) {
         <DeleteRoundedIcon />
       </IconButton>
     </SurfacePanel>
-  )
+  );
 }
 
 function InspirationColumn({
@@ -179,14 +172,17 @@ function InspirationColumn({
             <StatusOrb accent={dashboardColors.secondary} />
             <Typography
               variant="caption"
-              sx={{ color: dashboardColors.secondary, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase' }}
+              sx={{
+                color: dashboardColors.secondary,
+                fontWeight: 800,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+              }}
             >
               Focus Tip
             </Typography>
           </Stack>
-          <Typography sx={{ fontStyle: 'italic', lineHeight: 1.8 }}>
-            {focusTip}
-          </Typography>
+          <Typography sx={{ fontStyle: 'italic', lineHeight: 1.8 }}>{focusTip}</Typography>
         </Stack>
       </SurfacePanel>
 
@@ -218,7 +214,7 @@ function InspirationColumn({
         />
       </Box>
     </Stack>
-  )
+  );
 }
 
 function EditorHeader({ title, subtitle }: Pick<EditTaskViewProps, 'title' | 'subtitle'>) {
@@ -232,11 +228,16 @@ function EditorHeader({ title, subtitle }: Pick<EditTaskViewProps, 'title' | 'su
           {subtitle}
         </Typography>
       </Box>
-      <IconButton sx={{ color: dashboardColors.outline, '&:hover': { backgroundColor: dashboardColors.surfaceContainerHigh, color: 'text.primary' } }}>
+      <IconButton
+        sx={{
+          color: dashboardColors.outline,
+          '&:hover': { backgroundColor: dashboardColors.surfaceContainerHigh, color: 'text.primary' },
+        }}
+      >
         <CloseRoundedIcon />
       </IconButton>
     </Stack>
-  )
+  );
 }
 
 export function EditTaskView({
@@ -326,7 +327,9 @@ export function EditTaskView({
                   </FieldShell>
                 </Stack>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}>
+                <Box
+                  sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}
+                >
                   <Box sx={{ gridColumn: { md: 'span 2' } }}>
                     <FieldShell label="Project">
                       <LeadingIconField icon={<FolderRoundedIcon fontSize="small" />}>
@@ -405,7 +408,9 @@ export function EditTaskView({
 
                   <Box sx={{ gridColumn: { md: 'span 2' } }}>
                     <FieldShell label="Recurring End Date">
-                      <LeadingIconField icon={<EventBusyRoundedIcon fontSize="small" sx={{ color: dashboardColors.outline }} />}>
+                      <LeadingIconField
+                        icon={<EventBusyRoundedIcon fontSize="small" sx={{ color: dashboardColors.outline }} />}
+                      >
                         <TextField
                           value={recurringEndDate}
                           InputProps={{ readOnly: true }}
@@ -425,7 +430,15 @@ export function EditTaskView({
                   <Stack direction="row" justifyContent="space-between" alignItems="flex-end" spacing={2}>
                     <Box>
                       <Typography variant="h6">Reminders</Typography>
-                      <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          color: 'text.secondary',
+                          fontWeight: 800,
+                          letterSpacing: '0.16em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
                         Never miss a pulse
                       </Typography>
                     </Box>
@@ -458,5 +471,5 @@ export function EditTaskView({
         </Box>
       </Box>
     </Box>
-  )
+  );
 }

@@ -1,25 +1,25 @@
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { NocturnalDashboard } from './pages/dashboard'
-import { AppLayout } from './components/AppLayout'
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
-import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded'
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded'
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
-import { dashboardColors, waypointTheme } from './theme'
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import { AppLayout } from './components/AppLayout';
+import { NocturnalDashboard } from './pages/dashboard';
+import { dashboardColors, waypointTheme } from './theme';
 
 function App() {
   const navigationItems = [
     { label: 'Dashboard', icon: <DashboardRoundedIcon />, active: true },
     { label: 'Projects', icon: <FolderRoundedIcon />, active: false },
     { label: 'Reminders', icon: <NotificationsRoundedIcon />, active: false },
-  ]
+  ];
 
   const footerItems = [
     { label: 'Help & Support', icon: <HelpOutlineRoundedIcon />, active: false },
     { label: 'Logout', icon: <LogoutRoundedIcon />, active: false },
-  ]
+  ];
 
   return (
     <ThemeProvider theme={waypointTheme}>
@@ -105,7 +105,7 @@ function App() {
         />
       </AppLayout>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

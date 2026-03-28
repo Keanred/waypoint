@@ -1,1 +1,1 @@
-export { AppSidebar, type NavigationItem } from './AppSidebar'
+export { AppSidebar, type NavigationItem } from './AppSidebar';

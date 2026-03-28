@@ -1,1 +1,1 @@
-export { UtilityHeader } from './UtilityHeader'
+export { UtilityHeader } from './UtilityHeader';

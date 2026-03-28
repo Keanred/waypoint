@@ -1,1 +1,1 @@
-export { StatusOrb } from './StatusOrb'
+export { StatusOrb } from './StatusOrb';

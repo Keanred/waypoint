@@ -1,1 +1,1 @@
-export { FixedTopNav, type HeaderLinkItem } from './FixedTopNav'
+export { FixedTopNav, type HeaderLinkItem } from './FixedTopNav';

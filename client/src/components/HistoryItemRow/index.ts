@@ -1,1 +1,1 @@
-export { HistoryItemRow, type ReminderHistoryItem } from './HistoryItemRow'
+export { HistoryItemRow, type ReminderHistoryItem } from './HistoryItemRow';

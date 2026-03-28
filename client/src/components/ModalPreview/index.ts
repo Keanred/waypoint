@@ -1,1 +1,1 @@
-export { ModalPreview } from './ModalPreview'
+export { ModalPreview } from './ModalPreview';

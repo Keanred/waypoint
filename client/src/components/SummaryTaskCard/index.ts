@@ -1,1 +1,1 @@
-export { SummaryTaskCard, type SummaryCard } from './SummaryTaskCard'
+export { SummaryTaskCard, type SummaryCard } from './SummaryTaskCard';

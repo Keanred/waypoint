@@ -4,8 +4,7 @@
   color: #ececfd;
   background:
     radial-gradient(circle at top right, rgba(196, 154, 255, 0.18), transparent 28%),
-    radial-gradient(circle at bottom left, rgba(253, 119, 196, 0.12), transparent 32%),
-    #0b0e18;
+    radial-gradient(circle at bottom left, rgba(253, 119, 196, 0.12), transparent 32%), #0b0e18;
   font-family: 'Manrope', sans-serif;
   color-scheme: dark;
 }
@@ -24,8 +23,7 @@ body {
   margin: 0;
   background:
     radial-gradient(circle at top right, rgba(196, 154, 255, 0.18), transparent 28%),
-    radial-gradient(circle at bottom left, rgba(253, 119, 196, 0.12), transparent 32%),
-    #0b0e18;
+    radial-gradient(circle at bottom left, rgba(253, 119, 196, 0.12), transparent 32%), #0b0e18;
 }
 
 #root {

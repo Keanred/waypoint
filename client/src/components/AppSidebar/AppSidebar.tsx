@@ -1,14 +1,14 @@
-import type { ReactElement } from 'react'
-import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import { alpha, Box, Button, Stack } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { GradientActionButton } from '../GradientActionButton'
-import { WorkspaceIdentity } from '../WorkspaceIdentity'
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import { alpha, Box, Button, Stack } from '@mui/material';
+import type { ReactElement } from 'react';
+import { dashboardColors } from '../../theme';
+import { GradientActionButton } from '../GradientActionButton';
+import { WorkspaceIdentity } from '../WorkspaceIdentity';
 
 export interface NavigationItem {
-  label: string
-  icon: ReactElement
-  active?: boolean
+  label: string;
+  icon: ReactElement;
+  active?: boolean;
 }
 
 function NavigationLink({ item }: { item: NavigationItem }) {
@@ -31,7 +31,7 @@ function NavigationLink({ item }: { item: NavigationItem }) {
     >
       {item.label}
     </Button>
-  )
+  );
 }
 
 export function AppSidebar({
@@ -41,11 +41,11 @@ export function AppSidebar({
   footerItems,
   primaryActionLabel,
 }: {
-  workspaceName: string
-  workspaceTagline: string
-  navigationItems: NavigationItem[]
-  footerItems: NavigationItem[]
-  primaryActionLabel: string
+  workspaceName: string;
+  workspaceTagline: string;
+  navigationItems: NavigationItem[];
+  footerItems: NavigationItem[];
+  primaryActionLabel: string;
 }) {
   return (
     <Box
@@ -86,5 +86,5 @@ export function AppSidebar({
         ))}
       </Stack>
     </Box>
-  )
+  );
 }

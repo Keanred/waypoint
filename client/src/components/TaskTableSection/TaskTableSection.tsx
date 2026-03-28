@@ -1,9 +1,9 @@
-import BlockRoundedIcon from '@mui/icons-material/BlockRounded'
-import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded'
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded'
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
-import SyncRoundedIcon from '@mui/icons-material/SyncRounded'
+import BlockRoundedIcon from '@mui/icons-material/BlockRounded';
+import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import SyncRoundedIcon from '@mui/icons-material/SyncRounded';
 import {
   alpha,
   Box,
@@ -17,39 +17,39 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { StatusOrb } from '../StatusOrb'
-import { SurfacePanel } from '../SurfacePanel'
+} from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { StatusOrb } from '../StatusOrb';
+import { SurfacePanel } from '../SurfacePanel';
 
 export interface TaskListItem {
-  title: string
-  description: string
-  accent: string
-  project: string
-  dueLabel: string
-  dueSubtext: string
-  dueAccent: string
-  recurrence: string
-  recurrenceType: 'none' | 'sync' | 'calendar'
-  remindersCount: number
-  reminderAccent?: string
+  title: string;
+  description: string;
+  accent: string;
+  project: string;
+  dueLabel: string;
+  dueSubtext: string;
+  dueAccent: string;
+  recurrence: string;
+  recurrenceType: 'none' | 'sync' | 'calendar';
+  remindersCount: number;
+  reminderAccent?: string;
 }
 
 export function recurrenceIcon(type: TaskListItem['recurrenceType']) {
   if (type === 'sync') {
-    return <SyncRoundedIcon sx={{ fontSize: 16 }} />
+    return <SyncRoundedIcon sx={{ fontSize: 16 }} />;
   }
 
   if (type === 'calendar') {
-    return <CalendarMonthRoundedIcon sx={{ fontSize: 16 }} />
+    return <CalendarMonthRoundedIcon sx={{ fontSize: 16 }} />;
   }
 
-  return <BlockRoundedIcon sx={{ fontSize: 16 }} />
+  return <BlockRoundedIcon sx={{ fontSize: 16 }} />;
 }
 
 export function reminderBadge(item: TaskListItem) {
-  const active = item.remindersCount > 0
+  const active = item.remindersCount > 0;
 
   return (
     <Chip
@@ -57,7 +57,7 @@ export function reminderBadge(item: TaskListItem) {
       sx={{
         minWidth: 34,
         height: 24,
-        color: active ? item.reminderAccent ?? dashboardColors.secondary : 'text.secondary',
+        color: active ? (item.reminderAccent ?? dashboardColors.secondary) : 'text.secondary',
         fontSize: 12,
         fontWeight: 800,
         borderRadius: 1.5,
@@ -66,10 +66,22 @@ export function reminderBadge(item: TaskListItem) {
           : dashboardColors.surfaceContainerHighest,
       }}
     />
-  )
+  );
 }
 
 export function TaskTableSection({ tasks }: { tasks: TaskListItem[] }) {
+  const getHeaderAlign = (index: number): 'left' | 'center' | 'right' => {
+    if (index === 4) {
+      return 'center';
+    }
+
+    if (index > 4) {
+      return 'right';
+    }
+
+    return 'left';
+  };
+
   return (
     <SurfacePanel variant="low" sx={{ borderRadius: 4, overflow: 'hidden' }}>
       <TableContainer>
@@ -79,7 +91,7 @@ export function TaskTableSection({ tasks }: { tasks: TaskListItem[] }) {
               {['Task Title', 'Project', 'Due Date', 'Recurrence', 'Reminders', 'Action'].map((label, index) => (
                 <TableCell
                   key={label}
-                  align={index >= 4 ? (index === 4 ? 'center' : 'right') : 'left'}
+                  align={getHeaderAlign(index)}
                   sx={{
                     py: 3,
                     px: index === 0 || index === 5 ? 4 : 2,
@@ -172,14 +184,18 @@ export function TaskTableSection({ tasks }: { tasks: TaskListItem[] }) {
           Showing 5 of 28 active tasks
         </Typography>
         <Stack direction="row" spacing={1}>
-          <IconButton sx={{ borderRadius: 2, backgroundColor: dashboardColors.surfaceContainerHighest, color: 'text.primary' }}>
+          <IconButton
+            sx={{ borderRadius: 2, backgroundColor: dashboardColors.surfaceContainerHighest, color: 'text.primary' }}
+          >
             <ChevronLeftRoundedIcon fontSize="small" />
           </IconButton>
-          <IconButton sx={{ borderRadius: 2, backgroundColor: dashboardColors.surfaceContainerHighest, color: 'text.primary' }}>
+          <IconButton
+            sx={{ borderRadius: 2, backgroundColor: dashboardColors.surfaceContainerHighest, color: 'text.primary' }}
+          >
             <ChevronRightRoundedIcon fontSize="small" />
           </IconButton>
         </Stack>
       </Stack>
     </SurfacePanel>
-  )
+  );
 }

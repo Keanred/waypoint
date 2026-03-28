@@ -1,1 +1,1 @@
-export { ActiveTaskRow, type ActiveTask } from './ActiveTaskRow'
+export { ActiveTaskRow, type ActiveTask } from './ActiveTaskRow';

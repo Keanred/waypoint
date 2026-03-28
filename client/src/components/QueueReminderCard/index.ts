@@ -1,1 +1,1 @@
-export { QueueReminderCard, type ReminderQueueItem } from './QueueReminderCard'
+export { QueueReminderCard, type ReminderQueueItem } from './QueueReminderCard';

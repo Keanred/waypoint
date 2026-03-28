@@ -1,1 +1,1 @@
-export { FeaturedTaskCard, type FeaturedTask } from './FeaturedTaskCard'
+export { FeaturedTaskCard, type FeaturedTask } from './FeaturedTaskCard';

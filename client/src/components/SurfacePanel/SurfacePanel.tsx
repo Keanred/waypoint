@@ -1,16 +1,16 @@
-import type { PropsWithChildren } from 'react'
-import { alpha, Paper } from '@mui/material'
-import type { SxProps, Theme } from '@mui/material/styles'
-import { dashboardColors } from '../../theme'
+import { alpha, Paper } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
+import type { PropsWithChildren } from 'react';
+import { dashboardColors } from '../../theme';
 
-type PanelVariant = 'default' | 'low' | 'high' | 'glass'
+type PanelVariant = 'default' | 'low' | 'high' | 'glass';
 
 const panelBackgrounds: Record<PanelVariant, string> = {
   default: dashboardColors.surfaceContainer,
   low: dashboardColors.surfaceLow,
   high: dashboardColors.surfaceContainerHigh,
   glass: alpha(dashboardColors.surfaceContainerHighest, 0.8),
-}
+};
 
 export function SurfacePanel({
   children,
@@ -37,5 +37,5 @@ export function SurfacePanel({
     >
       {children}
     </Paper>
-  )
+  );
 }

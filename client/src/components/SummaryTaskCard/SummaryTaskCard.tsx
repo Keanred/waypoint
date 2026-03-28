@@ -1,17 +1,17 @@
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded'
-import { alpha, Chip, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { StatusOrb } from '../StatusOrb'
-import { SurfacePanel } from '../SurfacePanel'
+import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
+import { alpha, Chip, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { StatusOrb } from '../StatusOrb';
+import { SurfacePanel } from '../SurfacePanel';
 
 export interface SummaryCard {
-  statusLabel: string
-  accent: string
-  dueLabel: string
-  title: string
-  description: string
-  reminderLabel: string
-  category: string
+  statusLabel: string;
+  accent: string;
+  dueLabel: string;
+  title: string;
+  description: string;
+  reminderLabel: string;
+  category: string;
 }
 
 export function SummaryTaskCard({ card }: { card: SummaryCard }) {
@@ -32,7 +32,10 @@ export function SummaryTaskCard({ card }: { card: SummaryCard }) {
       <Stack direction="row" justifyContent="space-between" spacing={2} sx={{ mb: 3 }}>
         <Stack direction="row" spacing={1.5} alignItems="center">
           <StatusOrb accent={card.accent} />
-          <Typography variant="caption" sx={{ color: card.accent, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+          <Typography
+            variant="caption"
+            sx={{ color: card.accent, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase' }}
+          >
             {card.statusLabel}
           </Typography>
         </Stack>
@@ -81,5 +84,5 @@ export function SummaryTaskCard({ card }: { card: SummaryCard }) {
         />
       </Stack>
     </SurfacePanel>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { Box } from '@mui/material'
-import { dashboardColors } from '../../theme'
+import { Box } from '@mui/material';
+import { dashboardColors } from '../../theme';
 
 export function FilterTag({ label, active = false }: { label: string; active?: boolean }) {
   return (
@@ -18,5 +18,5 @@ export function FilterTag({ label, active = false }: { label: string; active?: b
     >
       {label}
     </Box>
-  )
+  );
 }

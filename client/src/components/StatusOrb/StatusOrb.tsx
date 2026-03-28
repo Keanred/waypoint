@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box } from '@mui/material';
 
 export function StatusOrb({ accent, size = 8 }: { accent: string; size?: number }) {
   return (
@@ -12,5 +12,5 @@ export function StatusOrb({ accent, size = 8 }: { accent: string; size?: number 
         flexShrink: 0,
       }}
     />
-  )
+  );
 }

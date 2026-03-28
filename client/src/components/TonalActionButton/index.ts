@@ -1,1 +1,1 @@
-export { TonalActionButton } from './TonalActionButton'
+export { TonalActionButton } from './TonalActionButton';

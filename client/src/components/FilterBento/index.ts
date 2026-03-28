@@ -1,1 +1,1 @@
-export { FilterBento } from './FilterBento'
+export { FilterBento } from './FilterBento';

@@ -1,6 +1,6 @@
-import { alpha, Box, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { SurfacePanel } from '../SurfacePanel'
+import { alpha, Box, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { SurfacePanel } from '../SurfacePanel';
 
 export function VelocityCard({ value }: { value: number }) {
   return (
@@ -55,5 +55,5 @@ export function VelocityCard({ value }: { value: number }) {
         }}
       />
     </SurfacePanel>
-  )
+  );
 }

@@ -1,47 +1,37 @@
-import AddAlertRoundedIcon from '@mui/icons-material/AddAlertRounded'
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded'
-import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded'
-import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
-import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded'
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded'
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded'
-import {
-  alpha,
-  Avatar,
-  Box,
-  Chip,
-  Fab,
-  IconButton,
-  Stack,
-  Typography,
-} from '@mui/material'
-import type { NavigationItem } from '../components/AppSidebar'
-import { AppSidebar } from '../components/AppSidebar'
-import { UtilityHeader } from '../components/UtilityHeader'
-import { AmbientBackground } from '../components/AmbientBackground'
-import { SurfacePanel } from '../components/SurfacePanel'
-import { dashboardColors } from '../theme'
-import { QueueReminderCard, type ReminderQueueItem } from '../components/QueueReminderCard'
-import { HistoryItemRow, type ReminderHistoryItem } from '../components/HistoryItemRow'
+import AddAlertRoundedIcon from '@mui/icons-material/AddAlertRounded';
+import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
+import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
+import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import { alpha, Avatar, Box, Chip, Fab, IconButton, Stack, Typography } from '@mui/material';
+import { AmbientBackground } from '../components/AmbientBackground';
+import { AppSidebar, type NavigationItem } from '../components/AppSidebar';
+import { HistoryItemRow, type ReminderHistoryItem } from '../components/HistoryItemRow';
+import { QueueReminderCard, type ReminderQueueItem } from '../components/QueueReminderCard';
+import { SurfacePanel } from '../components/SurfacePanel';
+import { UtilityHeader } from '../components/UtilityHeader';
+import { dashboardColors } from '../theme';
 
-export type { ReminderQueueItem, ReminderHistoryItem }
+export type { ReminderHistoryItem, ReminderQueueItem };
 
 interface RemindersViewProps {
-  workspaceName: string
-  workspaceTagline: string
-  navigationItems: NavigationItem[]
-  footerItems: NavigationItem[]
-  queuedReminders: ReminderQueueItem[]
-  historyItems: ReminderHistoryItem[]
-  title: string
-  subtitle: string
-  avatarUrl: string
-  tipTitle: string
-  tipDescription: string
-  tipActionLabel: string
+  workspaceName: string;
+  workspaceTagline: string;
+  navigationItems: NavigationItem[];
+  footerItems: NavigationItem[];
+  queuedReminders: ReminderQueueItem[];
+  historyItems: ReminderHistoryItem[];
+  title: string;
+  subtitle: string;
+  avatarUrl: string;
+  tipTitle: string;
+  tipDescription: string;
+  tipActionLabel: string;
 }
 
 export function RemindersView({
@@ -68,7 +58,7 @@ export function RemindersView({
         footerItems={footerItems}
         primaryActionLabel="New Task"
       />
-      <UtilityHeader searchPlaceholder="Search notifications..." links={["Docs", "Status"]} />
+      <UtilityHeader searchPlaceholder="Search notifications..." links={['Docs', 'Status']} />
 
       <Box
         component="main"
@@ -163,11 +153,7 @@ export function RemindersView({
 
             <SurfacePanel variant="low" sx={{ borderRadius: 4, overflow: 'hidden', mb: 4 }}>
               {historyItems.map((item, index) => (
-                <HistoryItemRow
-                  key={item.title}
-                  item={item}
-                  bordered={index < historyItems.length - 1}
-                />
+                <HistoryItemRow key={item.title} item={item} bordered={index < historyItems.length - 1} />
               ))}
               <Box
                 sx={{
@@ -237,7 +223,7 @@ export function RemindersView({
         </Fab>
       </Box>
     </Box>
-  )
+  );
 }
 
 export const remindersNavigationItems: NavigationItem[] = [
@@ -262,7 +248,7 @@ export const remindersNavigationItems: NavigationItem[] = [
     label: 'Archive',
     icon: <ArchiveRoundedIcon fontSize="small" />,
   },
-]
+];
 
 export const remindersFooterItems: NavigationItem[] = [
   {
@@ -273,4 +259,4 @@ export const remindersFooterItems: NavigationItem[] = [
     label: 'Log Out',
     icon: <LogoutRoundedIcon fontSize="small" />,
   },
-]
+];

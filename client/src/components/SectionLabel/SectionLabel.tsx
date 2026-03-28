@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
-import { Typography } from '@mui/material'
+import { Typography } from '@mui/material';
+import type { ReactNode } from 'react';
 
 export function SectionLabel({ children }: { children: ReactNode }) {
   return (
@@ -16,5 +16,5 @@ export function SectionLabel({ children }: { children: ReactNode }) {
     >
       {children}
     </Typography>
-  )
+  );
 }

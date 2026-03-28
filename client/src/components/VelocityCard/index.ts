@@ -1,1 +1,1 @@
-export { VelocityCard } from './VelocityCard'
+export { VelocityCard } from './VelocityCard';

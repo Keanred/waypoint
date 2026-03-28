@@ -1,23 +1,23 @@
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded'
-import { alpha, Avatar, Box, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { StatusOrb } from '../StatusOrb'
-import { SurfacePanel } from '../SurfacePanel'
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import { alpha, Avatar, Box, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { StatusOrb } from '../StatusOrb';
+import { SurfacePanel } from '../SurfacePanel';
 
 export interface Participant {
-  name: string
-  initials: string
-  accent: string
+  name: string;
+  initials: string;
+  accent: string;
 }
 
 export interface FeaturedTask {
-  statusLabel: string
-  accent: string
-  dueLabel: string
-  title: string
-  description: string
-  reminderLabel: string
-  participants: Participant[]
+  statusLabel: string;
+  accent: string;
+  dueLabel: string;
+  title: string;
+  description: string;
+  reminderLabel: string;
+  participants: Participant[];
 }
 
 export function FeaturedTaskCard({ task }: { task: FeaturedTask }) {
@@ -38,7 +38,10 @@ export function FeaturedTaskCard({ task }: { task: FeaturedTask }) {
         <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
           <Stack direction="row" spacing={1.5} alignItems="center">
             <StatusOrb accent={task.accent} />
-            <Typography variant="caption" sx={{ color: task.accent, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+            <Typography
+              variant="caption"
+              sx={{ color: task.accent, fontWeight: 800, letterSpacing: '0.18em', textTransform: 'uppercase' }}
+            >
               {task.statusLabel}
             </Typography>
           </Stack>
@@ -95,5 +98,5 @@ export function FeaturedTaskCard({ task }: { task: FeaturedTask }) {
         </Stack>
       </Stack>
     </SurfacePanel>
-  )
+  );
 }

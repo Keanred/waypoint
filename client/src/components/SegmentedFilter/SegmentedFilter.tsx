@@ -1,5 +1,5 @@
-import { Box, Stack } from '@mui/material'
-import { dashboardColors } from '../../theme'
+import { Box, Stack } from '@mui/material';
+import { dashboardColors } from '../../theme';
 
 export function SegmentedFilter() {
   return (
@@ -30,5 +30,5 @@ export function SegmentedFilter() {
         Completed
       </Box>
     </Stack>
-  )
+  );
 }

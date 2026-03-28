@@ -1,1 +1,1 @@
-export { WorkspaceIdentity } from './WorkspaceIdentity'
+export { WorkspaceIdentity } from './WorkspaceIdentity';

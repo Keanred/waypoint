@@ -1,1 +1,1 @@
-export { GradientActionButton } from './GradientActionButton'
+export { GradientActionButton } from './GradientActionButton';

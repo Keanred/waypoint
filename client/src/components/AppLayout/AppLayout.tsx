@@ -1,31 +1,24 @@
-import { ReactNode } from 'react'
-import { alpha, Box, Typography } from '@mui/material'
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded'
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
-import {
-  Avatar,
-  IconButton,
-  InputBase,
-  Paper,
-  Stack,
-} from '@mui/material'
-import { dashboardColors } from '../../theme'
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import { alpha, Avatar, Box, IconButton, InputBase, Paper, Stack, Typography } from '@mui/material';
+import { ReactNode } from 'react';
+import { dashboardColors } from '../../theme';
 
 export interface NavigationItem {
-  label: string
-  icon: ReactNode
-  active?: boolean
+  label: string;
+  icon: ReactNode;
+  active?: boolean;
 }
 
 export interface AppLayoutProps {
-  appName: string
-  workspaceName: string
-  workspaceTagline: string
-  navigationItems: NavigationItem[]
-  footerItems: NavigationItem[]
-  primaryActionLabel: string
-  children: ReactNode
+  appName: string;
+  workspaceName: string;
+  workspaceTagline: string;
+  navigationItems: NavigationItem[];
+  footerItems: NavigationItem[];
+  primaryActionLabel: string;
+  children: ReactNode;
 }
 
 function SearchField() {
@@ -55,7 +48,7 @@ function SearchField() {
         }}
       />
     </Paper>
-  )
+  );
 }
 
 function TopNavigation({ appName }: { appName: string }) {
@@ -88,12 +81,10 @@ function TopNavigation({ appName }: { appName: string }) {
         <IconButton sx={{ color: 'text.secondary' }}>
           <SettingsRoundedIcon />
         </IconButton>
-        <Avatar sx={{ width: 36, height: 36, bgcolor: dashboardColors.surfaceBright, fontSize: 14 }}>
-          KA
-        </Avatar>
+        <Avatar sx={{ width: 36, height: 36, bgcolor: dashboardColors.surfaceBright, fontSize: 14 }}>KA</Avatar>
       </Stack>
     </Box>
-  )
+  );
 }
 
 function Sidebar({
@@ -103,11 +94,11 @@ function Sidebar({
   footerItems,
   primaryActionLabel,
 }: {
-  workspaceName: string
-  workspaceTagline: string
-  navigationItems: NavigationItem[]
-  footerItems: NavigationItem[]
-  primaryActionLabel: string
+  workspaceName: string;
+  workspaceTagline: string;
+  navigationItems: NavigationItem[];
+  footerItems: NavigationItem[];
+  primaryActionLabel: string;
 }) {
   return (
     <Box
@@ -209,7 +200,7 @@ function Sidebar({
         </Stack>
       </Box>
     </Box>
-  )
+  );
 }
 
 function MobileNavigation({ items }: { items: NavigationItem[] }) {
@@ -260,7 +251,7 @@ function MobileNavigation({ items }: { items: NavigationItem[] }) {
         </Box>
       ))}
     </Box>
-  )
+  );
 }
 
 export function AppLayout({
@@ -297,5 +288,5 @@ export function AppLayout({
         </Box>
       </Box>
     </Box>
-  )
+  );
 }

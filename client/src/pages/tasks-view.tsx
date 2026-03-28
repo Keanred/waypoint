@@ -1,43 +1,35 @@
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded'
-import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded'
-import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded'
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
-import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded'
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
-import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import {
-  alpha,
-  Box,
-  Fab,
-  Stack,
-  Typography,
-} from '@mui/material'
-import type { NavigationItem } from '../components/AppSidebar'
-import type { HeaderLinkItem } from '../components/FixedTopNav'
-import { AppSidebar } from '../components/AppSidebar'
-import { FixedTopNav } from '../components/FixedTopNav'
-import { AmbientBackground } from '../components/AmbientBackground'
-import { dashboardColors } from '../theme'
-import { SegmentedFilter } from '../components/SegmentedFilter'
-import { FilterBento } from '../components/FilterBento'
-import { TaskTableSection, type TaskListItem } from '../components/TaskTableSection'
-import { MetricCard, type TaskMetricCard } from '../components/MetricCard'
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
+import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded';
+import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { alpha, Box, Fab, Stack, Typography } from '@mui/material';
+import { AmbientBackground } from '../components/AmbientBackground';
+import { AppSidebar, type NavigationItem } from '../components/AppSidebar';
+import { FilterBento } from '../components/FilterBento';
+import { FixedTopNav, type HeaderLinkItem } from '../components/FixedTopNav';
+import { MetricCard, type TaskMetricCard } from '../components/MetricCard';
+import { SegmentedFilter } from '../components/SegmentedFilter';
+import { TaskTableSection, type TaskListItem } from '../components/TaskTableSection';
+import { dashboardColors } from '../theme';
 
-export type { TaskListItem, TaskMetricCard }
+export type { TaskListItem, TaskMetricCard };
 
 interface TasksViewProps {
-  workspaceName: string
-  workspaceTagline: string
-  brandName: string
-  headerLinks: HeaderLinkItem[]
-  navigationItems: NavigationItem[]
-  footerItems: NavigationItem[]
-  avatarUrl: string
-  title: string
-  subtitle: string
-  tasks: TaskListItem[]
-  metrics: TaskMetricCard[]
+  workspaceName: string;
+  workspaceTagline: string;
+  brandName: string;
+  headerLinks: HeaderLinkItem[];
+  navigationItems: NavigationItem[];
+  footerItems: NavigationItem[];
+  avatarUrl: string;
+  title: string;
+  subtitle: string;
+  tasks: TaskListItem[];
+  metrics: TaskMetricCard[];
 }
 
 export function TasksView({
@@ -97,7 +89,9 @@ export function TasksView({
           <FilterBento />
           <TaskTableSection tasks={tasks} />
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' }, gap: 3, mt: 4 }}>
+          <Box
+            sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' }, gap: 3, mt: 4 }}
+          >
             {metrics.map((metric) => (
               <MetricCard key={metric.label} metric={metric} />
             ))}
@@ -112,10 +106,18 @@ export function TasksView({
             width: 64,
             height: 64,
             color: '#1a003b',
-            background: `linear-gradient(135deg, ${dashboardColors.primary} 0%, ${dashboardColors.primaryContainer} 100%)`,
+            background: `linear-gradient(
+              135deg,
+              ${dashboardColors.primary} 0%,
+              ${dashboardColors.primaryContainer} 100%
+            )`,
             boxShadow: `0 24px 48px ${alpha(dashboardColors.primary, 0.28)}`,
             '&:hover': {
-              background: `linear-gradient(135deg, ${dashboardColors.primary} 0%, ${dashboardColors.primaryContainer} 100%)`,
+              background: `linear-gradient(
+                135deg,
+                ${dashboardColors.primary} 0%,
+                ${dashboardColors.primaryContainer} 100%
+              )`,
               transform: 'scale(1.05)',
             },
           }}
@@ -124,14 +126,14 @@ export function TasksView({
         </Fab>
       </Box>
     </Box>
-  )
+  );
 }
 
 export const tasksHeaderLinks: HeaderLinkItem[] = [
   { label: 'Dashboard' },
   { label: 'Tasks', active: true },
   { label: 'Projects' },
-]
+];
 
 export const tasksNavigationItems: NavigationItem[] = [
   { label: 'Dashboard', icon: <DashboardRoundedIcon fontSize="small" /> },
@@ -139,9 +141,9 @@ export const tasksNavigationItems: NavigationItem[] = [
   { label: 'Reminders', icon: <AlarmRoundedIcon fontSize="small" /> },
   { label: 'Projects', icon: <FolderRoundedIcon fontSize="small" /> },
   { label: 'Archive', icon: <ArchiveRoundedIcon fontSize="small" /> },
-]
+];
 
 export const tasksFooterItems: NavigationItem[] = [
   { label: 'Support', icon: <HelpOutlineRoundedIcon fontSize="small" /> },
   { label: 'Log Out', icon: <LogoutRoundedIcon fontSize="small" /> },
-]
+];

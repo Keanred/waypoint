@@ -1,13 +1,7 @@
-import { Box, Stack, Typography } from '@mui/material'
-import { SearchInput } from '../SearchInput'
+import { Box, Stack, Typography } from '@mui/material';
+import { SearchInput } from '../SearchInput';
 
-export function UtilityHeader({
-  searchPlaceholder,
-  links,
-}: {
-  searchPlaceholder: string
-  links: string[]
-}) {
+export function UtilityHeader({ searchPlaceholder, links }: { searchPlaceholder: string; links: string[] }) {
   return (
     <Box
       sx={{
@@ -38,5 +32,5 @@ export function UtilityHeader({
         </Stack>
       </Stack>
     </Box>
-  )
+  );
 }

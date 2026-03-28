@@ -1,8 +1,8 @@
-import { alpha, Box, Button, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { GradientActionButton } from '../GradientActionButton'
-import { SectionLabel } from '../SectionLabel'
-import { SurfacePanel } from '../SurfacePanel'
+import { alpha, Box, Button, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { GradientActionButton } from '../GradientActionButton';
+import { SectionLabel } from '../SectionLabel';
+import { SurfacePanel } from '../SurfacePanel';
 
 export function ModalPreview({ modalTitle, primaryActionLabel }: { modalTitle: string; primaryActionLabel: string }) {
   return (
@@ -72,11 +72,7 @@ export function ModalPreview({ modalTitle, primaryActionLabel }: { modalTitle: s
             </Stack>
           </Box>
           <Stack direction="row" spacing={2}>
-            <GradientActionButton
-              fullWidth
-            >
-              {primaryActionLabel}
-            </GradientActionButton>
+            <GradientActionButton fullWidth>{primaryActionLabel}</GradientActionButton>
             <Button
               sx={{
                 minWidth: 120,
@@ -92,5 +88,5 @@ export function ModalPreview({ modalTitle, primaryActionLabel }: { modalTitle: s
         </Stack>
       </SurfacePanel>
     </Box>
-  )
+  );
 }

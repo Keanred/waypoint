@@ -1,1 +1,1 @@
-export { SurfacePanel } from './SurfacePanel'
+export { SurfacePanel } from './SurfacePanel';

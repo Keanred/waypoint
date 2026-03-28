@@ -1,16 +1,16 @@
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded'
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded'
-import { alpha, Box, IconButton, Stack, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { StatusOrb } from '../StatusOrb'
-import { SurfacePanel } from '../SurfacePanel'
+import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { alpha, Box, IconButton, Stack, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { StatusOrb } from '../StatusOrb';
+import { SurfacePanel } from '../SurfacePanel';
 
 export interface ReminderQueueItem {
-  title: string
-  offsetLabel: string
-  scheduledAt: string
-  accent: string
-  highlighted?: boolean
+  title: string;
+  offsetLabel: string;
+  scheduledAt: string;
+  accent: string;
+  highlighted?: boolean;
 }
 
 export function QueueReminderCard({ item }: { item: ReminderQueueItem }) {
@@ -55,7 +55,14 @@ export function QueueReminderCard({ item }: { item: ReminderQueueItem }) {
                   {item.offsetLabel}
                 </Typography>
               </Stack>
-              <Box sx={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: alpha(dashboardColors.outlineVariant, 0.4) }} />
+              <Box
+                sx={{
+                  width: 4,
+                  height: 4,
+                  borderRadius: '50%',
+                  backgroundColor: alpha(dashboardColors.outlineVariant, 0.4),
+                }}
+              />
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Scheduled: {item.scheduledAt}
               </Typography>
@@ -67,5 +74,5 @@ export function QueueReminderCard({ item }: { item: ReminderQueueItem }) {
         </IconButton>
       </Stack>
     </SurfacePanel>
-  )
+  );
 }

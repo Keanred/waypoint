@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme } from '@mui/material/styles';
 
 export const dashboardColors = {
   background: '#0b0e18',
@@ -20,7 +20,7 @@ export const dashboardColors = {
   error: '#ff6e84',
   errorDim: '#d73357',
   successDim: '#42ef72',
-} as const
+} as const;
 
 export const waypointTheme = createTheme({
   palette: {
@@ -91,4 +91,4 @@ export const waypointTheme = createTheme({
       },
     },
   },
-})
+});

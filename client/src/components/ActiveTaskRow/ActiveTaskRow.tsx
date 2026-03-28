@@ -1,14 +1,14 @@
-import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import { alpha, Box, IconButton, Typography } from '@mui/material'
-import { dashboardColors } from '../../theme'
-import { SurfacePanel } from '../SurfacePanel'
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import { alpha, Box, IconButton, Typography } from '@mui/material';
+import { dashboardColors } from '../../theme';
+import { SurfacePanel } from '../SurfacePanel';
 
 export interface ActiveTask {
-  accent: string
-  statusLabel: string
-  title: string
-  description: string
-  dueLabel: string
+  accent: string;
+  statusLabel: string;
+  title: string;
+  description: string;
+  dueLabel: string;
 }
 
 export function ActiveTaskRow({ task }: { task: ActiveTask }) {
@@ -43,7 +43,17 @@ export function ActiveTaskRow({ task }: { task: ActiveTask }) {
           textAlign: { xs: 'left', md: 'right' },
         }}
       >
-        <Typography variant="caption" sx={{ display: 'block', color: task.accent, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', mb: 0.5 }}>
+        <Typography
+          variant="caption"
+          sx={{
+            display: 'block',
+            color: task.accent,
+            fontWeight: 800,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            mb: 0.5,
+          }}
+        >
           {task.statusLabel}
         </Typography>
         <Typography variant="body2">{task.dueLabel}</Typography>
@@ -60,5 +70,5 @@ export function ActiveTaskRow({ task }: { task: ActiveTask }) {
         <MoreVertRoundedIcon />
       </IconButton>
     </SurfacePanel>
-  )
+  );
 }
