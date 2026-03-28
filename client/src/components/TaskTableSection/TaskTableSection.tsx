@@ -36,7 +36,7 @@ export interface TaskListItem {
   reminderAccent?: string;
 }
 
-export function recurrenceIcon(type: TaskListItem['recurrenceType']) {
+export const recurrenceIcon = (type: TaskListItem['recurrenceType']) => {
   if (type === 'sync') {
     return <SyncRoundedIcon sx={{ fontSize: 16 }} />;
   }
@@ -46,9 +46,9 @@ export function recurrenceIcon(type: TaskListItem['recurrenceType']) {
   }
 
   return <BlockRoundedIcon sx={{ fontSize: 16 }} />;
-}
+};
 
-export function reminderBadge(item: TaskListItem) {
+export const reminderBadge = (item: TaskListItem) => {
   const active = item.remindersCount > 0;
 
   return (
@@ -67,9 +67,9 @@ export function reminderBadge(item: TaskListItem) {
       }}
     />
   );
-}
+};
 
-export function TaskTableSection({ tasks }: { tasks: TaskListItem[] }) {
+export const TaskTableSection = ({ tasks }: { tasks: TaskListItem[] }) => {
   const getHeaderAlign = (index: number): 'left' | 'center' | 'right' => {
     if (index === 4) {
       return 'center';
@@ -198,4 +198,4 @@ export function TaskTableSection({ tasks }: { tasks: TaskListItem[] }) {
       </Stack>
     </SurfacePanel>
   );
-}
+};

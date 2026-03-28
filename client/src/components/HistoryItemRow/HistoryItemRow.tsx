@@ -9,7 +9,7 @@ export interface ReminderHistoryItem {
   channel: string;
 }
 
-export function HistoryItemRow({ item, bordered }: { item: ReminderHistoryItem; bordered: boolean }) {
+export const HistoryItemRow = ({ item, bordered }: { item: ReminderHistoryItem; bordered: boolean }) => {
   return (
     <Box
       sx={{
@@ -53,4 +53,4 @@ export function HistoryItemRow({ item, bordered }: { item: ReminderHistoryItem; 
       </Stack>
     </Box>
   );
-}
+};

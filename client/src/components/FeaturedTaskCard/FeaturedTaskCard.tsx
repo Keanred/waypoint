@@ -20,7 +20,7 @@ export interface FeaturedTask {
   participants: Participant[];
 }
 
-export function FeaturedTaskCard({ task }: { task: FeaturedTask }) {
+export const FeaturedTaskCard = ({ task }: { task: FeaturedTask }) => {
   return (
     <SurfacePanel
       sx={{
@@ -99,4 +99,4 @@ export function FeaturedTaskCard({ task }: { task: FeaturedTask }) {
       </Stack>
     </SurfacePanel>
   );
-}
+};

@@ -2,7 +2,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { alpha, Box, InputBase } from '@mui/material';
 import { dashboardColors } from '../../theme';
 
-export function SearchInput({ placeholder, width = 256 }: { placeholder: string; width?: number | string }) {
+export const SearchInput = ({ placeholder, width = 256 }: { placeholder: string; width?: number | string }) => {
   return (
     <Box
       sx={{

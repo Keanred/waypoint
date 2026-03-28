@@ -8,7 +8,7 @@ interface ApiError {
   error: string;
 }
 
-export async function getTasks() {
+export const getTasks = async () => {
   const res = await fetch(`${API_BASE}/tasks`);
   if (!res.ok) {
     const error = (await res.json()) as ApiError;
@@ -17,7 +17,7 @@ export async function getTasks() {
   return res.json();
 }
 
-export async function createTask(input: CreateTaskInput) {
+export const createTask = async (input: CreateTaskInput) => {
   const res = await fetch(`${API_BASE}/tasks`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -30,7 +30,7 @@ export async function createTask(input: CreateTaskInput) {
   return res.json();
 }
 
-export async function updateTask(id: string, input: UpdateTaskInput) {
+export const updateTask = async (id: string, input: UpdateTaskInput) => {
   const res = await fetch(`${API_BASE}/tasks/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
@@ -43,7 +43,7 @@ export async function updateTask(id: string, input: UpdateTaskInput) {
   return res.json();
 }
 
-export async function deleteTask(id: string) {
+export const deleteTask = async (id: string) => {
   const res = await fetch(`${API_BASE}/tasks/${id}`, {
     method: 'DELETE',
   });

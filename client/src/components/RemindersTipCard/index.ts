@@ -1,0 +1,1 @@
+export { RemindersTipCard } from './RemindersTipCard';

@@ -21,7 +21,7 @@ export interface AppLayoutProps {
   children: ReactNode;
 }
 
-function SearchField() {
+const SearchField = () => {
   return (
     <Paper
       elevation={0}
@@ -51,7 +51,7 @@ function SearchField() {
   );
 }
 
-function TopNavigation({ appName }: { appName: string }) {
+const TopNavigation = ({ appName }: { appName: string }) => {
   return (
     <Box
       component="header"
@@ -87,7 +87,7 @@ function TopNavigation({ appName }: { appName: string }) {
   );
 }
 
-function Sidebar({
+const Sidebar = ({
   workspaceName,
   workspaceTagline,
   navigationItems,
@@ -99,7 +99,7 @@ function Sidebar({
   navigationItems: NavigationItem[];
   footerItems: NavigationItem[];
   primaryActionLabel: string;
-}) {
+}) => {
   return (
     <Box
       component="aside"
@@ -203,7 +203,7 @@ function Sidebar({
   );
 }
 
-function MobileNavigation({ items }: { items: NavigationItem[] }) {
+const MobileNavigation = ({ items }: { items: NavigationItem[] }) => {
   return (
     <Box
       sx={{
@@ -254,7 +254,7 @@ function MobileNavigation({ items }: { items: NavigationItem[] }) {
   );
 }
 
-export function AppLayout({
+export const AppLayout = ({
   appName,
   workspaceName,
   workspaceTagline,
@@ -262,7 +262,7 @@ export function AppLayout({
   footerItems,
   primaryActionLabel,
   children,
-}: AppLayoutProps) {
+}: AppLayoutProps) => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: dashboardColors.background }}>
       <TopNavigation appName={appName} />

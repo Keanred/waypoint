@@ -2,7 +2,7 @@ import { alpha, Box, Stack, Typography } from '@mui/material';
 import { dashboardColors } from '../../theme';
 import { SurfacePanel } from '../SurfacePanel';
 
-export function VelocityCard({ value }: { value: number }) {
+export const VelocityCard = ({ value }: { value: number }) => {
   return (
     <SurfacePanel
       sx={{
@@ -56,4 +56,4 @@ export function VelocityCard({ value }: { value: number }) {
       />
     </SurfacePanel>
   );
-}
+};

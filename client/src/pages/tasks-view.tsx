@@ -32,7 +32,7 @@ interface TasksViewProps {
   metrics: TaskMetricCard[];
 }
 
-export function TasksView({
+export const TasksView = ({
   workspaceName,
   workspaceTagline,
   brandName,
@@ -44,7 +44,7 @@ export function TasksView({
   subtitle,
   tasks,
   metrics,
-}: TasksViewProps) {
+}: TasksViewProps) => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: dashboardColors.background }}>
       <AmbientBackground />
@@ -127,7 +127,7 @@ export function TasksView({
       </Box>
     </Box>
   );
-}
+};
 
 export const tasksHeaderLinks: HeaderLinkItem[] = [
   { label: 'Dashboard' },
@@ -137,7 +137,8 @@ export const tasksHeaderLinks: HeaderLinkItem[] = [
 
 export const tasksNavigationItems: NavigationItem[] = [
   { label: 'Dashboard', icon: <DashboardRoundedIcon fontSize="small" /> },
-  { label: 'Tasks', icon: <ChecklistRoundedIcon fontSize="small" />, active: true },
+  { label: 'Tasks View', icon: <ChecklistRoundedIcon fontSize="small" />, active: true },
+  { label: 'Tasks', icon: <ChecklistRoundedIcon fontSize="small" /> },
   { label: 'Reminders', icon: <AlarmRoundedIcon fontSize="small" /> },
   { label: 'Projects', icon: <FolderRoundedIcon fontSize="small" /> },
   { label: 'Archive', icon: <ArchiveRoundedIcon fontSize="small" /> },

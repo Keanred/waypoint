@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { dashboardColors } from '../../theme';
 
-export function FilterTag({ label, active = false }: { label: string; active?: boolean }) {
+export const FilterTag = ({ label, active = false }: { label: string; active?: boolean }) => {
   return (
     <Box
       sx={{
@@ -19,4 +19,4 @@ export function FilterTag({ label, active = false }: { label: string; active?: b
       {label}
     </Box>
   );
-}
+};

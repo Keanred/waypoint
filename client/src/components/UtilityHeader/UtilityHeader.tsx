@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { SearchInput } from '../SearchInput';
 
-export function UtilityHeader({ searchPlaceholder, links }: { searchPlaceholder: string; links: string[] }) {
+export const UtilityHeader = ({ searchPlaceholder, links }: { searchPlaceholder: string; links: string[] }) => {
   return (
     <Box
       sx={{

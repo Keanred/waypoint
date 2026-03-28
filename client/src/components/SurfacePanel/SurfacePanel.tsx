@@ -12,11 +12,11 @@ const panelBackgrounds: Record<PanelVariant, string> = {
   glass: alpha(dashboardColors.surfaceContainerHighest, 0.8),
 };
 
-export function SurfacePanel({
+export const SurfacePanel = ({
   children,
   variant = 'default',
   sx,
-}: PropsWithChildren<{ variant?: PanelVariant; sx?: SxProps<Theme> }>) {
+}: PropsWithChildren<{ variant?: PanelVariant; sx?: SxProps<Theme> }>) => {
   return (
     <Paper
       elevation={0}

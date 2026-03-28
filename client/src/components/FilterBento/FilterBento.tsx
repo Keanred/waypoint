@@ -4,7 +4,7 @@ import { FilterTag } from '../FilterTag';
 import { SearchInput } from '../SearchInput';
 import { SurfacePanel } from '../SurfacePanel';
 
-export function FilterBento() {
+export const FilterBento = () => {
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' }, gap: 2, mb: 4 }}>
       <SurfacePanel variant="low" sx={{ p: 3, gridColumn: { md: 'span 2' } }}>
@@ -55,4 +55,4 @@ export function FilterBento() {
       </SurfacePanel>
     </Box>
   );
-}
+};

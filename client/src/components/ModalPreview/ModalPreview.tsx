@@ -4,7 +4,13 @@ import { GradientActionButton } from '../GradientActionButton';
 import { SectionLabel } from '../SectionLabel';
 import { SurfacePanel } from '../SurfacePanel';
 
-export function ModalPreview({ modalTitle, primaryActionLabel }: { modalTitle: string; primaryActionLabel: string }) {
+export const ModalPreview = ({
+  modalTitle,
+  primaryActionLabel,
+}: {
+  modalTitle: string;
+  primaryActionLabel: string;
+}) => {
   return (
     <Box
       aria-hidden
@@ -89,4 +95,4 @@ export function ModalPreview({ modalTitle, primaryActionLabel }: { modalTitle: s
       </SurfacePanel>
     </Box>
   );
-}
+};

@@ -1,3 +1,4 @@
+import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
@@ -9,9 +10,10 @@ import { AppLayout } from './components/AppLayout';
 import { NocturnalDashboard } from './pages/dashboard';
 import { dashboardColors, waypointTheme } from './theme';
 
-function App() {
+const App = () => {
   const navigationItems = [
     { label: 'Dashboard', icon: <DashboardRoundedIcon />, active: true },
+    { label: 'Tasks View', icon: <ChecklistRoundedIcon />, active: false },
     { label: 'Projects', icon: <FolderRoundedIcon />, active: false },
     { label: 'Reminders', icon: <NotificationsRoundedIcon />, active: false },
   ];
@@ -106,6 +108,6 @@ function App() {
       </AppLayout>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

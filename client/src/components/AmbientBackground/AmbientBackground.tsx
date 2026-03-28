@@ -1,7 +1,7 @@
 import { alpha, Box } from '@mui/material';
 import { dashboardColors } from '../../theme';
 
-export function AmbientBackground() {
+export const AmbientBackground = () => {
   return (
     <Box
       aria-hidden

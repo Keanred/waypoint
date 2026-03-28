@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-export function StatusOrb({ accent, size = 8 }: { accent: string; size?: number }) {
+export const StatusOrb = ({ accent, size = 8 }: { accent: string; size?: number }) => {
   return (
     <Box
       sx={{

@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import type { ReactNode } from 'react';
 
-export function SectionLabel({ children }: { children: ReactNode }) {
+export const SectionLabel = ({ children }: { children: ReactNode }) => {
   return (
     <Typography
       variant="caption"

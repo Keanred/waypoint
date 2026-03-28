@@ -3,7 +3,7 @@ import type { ButtonProps } from '@mui/material/Button';
 import type { PropsWithChildren } from 'react';
 import { dashboardColors } from '../../theme';
 
-export function GradientActionButton({ children, sx, ...buttonProps }: PropsWithChildren<ButtonProps>) {
+export const GradientActionButton = ({ children, sx, ...buttonProps }: PropsWithChildren<ButtonProps>) => {
   return (
     <Button
       {...buttonProps}

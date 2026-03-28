@@ -13,7 +13,7 @@ export interface ReminderQueueItem {
   highlighted?: boolean;
 }
 
-export function QueueReminderCard({ item }: { item: ReminderQueueItem }) {
+export const QueueReminderCard = ({ item }: { item: ReminderQueueItem }) => {
   return (
     <SurfacePanel
       sx={{
@@ -75,4 +75,4 @@ export function QueueReminderCard({ item }: { item: ReminderQueueItem }) {
       </Stack>
     </SurfacePanel>
   );
-}
+};

@@ -17,7 +17,7 @@ interface NocturnalDashboardProps {
   modalTitle: string;
 }
 
-export function NocturnalDashboard({
+export const NocturnalDashboard = ({
   title,
   subtitle,
   weeklyVelocity,
@@ -26,7 +26,7 @@ export function NocturnalDashboard({
   activeTasks,
   topReminderLabel,
   modalTitle,
-}: NocturnalDashboardProps) {
+}: NocturnalDashboardProps) => {
   return (
     <>
       <Box sx={{ mb: { xs: 8, md: 10 }, maxWidth: 920 }}>
@@ -84,4 +84,4 @@ export function NocturnalDashboard({
       <ModalPreview modalTitle={modalTitle} primaryActionLabel="New Task" />
     </>
   );
-}
+};

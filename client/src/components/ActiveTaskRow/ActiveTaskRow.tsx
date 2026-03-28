@@ -11,7 +11,7 @@ export interface ActiveTask {
   dueLabel: string;
 }
 
-export function ActiveTaskRow({ task }: { task: ActiveTask }) {
+export const ActiveTaskRow = ({ task }: { task: ActiveTask }) => {
   return (
     <SurfacePanel
       sx={{
@@ -71,4 +71,4 @@ export function ActiveTaskRow({ task }: { task: ActiveTask }) {
       </IconButton>
     </SurfacePanel>
   );
-}
+};

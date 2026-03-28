@@ -14,7 +14,7 @@ export interface SummaryCard {
   category: string;
 }
 
-export function SummaryTaskCard({ card }: { card: SummaryCard }) {
+export const SummaryTaskCard = ({ card }: { card: SummaryCard }) => {
   return (
     <SurfacePanel
       sx={{
@@ -85,4 +85,4 @@ export function SummaryTaskCard({ card }: { card: SummaryCard }) {
       </Stack>
     </SurfacePanel>
   );
-}
+};

@@ -1,26 +1,24 @@
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
-import { alpha, Box, IconButton, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
-import type { ReactNode } from 'react';
+import { alpha, Box, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import { AmbientBackground } from '../components/AmbientBackground';
+import { EditTaskViewFieldShell } from '../components/EditTaskViewFieldShell';
+import { EditTaskViewHeader } from '../components/EditTaskViewHeader';
+import { EditTaskViewInspirationColumn } from '../components/EditTaskViewInspirationColumn';
+import { EditTaskViewLeadingIconField } from '../components/EditTaskViewLeadingIconField';
+import { EditTaskViewReminderRow } from '../components/EditTaskViewReminderRow';
+import { editTaskFieldInputStyles } from '../components/EditTaskViewSharedStyles';
+import type { ReminderRowData } from '../components/EditTaskViewTypes';
 import { GradientActionButton } from '../components/GradientActionButton';
-import { SectionLabel } from '../components/SectionLabel';
-import { StatusOrb } from '../components/StatusOrb';
 import { SurfacePanel } from '../components/SurfacePanel';
 import { TonalActionButton } from '../components/TonalActionButton';
-import { WorkspaceIdentity } from '../components/WorkspaceIdentity';
 import { dashboardColors } from '../theme';
 
-export interface ReminderRowData {
-  value: string;
-  unit: string;
-}
+export type { ReminderRowData } from '../components/EditTaskViewTypes';
 
 interface EditTaskViewProps {
   brandTitle: string;
@@ -39,208 +37,7 @@ interface EditTaskViewProps {
   reminders: ReminderRowData[];
 }
 
-function fieldInputStyles() {
-  return {
-    '& .MuiOutlinedInput-root': {
-      borderRadius: 2.5,
-      backgroundColor: dashboardColors.surfaceContainerLowest,
-      color: 'text.primary',
-      alignItems: 'flex-start',
-      '& fieldset': {
-        borderColor: 'transparent',
-      },
-      '&:hover fieldset': {
-        borderColor: alpha(dashboardColors.outlineVariant, 0.25),
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: alpha(dashboardColors.primary, 0.35),
-      },
-    },
-    '& .MuiInputBase-input': {
-      color: 'text.primary',
-    },
-  };
-}
-
-function FieldShell({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <Stack spacing={1.25}>
-      <SectionLabel>{label}</SectionLabel>
-      {children}
-    </Stack>
-  );
-}
-
-function LeadingIconField({ icon, children }: { icon: ReactNode; children: ReactNode }) {
-  return (
-    <Box sx={{ position: 'relative' }}>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: 16,
-          zIndex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          transform: 'translateY(-50%)',
-          color: dashboardColors.primary,
-        }}
-      >
-        {icon}
-      </Box>
-      {children}
-    </Box>
-  );
-}
-
-function ReminderRow({ reminder }: { reminder: ReminderRowData }) {
-  return (
-    <SurfacePanel
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 1.5,
-        p: 1.5,
-        borderRadius: 3,
-        transition: 'background-color 180ms ease',
-        '&:hover': {
-          backgroundColor: dashboardColors.surfaceContainerHigh,
-        },
-      }}
-    >
-      <Box
-        sx={{ flex: 1, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}
-      >
-        <TextField
-          value={reminder.value}
-          type="number"
-          InputProps={{ readOnly: true }}
-          sx={{
-            ...fieldInputStyles(),
-            '& .MuiInputBase-input': {
-              textAlign: 'center',
-              fontWeight: 700,
-            },
-          }}
-        />
-        <Select
-          value={reminder.unit}
-          IconComponent={ExpandMoreRoundedIcon}
-          inputProps={{ readOnly: true }}
-          sx={{
-            borderRadius: 2.5,
-            backgroundColor: dashboardColors.surfaceContainerLowest,
-            color: 'text.primary',
-            '.MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' },
-            '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: alpha(dashboardColors.outlineVariant, 0.25),
-            },
-            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: alpha(dashboardColors.primary, 0.35),
-            },
-          }}
-        >
-          <MenuItem value="Minutes">Minutes</MenuItem>
-          <MenuItem value="Hours">Hours</MenuItem>
-          <MenuItem value="Days">Days</MenuItem>
-        </Select>
-      </Box>
-      <Typography variant="body2" sx={{ px: 1, color: 'text.secondary' }}>
-        before
-      </Typography>
-      <IconButton sx={{ color: 'text.secondary', '&:hover': { color: dashboardColors.error } }}>
-        <DeleteRoundedIcon />
-      </IconButton>
-    </SurfacePanel>
-  );
-}
-
-function InspirationColumn({
-  brandTitle,
-  brandSubtitle,
-  focusTip,
-  imageAlt,
-  imageUrl,
-}: Pick<EditTaskViewProps, 'brandTitle' | 'brandSubtitle' | 'focusTip' | 'imageAlt' | 'imageUrl'>) {
-  return (
-    <Stack spacing={4} sx={{ display: { xs: 'none', lg: 'flex' } }}>
-      <WorkspaceIdentity title={brandTitle} subtitle={brandSubtitle} titleVariant="h3" />
-
-      <SurfacePanel variant="low" sx={{ p: 3, borderRadius: 3.5 }}>
-        <Stack spacing={2}>
-          <Stack direction="row" spacing={1.25} alignItems="center">
-            <StatusOrb accent={dashboardColors.secondary} />
-            <Typography
-              variant="caption"
-              sx={{
-                color: dashboardColors.secondary,
-                fontWeight: 800,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Focus Tip
-            </Typography>
-          </Stack>
-          <Typography sx={{ fontStyle: 'italic', lineHeight: 1.8 }}>{focusTip}</Typography>
-        </Stack>
-      </SurfacePanel>
-
-      <Box
-        sx={{
-          position: 'relative',
-          overflow: 'hidden',
-          borderRadius: 3.5,
-          aspectRatio: '4 / 5',
-        }}
-      >
-        <Box
-          component="img"
-          src={imageUrl}
-          alt={imageAlt}
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            opacity: 0.6,
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(to top, #0b0e18, transparent 55%)',
-          }}
-        />
-      </Box>
-    </Stack>
-  );
-}
-
-function EditorHeader({ title, subtitle }: Pick<EditTaskViewProps, 'title' | 'subtitle'>) {
-  return (
-    <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
-      <Box>
-        <Typography variant="h3" sx={{ mb: 0.5 }}>
-          {title}
-        </Typography>
-        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-          {subtitle}
-        </Typography>
-      </Box>
-      <IconButton
-        sx={{
-          color: dashboardColors.outline,
-          '&:hover': { backgroundColor: dashboardColors.surfaceContainerHigh, color: 'text.primary' },
-        }}
-      >
-        <CloseRoundedIcon />
-      </IconButton>
-    </Stack>
-  );
-}
-
-export function EditTaskView({
+export const EditTaskView = ({
   brandTitle,
   brandSubtitle,
   title,
@@ -255,7 +52,7 @@ export function EditTaskView({
   imageAlt,
   imageUrl,
   reminders,
-}: EditTaskViewProps) {
+}: EditTaskViewProps) => {
   return (
     <Box
       sx={{
@@ -281,7 +78,7 @@ export function EditTaskView({
         }}
       >
         <Box sx={{ gridColumn: { lg: 'span 4' } }}>
-          <InspirationColumn
+          <EditTaskViewInspirationColumn
             brandTitle={brandTitle}
             brandSubtitle={brandSubtitle}
             focusTip={focusTip}
@@ -293,18 +90,18 @@ export function EditTaskView({
         <Box sx={{ gridColumn: { lg: 'span 8' } }}>
           <SurfacePanel variant="glass" sx={{ p: { xs: 3, md: 5 }, borderRadius: 3.5 }}>
             <Stack spacing={5}>
-              <EditorHeader title={title} subtitle={subtitle} />
+              <EditTaskViewHeader title={title} subtitle={subtitle} />
 
               <Stack component="form" spacing={6}>
                 <Stack spacing={3}>
-                  <FieldShell label="Task Title">
+                  <EditTaskViewFieldShell label="Task Title">
                     <TextField
                       value={taskTitle}
                       InputProps={{ readOnly: true }}
                       sx={{
-                        ...fieldInputStyles(),
+                        ...editTaskFieldInputStyles(),
                         '& .MuiOutlinedInput-root': {
-                          ...fieldInputStyles()['& .MuiOutlinedInput-root'],
+                          ...editTaskFieldInputStyles()['& .MuiOutlinedInput-root'],
                           borderBottom: `2px solid transparent`,
                         },
                         '& .MuiInputBase-input': {
@@ -314,25 +111,25 @@ export function EditTaskView({
                         },
                       }}
                     />
-                  </FieldShell>
+                  </EditTaskViewFieldShell>
 
-                  <FieldShell label="Description">
+                  <EditTaskViewFieldShell label="Description">
                     <TextField
                       value={description}
                       multiline
                       rows={4}
                       InputProps={{ readOnly: true }}
-                      sx={fieldInputStyles()}
+                      sx={editTaskFieldInputStyles()}
                     />
-                  </FieldShell>
+                  </EditTaskViewFieldShell>
                 </Stack>
 
                 <Box
                   sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 3 }}
                 >
                   <Box sx={{ gridColumn: { md: 'span 2' } }}>
-                    <FieldShell label="Project">
-                      <LeadingIconField icon={<FolderRoundedIcon fontSize="small" />}>
+                    <EditTaskViewFieldShell label="Project">
+                      <EditTaskViewLeadingIconField icon={<FolderRoundedIcon fontSize="small" />}>
                         <Select
                           value={project}
                           IconComponent={ExpandMoreRoundedIcon}
@@ -358,27 +155,27 @@ export function EditTaskView({
                           <MenuItem value="API Audit">API Audit</MenuItem>
                           <MenuItem value="Design Sync">Design Sync</MenuItem>
                         </Select>
-                      </LeadingIconField>
-                    </FieldShell>
+                      </EditTaskViewLeadingIconField>
+                    </EditTaskViewFieldShell>
                   </Box>
 
-                  <FieldShell label="Due Date">
-                    <LeadingIconField icon={<CalendarTodayRoundedIcon fontSize="small" />}>
+                  <EditTaskViewFieldShell label="Due Date">
+                    <EditTaskViewLeadingIconField icon={<CalendarTodayRoundedIcon fontSize="small" />}>
                       <TextField
                         value={dueDate}
                         InputProps={{ readOnly: true }}
                         sx={{
-                          ...fieldInputStyles(),
+                          ...editTaskFieldInputStyles(),
                           '& .MuiInputBase-input': {
                             pl: 4.5,
                           },
                         }}
                       />
-                    </LeadingIconField>
-                  </FieldShell>
+                    </EditTaskViewLeadingIconField>
+                  </EditTaskViewFieldShell>
 
-                  <FieldShell label="Recurrence">
-                    <LeadingIconField icon={<RepeatRoundedIcon fontSize="small" />}>
+                  <EditTaskViewFieldShell label="Recurrence">
+                    <EditTaskViewLeadingIconField icon={<RepeatRoundedIcon fontSize="small" />}>
                       <Select
                         value={recurrence}
                         IconComponent={ExpandMoreRoundedIcon}
@@ -403,26 +200,26 @@ export function EditTaskView({
                         <MenuItem value="Weekly">Weekly</MenuItem>
                         <MenuItem value="Monthly">Monthly</MenuItem>
                       </Select>
-                    </LeadingIconField>
-                  </FieldShell>
+                    </EditTaskViewLeadingIconField>
+                  </EditTaskViewFieldShell>
 
                   <Box sx={{ gridColumn: { md: 'span 2' } }}>
-                    <FieldShell label="Recurring End Date">
-                      <LeadingIconField
+                    <EditTaskViewFieldShell label="Recurring End Date">
+                      <EditTaskViewLeadingIconField
                         icon={<EventBusyRoundedIcon fontSize="small" sx={{ color: dashboardColors.outline }} />}
                       >
                         <TextField
                           value={recurringEndDate}
                           InputProps={{ readOnly: true }}
                           sx={{
-                            ...fieldInputStyles(),
+                            ...editTaskFieldInputStyles(),
                             '& .MuiInputBase-input': {
                               pl: 4.5,
                             },
                           }}
                         />
-                      </LeadingIconField>
-                    </FieldShell>
+                      </EditTaskViewLeadingIconField>
+                    </EditTaskViewFieldShell>
                   </Box>
                 </Box>
 
@@ -452,7 +249,10 @@ export function EditTaskView({
 
                   <Stack spacing={1.5}>
                     {reminders.map((reminder, index) => (
-                      <ReminderRow key={`${reminder.value}-${reminder.unit}-${index}`} reminder={reminder} />
+                      <EditTaskViewReminderRow
+                        key={`${reminder.value}-${reminder.unit}-${index}`}
+                        reminder={reminder}
+                      />
                     ))}
                   </Stack>
                 </Stack>
@@ -472,4 +272,4 @@ export function EditTaskView({
       </Box>
     </Box>
   );
-}
+};

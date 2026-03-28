@@ -14,7 +14,7 @@ export interface TaskMetricCard {
   icon: 'bolt' | 'warning' | 'layers';
 }
 
-export function metricIcon(icon: TaskMetricCard['icon']): ReactNode {
+export const metricIcon = (icon: TaskMetricCard['icon']): ReactNode => {
   if (icon === 'warning') {
     return <WarningAmberRoundedIcon sx={{ fontSize: 76 }} />;
   }
@@ -24,9 +24,9 @@ export function metricIcon(icon: TaskMetricCard['icon']): ReactNode {
   }
 
   return <BoltRoundedIcon sx={{ fontSize: 76 }} />;
-}
+};
 
-export function MetricCard({ metric }: { metric: TaskMetricCard }) {
+export const MetricCard = ({ metric }: { metric: TaskMetricCard }) => {
   return (
     <SurfacePanel variant="low" sx={{ p: 4, borderRadius: 4, position: 'relative', overflow: 'hidden' }}>
       <Box sx={{ position: 'absolute', top: 0, right: 0, p: 2, color: alpha(dashboardColors.textPrimary, 0.06) }}>
@@ -46,4 +46,4 @@ export function MetricCard({ metric }: { metric: TaskMetricCard }) {
       </Typography>
     </SurfacePanel>
   );
-}
+};

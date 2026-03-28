@@ -11,7 +11,7 @@ export interface NavigationItem {
   active?: boolean;
 }
 
-function NavigationLink({ item }: { item: NavigationItem }) {
+const NavigationLink = ({ item }: { item: NavigationItem }) => {
   return (
     <Button
       fullWidth
@@ -34,7 +34,7 @@ function NavigationLink({ item }: { item: NavigationItem }) {
   );
 }
 
-export function AppSidebar({
+export const AppSidebar = ({
   workspaceName,
   workspaceTagline,
   navigationItems,
@@ -46,7 +46,7 @@ export function AppSidebar({
   navigationItems: NavigationItem[];
   footerItems: NavigationItem[];
   primaryActionLabel: string;
-}) {
+}) => {
   return (
     <Box
       component="aside"

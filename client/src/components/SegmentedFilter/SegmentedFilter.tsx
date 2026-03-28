@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import { dashboardColors } from '../../theme';
 
-export function SegmentedFilter() {
+export const SegmentedFilter = () => {
   return (
     <Stack direction="row" spacing={0.5} sx={{ p: 0.5, borderRadius: 3, backgroundColor: dashboardColors.surfaceLow }}>
       <Box
@@ -31,4 +31,4 @@ export function SegmentedFilter() {
       </Box>
     </Stack>
   );
-}
+};

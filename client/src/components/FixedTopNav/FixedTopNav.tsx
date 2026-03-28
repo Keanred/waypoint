@@ -8,7 +8,7 @@ export interface HeaderLinkItem {
   active?: boolean;
 }
 
-export function FixedTopNav({
+export const FixedTopNav = ({
   brandName,
   links,
   avatarUrl,
@@ -16,7 +16,7 @@ export function FixedTopNav({
   brandName: string;
   links: HeaderLinkItem[];
   avatarUrl: string;
-}) {
+}) => {
   return (
     <Box
       component="nav"

@@ -1,11 +1,20 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle as drizzlePg } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import { config } from '../config';
 
-const sql = neon(config.databaseUrl);
-export const db = drizzle(sql);
+const isProduction = config.nodeEnv === 'production';
+
+let pgClient: ReturnType<typeof postgres> | null = null;
+
+export const db = isProduction
+  ? drizzle(neon(config.databaseUrl))
+  : (() => {
+      pgClient = postgres(config.databaseUrl);
+      return drizzlePg(pgClient);
+    })();
 
 export const disconnectDb = async (): Promise<void> => {
-  // Neon HTTP is stateless, so there is no persistent connection to close.
-  // Keep this hook for graceful shutdown and future DB client changes.
+  if (pgClient) await pgClient.end();
 };
