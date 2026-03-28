@@ -92,12 +92,8 @@
           "name": "reminders_task_id_tasks_id_fk",
           "tableFrom": "reminders",
           "tableTo": "tasks",
-          "columnsFrom": [
-            "task_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["task_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -195,21 +191,12 @@
     "public.offset_unit": {
       "name": "offset_unit",
       "schema": "public",
-      "values": [
-        "MINUTES",
-        "HOURS",
-        "DAYS"
-      ]
+      "values": ["MINUTES", "HOURS", "DAYS"]
     },
     "public.recurrence": {
       "name": "recurrence",
       "schema": "public",
-      "values": [
-        "NONE",
-        "DAILY",
-        "WEEKLY",
-        "MONTHLY"
-      ]
+      "values": ["NONE", "DAILY", "WEEKLY", "MONTHLY"]
     }
   },
   "schemas": {},

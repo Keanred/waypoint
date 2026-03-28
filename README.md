@@ -39,6 +39,7 @@ waypoint/
 ## Setup & Installation
 
 ### Prerequisites
+
 - Node.js 18+
 - Docker & Docker Compose
 - Resend API key (get from https://resend.com)
@@ -46,23 +47,27 @@ waypoint/
 ### Steps
 
 1. **Clone and install dependencies:**
+
    ```bash
    cd /home/keanred/code/waypoint
    npm install
    ```
 
 2. **Set up environment variables:**
+
    ```bash
    cp .env.example .env
    # Edit .env and add your RESEND_API_KEY
    ```
 
 3. **Start PostgreSQL:**
+
    ```bash
    docker-compose up -d
    ```
 
 4. **Run database migrations:**
+
    ```bash
    npm run build --workspace=schemas
    cd server
@@ -70,6 +75,7 @@ waypoint/
    ```
 
 5. **Start development servers:**
+
    ```bash
    npm run dev
    ```
@@ -80,6 +86,7 @@ waypoint/
 ## Development Commands
 
 ### Backend
+
 ```bash
 cd server
 npm run dev        # Start dev server with hot reload
@@ -89,6 +96,7 @@ npm run typecheck  # Type check without emit
 ```
 
 ### Client
+
 ```bash
 cd client
 npm run dev        # Start Vite dev server
@@ -97,6 +105,7 @@ npm test           # Run tests
 ```
 
 ### Schemas
+
 ```bash
 cd schemas
 npm run build      # Compile TypeScript
@@ -104,6 +113,7 @@ npm run typecheck  # Type check
 ```
 
 ### Database
+
 ```bash
 cd server
 npx drizzle-kit generate   # Generate migrations
@@ -125,11 +135,13 @@ npx drizzle-kit studio     # Open Drizzle Studio browser UI
 ## Testing
 
 Run tests in both server and client:
+
 ```bash
 npm test
 ```
 
 For specific workspace:
+
 ```bash
 npm test --workspace=server
 npm test --workspace=client
@@ -137,14 +149,14 @@ npm test --workspace=client
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://waypoint_user:waypoint_password@localhost:5432/waypoint` |
-| `RESEND_API_KEY` | Resend email API key | (required) |
-| `PORT` | Server port | `3001` |
-| `NODE_ENV` | Environment | `development` |
-| `REMINDER_CHECK_INTERVAL_MINUTES` | Cron job frequency | `1` |
-| `REMINDER_EMAIL_RECIPIENT` | Email to send notifications to | `test@example.com` |
+| Variable                          | Description                    | Default                                                                |
+| --------------------------------- | ------------------------------ | ---------------------------------------------------------------------- |
+| `DATABASE_URL`                    | PostgreSQL connection string   | `postgresql://waypoint_user:waypoint_password@localhost:5432/waypoint` |
+| `RESEND_API_KEY`                  | Resend email API key           | (required)                                                             |
+| `PORT`                            | Server port                    | `3001`                                                                 |
+| `NODE_ENV`                        | Environment                    | `development`                                                          |
+| `REMINDER_CHECK_INTERVAL_MINUTES` | Cron job frequency             | `1`                                                                    |
+| `REMINDER_EMAIL_RECIPIENT`        | Email to send notifications to | `test@example.com`                                                     |
 
 ## License
 

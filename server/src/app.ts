@@ -1,5 +1,7 @@
-import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import express, { NextFunction, Request, Response } from 'express';
+import { isHttpError } from './errors/http';
+import tasksRouter from './routes/tasks';
 
 const app = express();
 
@@ -7,14 +9,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.get('/api', (_req: Request, res: Response) => {
-  res.send('Hello, Waypoint!');
-});
+app.use('/api', tasksRouter);
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  // Handle errors
   console.error(err.stack);
-  res.status(500).send({ error: 'Something went wrong!' });
+  if (isHttpError(err)) {
+    res.status(err.statusCode).json({ success: false, error: err.message });
+    return;
+  }
+
+  res.status(500).json({ success: false, error: 'Something went wrong!' });
 });
 
 export default app;

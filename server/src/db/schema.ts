@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, pgEnum, integer, index } from 'drizzle-orm/pg-core';
+import { index, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Enums
 export const recurrenceEnum = pgEnum('recurrence', ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']);
@@ -30,7 +30,9 @@ export const reminders = pgTable(
   'reminders',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    taskId: uuid('task_id').notNull().references(() => tasks.id, { onDelete: 'cascade' }),
+    taskId: uuid('task_id')
+      .notNull()
+      .references(() => tasks.id, { onDelete: 'cascade' }),
     offsetValue: integer('offset_value').notNull(),
     offsetUnit: offsetUnitEnum('offset_unit').default('DAYS').notNull(),
     sentAt: timestamp('sent_at', { withTimezone: true }),

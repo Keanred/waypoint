@@ -1,11 +1,31 @@
 import { defineConfig } from 'drizzle-kit';
 
+const nodeEnv = process.env.NODE_ENV ?? 'development';
+const isProduction = nodeEnv === 'production';
+const postgresUser = process.env.POSTGRES_USER ?? 'waypoint_user';
+const postgresPassword = process.env.POSTGRES_PASSWORD ?? 'waypoint_password';
+const postgresDb = process.env.POSTGRES_DB ?? 'waypoint';
+const postgresHost = process.env.POSTGRES_HOST ?? 'localhost';
+const postgresPort = process.env.POSTGRES_PORT ?? '5432';
+const localDatabaseUrl = [
+  `postgresql://${postgresUser}:${postgresPassword}`,
+  `@${postgresHost}:${postgresPort}/${postgresDb}`,
+].join('');
+const databaseUrlDev = process.env.DATABASE_URL_DEV;
+const databaseUrlProd = process.env.DATABASE_URL_PROD;
+const runtimeDatabaseUrl = databaseUrlDev || localDatabaseUrl;
+const databaseUrl = isProduction ? databaseUrlProd : runtimeDatabaseUrl;
+
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL_PROD is required when NODE_ENV=production');
+}
+
 export default defineConfig({
   schema: './src/db/schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL || 'postgresql://waypoint_user:waypoint_password@localhost:5432/waypoint',
+    url: databaseUrl,
   },
   verbose: true,
   strict: true,
