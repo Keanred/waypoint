@@ -34,9 +34,16 @@ const databaseUrlProd = process.env.DATABASE_URL_PROD;
 const productionDatabaseUrl = databaseUrlProd || getEnv('DATABASE_URL_PROD');
 const runtimeDatabaseUrl = databaseUrlDev || localDatabaseUrl;
 const databaseUrl = isProduction ? productionDatabaseUrl : runtimeDatabaseUrl;
+const reminderEmailRecipient = getEnv('REMINDER_EMAIL_RECIPIENT');
+if (!reminderEmailRecipient && !isProduction) {
+  throw new Error('REMINDER_EMAIL_RECIPIENT must be set in non-production environments');
+}
 
 if (isProduction && /(localhost|127\.0\.0\.1)/.test(databaseUrl)) {
   throw new Error('DATABASE_URL must not point to localhost in production');
+}
+if (!isProduction && !reminderEmailRecipient) {
+  throw new Error('REMINDER_EMAIL_RECIPIENT must be set in non-production environments');
 }
 
 export const config = {
@@ -47,5 +54,5 @@ export const config = {
   seedOnStartup: getEnvBoolean('SEED_ON_STARTUP', !isProduction),
   cleanDbOnShutdown: getEnvBoolean('CLEAN_DB_ON_SHUTDOWN', !isProduction),
   reminderCheckIntervalMinutes: parseInt(getEnv('REMINDER_CHECK_INTERVAL_MINUTES', '1'), 10),
-  reminderEmailRecipient: getEnv('REMINDER_EMAIL_RECIPIENT', 'test@example.com'),
+  reminderEmailRecipient: getEnv('REMINDER_EMAIL_RECIPIENT'),
 };

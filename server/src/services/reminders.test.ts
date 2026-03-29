@@ -35,8 +35,6 @@ describe('calculateNextReminderTime', () => {
   });
 
   it('throws for unsupported offset units', () => {
-    expect(() => calculateNextReminderTime(dueDate, 1, 'WEEKS' as never)).toThrow(
-      'Unsupported offset unit: WEEKS',
-    );
+    expect(() => calculateNextReminderTime(dueDate, 1, 'WEEKS' as never)).toThrow('Unsupported offset unit: WEEKS');
   });
 });

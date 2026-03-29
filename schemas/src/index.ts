@@ -62,6 +62,9 @@ const ReminderResponseSchema = z.object({
 export type ReminderResponse = z.infer<typeof ReminderResponseSchema>;
 export { ReminderResponseSchema as ReminderResponse };
 
+export type Task = Pick<z.infer<typeof TaskResponseSchema>, 'id' | 'title' | 'description' | 'dueDate'>;
+export type Reminder = Pick<z.infer<typeof ReminderResponseSchema>, 'id' | 'offsetValue' | 'offsetUnit'>;
+
 const GetTasksResponseSchema = z.object({
   tasks: z.array(TaskResponseSchema),
   reminders: z.array(ReminderResponseSchema),

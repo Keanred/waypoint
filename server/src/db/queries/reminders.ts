@@ -1,4 +1,4 @@
-import { eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { calculateNextReminderTime } from '../../services/reminders';
 import { db } from '../client';
 import { NewReminder, Reminder, Task, reminders, tasks } from '../schema';
@@ -25,7 +25,7 @@ export const dbUpdateRemainder = async (id: string, updates: Partial<NewReminder
 
 export const dbGetUnsentReminders = async (
   timeMs: number = Date.now(),
-): Promise<{ reminders: Reminder; tasks: Task }[]> => {
+): Promise<{ reminder: Reminder; task: Task }[]> => {
   const now = new Date(timeMs);
 
   const unsentReminderResults = await db
@@ -34,8 +34,28 @@ export const dbGetUnsentReminders = async (
     .innerJoin(tasks, eq(reminders.taskId, tasks.id))
     .where(isNull(reminders.sentAt));
 
-  return unsentReminderResults.filter(({ reminders: reminder, tasks: task }) => {
-    const nextReminderTime = calculateNextReminderTime(task.dueDate, reminder.offsetValue, reminder.offsetUnit);
-    return nextReminderTime <= now;
-  });
+  return unsentReminderResults
+    .filter(({ reminders: curReminder, tasks: curTask }) => {
+      const nextReminderTime = calculateNextReminderTime(
+        curTask.dueDate,
+        curReminder.offsetValue,
+        curReminder.offsetUnit,
+      );
+      return nextReminderTime <= now;
+    })
+    .map(({ reminders: reminder, tasks: task }) => ({ reminder, task }));
+};
+
+export const dbGetRemindersByTaskId = async (taskId: string): Promise<Reminder[]> => {
+  const reminderResults = await db.select().from(reminders).where(eq(reminders.taskId, taskId));
+  return reminderResults;
+};
+
+export const dbCountUnsentRemindersByTaskId = async (taskId: string): Promise<number> => {
+  const [result] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(reminders)
+    .where(and(eq(reminders.taskId, taskId), isNull(reminders.sentAt)));
+
+  return Number(result?.count ?? 0);
 };

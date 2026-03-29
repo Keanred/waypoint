@@ -17,15 +17,15 @@
     "db:studio": "drizzle-kit studio --config=drizzle.config.ts"
   },
   "dependencies": {
-    "@waypoint/schemas": "file:../schemas",
     "@neondatabase/serverless": "^0.10.0",
     "@types/cors": "^2.8.19",
+    "@waypoint/schemas": "file:../schemas",
     "cors": "^2.8.6",
     "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
     "node-cron": "^3.0.3",
     "postgres": "^3.4.8",
-    "resend": "^3.0.0",
+    "resend": "^3.5.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
