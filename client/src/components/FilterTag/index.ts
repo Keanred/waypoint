@@ -1,1 +1,0 @@
-export { FilterTag } from './FilterTag';

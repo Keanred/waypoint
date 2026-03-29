@@ -1,1 +1,0 @@
-export { SegmentedFilter } from './SegmentedFilter';

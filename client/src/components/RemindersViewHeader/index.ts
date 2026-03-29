@@ -1,1 +1,0 @@
-export { RemindersViewHeader } from './RemindersViewHeader';

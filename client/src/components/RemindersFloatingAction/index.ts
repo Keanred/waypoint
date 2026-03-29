@@ -1,1 +1,0 @@
-export { RemindersFloatingAction } from './RemindersFloatingAction';

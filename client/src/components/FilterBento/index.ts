@@ -1,1 +1,0 @@
-export { FilterBento } from './FilterBento';
