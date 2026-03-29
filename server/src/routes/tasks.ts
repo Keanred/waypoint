@@ -27,7 +27,7 @@ tasksRouter.patch('/tasks/:id', async (req: Request, res: Response): Promise<voi
     return;
   }
 
-  const updatedTask: TaskResponse | null = await updateTask(id, result.data!);
+  const updatedTask: TaskResponse = await updateTask(id, result.data!);
   if (!updatedTask) {
     res.status(404).json({ success: false, error: `Task ${id} not found` });
     return;

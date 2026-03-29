@@ -19,7 +19,7 @@ export const seedDatabase = async (): Promise<void> => {
       dueDate: new Date(Date.now() + DAY_IN_MS),
       recurrence: 'NONE',
     })
-    .returning({ id: tasks.id });
+    .returning();
 
   await db.insert(reminders).values({
     taskId: seedTask.id,
