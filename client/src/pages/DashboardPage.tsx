@@ -17,6 +17,7 @@ import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import type { ReminderResponse, TaskResponse } from '@waypoint/schemas';
 
 import { BottomNavBar } from '../components/BottomNavBar';
 import { FloatingActionButton } from '../components/FloatingActionButton';
@@ -25,6 +26,9 @@ import { StatCard } from '../components/StatCard';
 import { TaskCard } from '../components/TaskCard';
 import { TaskGroup } from '../components/TaskGroup';
 import { TopAppBar } from '../components/TopAppBar';
+import { getTasks } from '../api';
+
+import { useEffect, useState } from 'react';
 
 const COLORS = {
   error: '#ffb4ab',
@@ -33,6 +37,34 @@ const COLORS = {
 } as const;
 
 export const DashboardPage = () => {
+  const [tasks, setTasks] = useState<TaskResponse[]>([]);
+  const [reminders, setReminders] = useState<ReminderResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const statusMessage =
+    error ??
+    (isLoading
+      ? 'Syncing your latest tasks from the API.'
+      : 'Maximize focus by crushing the immediate deadlines first.');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await getTasks();
+        setTasks(response.tasks);
+        setReminders(response.reminders);
+      } catch {
+        setError('Failed to load tasks. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchData();
+  }, []);
+
   return (
     <Box
       sx={{
@@ -106,13 +138,11 @@ export const DashboardPage = () => {
               >
                 Current Flow
               </Typography>
-              <Typography sx={{ color: '#968e9c', fontSize: '1.125rem', maxWidth: 512 }}>
-                Maximize focus by crushing the immediate deadlines first.
-              </Typography>
+              <Typography sx={{ color: '#968e9c', fontSize: '1.125rem', maxWidth: 512 }}>{statusMessage}</Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <StatCard value="12" label="Active Tasks" valueColor={COLORS.primary} />
-              <StatCard value="4h" label="Focus Log" valueColor={COLORS.tertiary} />
+              <StatCard value={String(tasks.length)} label="Active Tasks" valueColor={COLORS.primary} />
+              <StatCard value={String(reminders.length)} label="Alerts" valueColor={COLORS.tertiary} />
             </Box>
           </Box>
 

@@ -1,54 +1,144 @@
-// API client for Waypoint
+import type {
+  CreateReminderInput,
+  CreateTaskInput,
+  GetTasksResponse,
+  ReminderResponse,
+  TaskResponse,
+  UpdateTaskInput,
+} from '@waypoint/schemas';
 
-import type { CreateTaskInput, UpdateTaskInput } from '@waypoint/schemas';
+const API_BASE = '/api';
 
-const API_BASE = import.meta.env.DEV ? 'http://localhost:3001/api' : '/api';
+type ApiErrorDetails = string | Record<string, unknown> | Array<unknown>;
 
-interface ApiError {
-  error: string;
-}
+type ApiSuccess<TData> = {
+  success: true;
+  data: TData;
+};
 
-export const getTasks = async () => {
-  const res = await fetch(`${API_BASE}/tasks`);
-  if (!res.ok) {
-    const error = (await res.json()) as ApiError;
-    throw new Error(error.error || 'Failed to fetch tasks');
+type ApiFailure = {
+  success: false;
+  error: ApiErrorDetails;
+};
+
+type ApiResponse<TData> = ApiSuccess<TData> | ApiFailure;
+
+type RequestOptions<TBody = unknown> = {
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  body?: TBody;
+  headers?: HeadersInit;
+};
+
+type DeleteTaskResponse = {
+  message: string;
+};
+
+type DeleteReminderResponse = {
+  message: string;
+};
+
+export class ApiClientError extends Error {
+  readonly status: number;
+  readonly details: ApiErrorDetails | null;
+
+  constructor(message: string, status: number, details: ApiErrorDetails | null = null) {
+    super(message);
+    this.name = 'ApiClientError';
+    this.status = status;
+    this.details = details;
   }
-  return res.json();
 }
 
-export const createTask = async (input: CreateTaskInput) => {
-  const res = await fetch(`${API_BASE}/tasks`, {
+const isBodyInit = (value: unknown): value is BodyInit => {
+  if (typeof value === 'string') {
+    return true;
+  }
+
+  return value instanceof Blob || value instanceof FormData || value instanceof URLSearchParams;
+};
+
+const getErrorMessage = (details: ApiErrorDetails | null, fallback: string): string => {
+  if (typeof details === 'string' && details.length > 0) {
+    return details;
+  }
+
+  return fallback;
+};
+
+const buildRequestInit = <TBody>(
+  method: RequestOptions['method'],
+  body: TBody | undefined,
+  headers?: HeadersInit,
+): RequestInit => {
+  const requestHeaders = new Headers(headers);
+  const requestInit: RequestInit = { method, headers: requestHeaders };
+
+  if (body === undefined) {
+    return requestInit;
+  }
+
+  if (isBodyInit(body)) {
+    requestInit.body = body;
+    return requestInit;
+  }
+
+  requestHeaders.set('Content-Type', 'application/json');
+  requestInit.body = JSON.stringify(body);
+  return requestInit;
+};
+
+const parseResponse = async <TResponse>(response: Response): Promise<ApiResponse<TResponse> | null> => {
+  const contentType = response.headers.get('content-type');
+  if (!contentType?.includes('application/json')) {
+    return null;
+  }
+
+  return (await response.json()) as ApiResponse<TResponse>;
+};
+
+const unwrapResponse = <TResponse>(response: Response, payload: ApiResponse<TResponse> | null): TResponse => {
+  if (!response.ok) {
+    const details = payload && !payload.success ? payload.error : null;
+    throw new ApiClientError(
+      getErrorMessage(details, `Request failed with status ${response.status}`),
+      response.status,
+      details,
+    );
+  }
+
+  if (!payload || !payload.success) {
+    throw new ApiClientError('Expected a JSON success response from the API', response.status, null);
+  }
+
+  return payload.data;
+};
+
+const request = async <TResponse, TBody = unknown>(
+  path: string,
+  { method = 'GET', body, headers }: RequestOptions<TBody> = {},
+): Promise<TResponse> => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const response = await fetch(`${API_BASE}${normalizedPath}`, buildRequestInit(method, body, headers));
+  const payload = await parseResponse<TResponse>(response);
+  return unwrapResponse(response, payload);
+};
+
+export const getTasks = (): Promise<GetTasksResponse> => request<GetTasksResponse>('/tasks');
+
+export const createTask = (input: CreateTaskInput): Promise<TaskResponse> =>
+  request<TaskResponse, CreateTaskInput>('/tasks', { method: 'POST', body: input });
+
+export const updateTask = (id: string, input: UpdateTaskInput): Promise<TaskResponse> =>
+  request<TaskResponse, UpdateTaskInput>(`/tasks/${id}`, { method: 'PATCH', body: input });
+
+export const deleteTask = (id: string): Promise<DeleteTaskResponse> =>
+  request<DeleteTaskResponse>(`/tasks/${id}`, { method: 'DELETE' });
+
+export const createReminder = (taskId: string, input: Omit<CreateReminderInput, 'taskId'>): Promise<ReminderResponse> =>
+  request<ReminderResponse, Omit<CreateReminderInput, 'taskId'>>(`/tasks/${taskId}/reminders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
+    body: input,
   });
-  if (!res.ok) {
-    const error = (await res.json()) as ApiError;
-    throw new Error(error.error || 'Failed to create task');
-  }
-  return res.json();
-}
 
-export const updateTask = async (id: string, input: UpdateTaskInput) => {
-  const res = await fetch(`${API_BASE}/tasks/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
-  });
-  if (!res.ok) {
-    const error = (await res.json()) as ApiError;
-    throw new Error(error.error || 'Failed to update task');
-  }
-  return res.json();
-}
-
-export const deleteTask = async (id: string) => {
-  const res = await fetch(`${API_BASE}/tasks/${id}`, {
-    method: 'DELETE',
-  });
-  if (!res.ok) {
-    const error = (await res.json()) as ApiError;
-    throw new Error(error.error || 'Failed to delete task');
-  }
-}
+export const deleteReminder = (taskId: string, reminderId: string): Promise<DeleteReminderResponse> =>
+  request<DeleteReminderResponse>(`/tasks/${taskId}/reminders/${reminderId}`, { method: 'DELETE' });
