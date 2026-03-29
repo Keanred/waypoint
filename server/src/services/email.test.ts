@@ -70,7 +70,7 @@ describe('EmailService', () => {
     expect(payload.subject).toContain('2026-03-30T14:00:00.000Z');
     expect(payload.html).toContain('Task: Submit quarterly report');
     expect(payload.html).toContain('This reminder was scheduled 2 HOURS before the deadline.');
-    expect(Date.prototype.toLocaleString).toHaveBeenCalledWith('en-GB', { timeZone: 'Etc/UTC' });
+    expect(Date.prototype.toLocaleString).toHaveBeenCalledWith('en-GB', { timeZone: 'Etc/GMT-3' });
   });
 
   it('logs and returns success false when Resend returns an error response', async () => {

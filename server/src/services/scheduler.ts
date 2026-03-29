@@ -6,6 +6,9 @@ import {
 import { dbInsertTask } from '../db/queries/tasks';
 import { EmailService } from './email';
 import { getUnsentRemainders, markReminderAsSent } from './reminders';
+import cron from 'node-cron';
+
+let isRunning = false;
 
 const emailService = new EmailService();
 
@@ -44,6 +47,11 @@ const getNextDueDate = (dueDate: Date, recurrence: RecurringTask['recurrence']) 
 };
 
 export const checkAndSendReminders = async () => {
+  if (isRunning) {
+    console.warn("Reminder check is already running, skipping this cycle.");
+    return;
+  }
+  isRunning = true;
   let unsentReminders: Awaited<ReturnType<typeof getUnsentRemainders>> = [];
   try {
     unsentReminders = await getUnsentRemainders();
@@ -122,4 +130,10 @@ export const checkAndSendReminders = async () => {
     console.error(`Error processing reminders: ${error instanceof Error ? error.message : error}`);
   }
   console.log(`Reminder check complete. Processed ${unsentReminders.length} reminders.`);
+  isRunning = false;
+};
+
+export const startReminderScheduler = () => {
+  cron.schedule('* * * * *', checkAndSendReminders);
+  console.log("📅 Reminder scheduler started — checking every 1 minute");
 };

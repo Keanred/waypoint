@@ -2,6 +2,7 @@ import app from './app';
 import { config } from './config';
 import { disconnectDb } from './db/client';
 import { cleanDatabase, seedDatabase } from './db/lifecycle';
+import { startReminderScheduler } from './services/scheduler';
 
 let isShuttingDown = false;
 
@@ -42,6 +43,7 @@ const start = async (): Promise<void> => {
 
   const server = app.listen(config.port, () => {
     console.log(`Server listening on port ${config.port}`);
+    startReminderScheduler();
   });
 
   process.on('SIGTERM', gracefulShutdown(server));

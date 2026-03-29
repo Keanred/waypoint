@@ -17,7 +17,7 @@ export class EmailService {
         subject: `⏰ Reminder: ${task.title} — due ${new Date(task.dueDate).toISOString()}`,
         html: `
         Task: ${task.title}
-        Due: ${new Date(task.dueDate).toLocaleString('en-GB', { timeZone: 'Etc/UTC' })}
+        Due: ${new Date(task.dueDate).toLocaleString('en-GB', { timeZone: 'Etc/GMT-3' })}
         Description: ${task.description || 'No description'}
 
         ---
