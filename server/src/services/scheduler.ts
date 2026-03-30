@@ -7,6 +7,7 @@ import { dbInsertTask } from '../db/queries/tasks';
 import { EmailService } from './email';
 import { getUnsentRemainders, markReminderAsSent } from './reminders';
 import cron from 'node-cron';
+import { config } from '../config';
 
 let isRunning = false;
 
@@ -136,6 +137,10 @@ export const checkAndSendReminders = async () => {
 };
 
 export const startReminderScheduler = () => {
-  cron.schedule('* * * * *', checkAndSendReminders);
-  console.log("📅 Reminder scheduler started — checking every 1 minute");
+  const parsedInterval = Number(config.reminderCheckIntervalMinutes);
+  const intervalMinutes = Number.isFinite(parsedInterval) && parsedInterval > 0 ? Math.floor(parsedInterval) : 1;
+  const cronExpression = `*/${intervalMinutes} * * * *`;
+
+  cron.schedule(cronExpression, checkAndSendReminders);
+  console.log(`📅 Reminder scheduler started - checking every ${intervalMinutes} minute(s)`);
 };

@@ -16,7 +16,7 @@
     "lint": "eslint client server schemas --max-warnings 0",
     "format": "prettier . --write",
     "db:generate": "npm run db:generate --workspace=server",
-    "db:migrate": "npm run db:migrate --workspace=server",
+    "db:migrate": "just db-migrate",
     "db:push": "npm run db:push --workspace=server",
     "db:studio": "npm run db:studio --workspace=server"
   },

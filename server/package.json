@@ -6,15 +6,15 @@
   "type": "module",
   "exports": "./dist/index.js",
   "scripts": {
-    "dev": "if [ -f .env ]; then node --env-file .env --import tsx --watch src/main.ts; else node --import tsx --watch src/main.ts; fi",
+    "dev": "if [ -f ../.env ]; then node --env-file ../.env --import tsx --watch src/main.ts; elif [ -f .env ]; then node --env-file .env --import tsx --watch src/main.ts; else node --import tsx --watch src/main.ts; fi",
     "build": "tsc",
     "test": "DATABASE_URL_DEV=${DATABASE_URL_DEV:-postgresql://waypoint_user:postgres@localhost:5432/waypoint?sslmode=disable} DATABASE_URL_PROD=${DATABASE_URL_PROD:-postgresql://waypoint_user:postgres@localhost:5432/waypoint?sslmode=disable} REMINDER_EMAIL_RECIPIENT=${REMINDER_EMAIL_RECIPIENT:-test@example.com} RESEND_API_KEY=${RESEND_API_KEY:-test} NODE_ENV=${NODE_ENV:-test} vitest --run",
     "test:ui": "vitest --ui",
     "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
-    "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
-    "db:push": "drizzle-kit push --config=drizzle.config.ts",
-    "db:studio": "drizzle-kit studio --config=drizzle.config.ts"
+    "db:generate": "if [ -f ../.env ]; then set -a; source ../.env; set +a; fi; drizzle-kit generate --config=drizzle.config.ts",
+    "db:migrate": "if [ -f ../.env ]; then set -a; source ../.env; set +a; fi; drizzle-kit migrate --config=drizzle.config.ts",
+    "db:push": "if [ -f ../.env ]; then set -a; source ../.env; set +a; fi; drizzle-kit push --config=drizzle.config.ts",
+    "db:studio": "if [ -f ../.env ]; then set -a; source ../.env; set +a; fi; drizzle-kit studio --config=drizzle.config.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.0",

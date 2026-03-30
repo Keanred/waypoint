@@ -63,14 +63,14 @@ Or manually:
 2. **Set up environment variables:**
 
    ```bash
-   cp .env.example .env.local
-   # Edit .env.local — at minimum set POSTGRES_PASSWORD
+   cp .env.example .env
+   # Edit .env — at minimum set POSTGRES_PASSWORD
    ```
 
 3. **Start PostgreSQL:**
 
    ```bash
-   docker compose --env-file .env.local up -d postgres
+   docker compose --env-file .env up -d postgres
    ```
 
 4. **Run database migrations:**
@@ -152,7 +152,7 @@ npm run build         # Compile shared schemas
 
 ## Environment Variables
 
-Configured via `.env.local` (see `.env.example`):
+Configured via `.env` (see `.env.example`):
 
 | Variable                          | Description                    | Default                 |
 | --------------------------------- | ------------------------------ | ----------------------- |
