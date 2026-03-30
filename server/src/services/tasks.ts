@@ -9,6 +9,7 @@ export const getTasks = async (): Promise<GetTasksResponse> => {
       id: result.tasks.id,
       title: result.tasks.title,
       description: result.tasks.description,
+      priority: result.tasks.priority,
       dueDate: result.tasks.dueDate,
       recurrence: result.tasks.recurrence,
       recurringEndDate: result.tasks.recurringEndDate,

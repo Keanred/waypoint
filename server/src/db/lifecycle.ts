@@ -16,6 +16,7 @@ export const seedDatabase = async (): Promise<void> => {
     .values({
       title: 'Welcome to Waypoint',
       description: 'This task was created automatically as startup seed data.',
+      priority: 'medium',
       dueDate: new Date(Date.now() + DAY_IN_MS),
       recurrence: 'NONE',
     })

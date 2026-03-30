@@ -47,6 +47,7 @@ describe('checkAndSendReminders', () => {
     id: '00000000-0000-0000-0000-000000000100',
     title: 'Review architecture doc',
     description: 'Finalize event flow',
+    priority: 'medium' as const,
     dueDate: new Date('2030-03-30T14:00:00.000Z'),
     recurrence: 'NONE' as const,
     recurringEndDate: null,

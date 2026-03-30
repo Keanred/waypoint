@@ -36,6 +36,7 @@ type RecurringTask = {
   id: string;
   title: string;
   description: string | null;
+  priority: 'low' | 'medium' | 'high';
   dueDate: Date;
   recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'NONE';
   recurringEndDate: Date | null;
@@ -100,6 +101,7 @@ export const checkAndSendReminders = async () => {
         id: crypto.randomUUID(),
         title: task.title,
         description: task.description,
+        priority: task.priority,
         dueDate: nextDueDate,
         recurrence: task.recurrence,
         recurringEndDate: task.recurringEndDate,

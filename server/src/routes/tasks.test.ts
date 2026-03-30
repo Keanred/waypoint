@@ -14,6 +14,7 @@ const mockTask = {
   id: TASK_ID,
   title: 'Write tests',
   description: 'TDD all the things',
+  priority: 'medium' as const,
   dueDate: new Date('2026-04-01T00:00:00.000Z'),
   recurrence: 'NONE' as const,
   recurringEndDate: null,
@@ -65,6 +66,7 @@ describe('GET /api/tasks', () => {
     expect(task.id).toBe(TASK_ID);
     expect(task.title).toBe('Write tests');
     expect(task.description).toBe('TDD all the things');
+    expect(task.priority).toBe('medium');
     expect(task).toHaveProperty('dueDate');
     expect(task).toHaveProperty('recurrence');
     expect(task).toHaveProperty('createdAt');
@@ -114,6 +116,7 @@ describe('POST /api/tasks', () => {
   const validInput = {
     title: 'New Task',
     description: 'A task created via API',
+    priority: 'high',
     dueDate: '2026-04-01T00:00:00.000Z',
     recurrence: 'NONE',
   };
@@ -180,6 +183,16 @@ describe('POST /api/tasks', () => {
     expect(tasksService.createTask).not.toHaveBeenCalled();
   });
 
+  it('returns 400 when priority is an invalid enum value', async () => {
+    const res = await request(app)
+      .post('/api/tasks')
+      .send({ title: 'Task', dueDate: '2026-04-01T00:00:00.000Z', priority: 'urgent' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(tasksService.createTask).not.toHaveBeenCalled();
+  });
+
   it('creates the task when optional fields are omitted', async () => {
     vi.mocked(tasksService.createTask).mockResolvedValue(mockTask);
 
@@ -239,6 +252,14 @@ describe('PATCH /api/tasks/:id', () => {
 
   it('returns 400 when recurrence is an invalid enum value', async () => {
     const res = await request(app).patch(`/api/tasks/${TASK_ID}`).send({ recurrence: 'YEARLY' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(tasksService.updateTask).not.toHaveBeenCalled();
+  });
+
+  it('returns 400 when priority is an invalid enum value', async () => {
+    const res = await request(app).patch(`/api/tasks/${TASK_ID}`).send({ priority: 'urgent' });
 
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);

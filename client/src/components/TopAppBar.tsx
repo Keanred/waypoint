@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Typography from '@mui/material/Typography';
+import { WaypointLogo } from './WaypointLogo';
 
 interface NavLink {
   label: string;
@@ -48,6 +49,19 @@ export const TopAppBar = ({
       >
         {/* Left: Brand + Nav */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              display: 'grid',
+              placeItems: 'center',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, rgba(215, 186, 255, 0.25), rgba(117, 212, 232, 0.2))',
+              border: '1px solid rgba(215, 186, 255, 0.35)',
+            }}
+          >
+            <WaypointLogo size={20} />
+          </Box>
           <Typography
             sx={{
               fontSize: '1.5rem',
