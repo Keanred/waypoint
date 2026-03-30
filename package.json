@@ -15,9 +15,9 @@
     "test:workspaces": "npm test --workspace=server && npm test --workspace=client",
     "lint": "eslint client server schemas --max-warnings 0",
     "format": "prettier . --write",
-    "db:generate": "npm run db:generate --workspace=server",
+    "db:generate": "just db-generate",
     "db:migrate": "just db-migrate",
-    "db:push": "npm run db:push --workspace=server",
+    "db:push": "just db-push",
     "db:studio": "npm run db:studio --workspace=server"
   },
   "devDependencies": {

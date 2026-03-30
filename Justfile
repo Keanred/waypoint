@@ -55,6 +55,12 @@ db-migrate: db-wait
     set -a; source .env; set +a; npm run build --workspace=schemas
     set -a; source .env; set +a; npm run db:migrate --workspace=server
 
+db-generate: db-wait
+    set -a; source .env; set +a; npm run db:generate --workspace=server
+
+db-push: db-wait
+    set -a; source .env; set +a; npm run db:push --workspace=server
+
 dev: db-up
     bash scripts/startup-banner.sh
     set -a; source .env; set +a; npm run dev 2>&1 | cat
