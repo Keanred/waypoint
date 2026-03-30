@@ -9,16 +9,9 @@
     "schemas"
   ],
   "scripts": {
-    "dev": "bash scripts/startup-banner.sh && (npm run dev --workspace=server & until (echo > /dev/tcp/localhost/8080) >/dev/null 2>&1; do sleep 0.5; done; npm run dev --workspace=client; wait)",
     "build": "npm run build --workspace=schemas && npm run build --workspace=server && npm run build --workspace=client",
-    "test": "just test",
-    "test:workspaces": "npm test --workspace=server && npm test --workspace=client",
     "lint": "eslint client server schemas --max-warnings 0",
-    "format": "prettier . --write",
-    "db:generate": "just db-generate",
-    "db:migrate": "just db-migrate",
-    "db:push": "just db-push",
-    "db:studio": "npm run db:studio --workspace=server"
+    "format": "prettier . --write"
   },
   "devDependencies": {
     "drizzle-orm": "^0.45.1",

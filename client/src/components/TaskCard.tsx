@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
 interface TaskCardProps {
+  taskId: string;
   title: string;
   description: string;
   priorityLabel: string;
@@ -15,9 +16,12 @@ interface TaskCardProps {
   reminderCount: number;
   reminderIcon: ReactNode;
   borderColor: string;
+  onComplete?: (taskId: string) => void;
+  isCompleting?: boolean;
 }
 
 export const TaskCard = ({
+  taskId,
   title,
   description,
   priorityLabel,
@@ -27,6 +31,8 @@ export const TaskCard = ({
   reminderCount,
   reminderIcon,
   borderColor,
+  onComplete,
+  isCompleting = false,
 }: TaskCardProps) => {
   return (
     <Box
@@ -122,6 +128,8 @@ export const TaskCard = ({
           <EditRoundedIcon />
         </IconButton>
         <IconButton
+          onClick={() => onComplete?.(taskId)}
+          disabled={isCompleting}
           sx={{
             width: 48,
             height: 48,

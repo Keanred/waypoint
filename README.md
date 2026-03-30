@@ -76,14 +76,13 @@ Or manually:
 4. **Run database migrations:**
 
    ```bash
-   npm run build --workspace=schemas
-   npm run db:migrate
+   just db-migrate
    ```
 
 5. **Start development servers:**
 
    ```bash
-   npm run dev
+   just dev
    ```
 
    - Backend: http://localhost:3001
@@ -96,24 +95,17 @@ Or manually:
 ```bash
 just              # List available recipes
 just dev          # Start Postgres + dev servers
+just build        # Build schemas -> server -> client
 just test         # Run all tests
+just lint         # Lint all workspaces
+just format       # Format repository with Prettier
 just typecheck    # Type-check server
 just db-up        # Start Postgres container
 just db-down      # Stop Postgres container
 just db-logs      # Tail Postgres logs
-```
-
-### npm Scripts (root)
-
-```bash
-npm run dev       # Start both dev servers
-npm run build     # Build schemas → server → client
-npm test          # Run all tests
-npm run lint      # Lint all workspaces
-npm run format    # Format with Prettier
-npm run db:generate  # Generate Drizzle migrations
-npm run db:migrate   # Run Drizzle migrations
-npm run db:studio    # Open Drizzle Studio
+just db-generate  # Generate Drizzle migration files
+just db-migrate   # Apply Drizzle migrations
+just db-push      # Push schema directly (dev)
 ```
 
 ### Per-Workspace
@@ -174,7 +166,7 @@ Configured via `.env` (see `.env.example`):
 ## Testing
 
 ```bash
-npm test                       # All workspaces
+just test                      # All workspaces
 npm test --workspace=server    # Server only
 npm test --workspace=client    # Client only
 ```

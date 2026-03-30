@@ -27,6 +27,17 @@ env-init:
 install:
     npm install
 
+build:
+    npm run build --workspace=schemas
+    npm run build --workspace=server
+    npm run build --workspace=client
+
+lint:
+    npm run lint
+
+format:
+    npm run format
+
 db-up: env-init
     docker compose --env-file .env up -d postgres
 
@@ -61,12 +72,18 @@ db-generate: db-wait
 db-push: db-wait
     set -a; source .env; set +a; npm run db:push --workspace=server
 
-dev: db-up
-    bash scripts/startup-banner.sh
-    set -a; source .env; set +a; npm run dev 2>&1 | cat
+dev: db-wait
+    set -a; source .env; set +a; \
+        server_port="$${PORT:-3001}"; \
+        bash scripts/startup-banner.sh; \
+        npm run dev --workspace=server & \
+        server_pid=$$!; \
+        trap 'kill "$$server_pid" >/dev/null 2>&1 || true' EXIT INT TERM; \
+        npm run dev --workspace=client
 
 typecheck:
     npm run typecheck --workspace=server
 
 test: db-wait
-    set -a; source .env; set +a; npm run test:workspaces
+    set -a; source .env; set +a; npm test --workspace=server
+    npm test --workspace=client

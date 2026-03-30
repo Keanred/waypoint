@@ -55,7 +55,7 @@ export const SettingsPage = () => {
         {/* Top Header */}
         <TopAppBar
           brandName="Nocturne Task"
-          navLinks={[{ label: 'Dashboard' }, { label: 'Deadlines' }, { label: 'Settings', active: true }]}
+          navLinks={[{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }]}
           addButtonLabel="Add Task"
         />
 

@@ -1,15 +1,16 @@
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { Link, useMatchRoute } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Typography from '@mui/material/Typography';
-import { WaypointLogo } from './WaypointLogo';
 
 interface NavLink {
   label: string;
   active?: boolean;
+  to?: '/' | '/settings';
 }
 
 interface TopAppBarProps {
@@ -25,6 +26,8 @@ export const TopAppBar = ({
   addButtonLabel,
   searchPlaceholder = 'Search objectives...',
 }: TopAppBarProps) => {
+  const matchRoute = useMatchRoute();
+
   return (
     <Box
       component="header"
@@ -49,19 +52,6 @@ export const TopAppBar = ({
       >
         {/* Left: Brand + Nav */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <Box
-            sx={{
-              width: 32,
-              height: 32,
-              display: 'grid',
-              placeItems: 'center',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, rgba(215, 186, 255, 0.25), rgba(117, 212, 232, 0.2))',
-              border: '1px solid rgba(215, 186, 255, 0.35)',
-            }}
-          >
-            <WaypointLogo size={20} />
-          </Box>
           <Typography
             sx={{
               fontSize: '1.5rem',
@@ -86,14 +76,22 @@ export const TopAppBar = ({
             }}
           >
             {navLinks.map((link) => (
-              <Box
-                key={link.label}
-                component="a"
-                href="#"
-                sx={{
+              (() => {
+                const isActive =
+                  link.active ??
+                  (link.to
+                    ? Boolean(
+                        matchRoute({
+                          to: link.to,
+                          fuzzy: false,
+                        }),
+                      )
+                    : false);
+
+                const linkStyles = {
                   textDecoration: 'none',
                   transition: 'color 0.2s',
-                  ...(link.active
+                  ...(isActive
                     ? {
                         color: '#d7baff',
                         borderBottom: '2px solid #bd93f9',
@@ -103,10 +101,22 @@ export const TopAppBar = ({
                         color: '#94a3b8',
                         '&:hover': { color: '#e1e1f1' },
                       }),
-                }}
-              >
-                {link.label}
-              </Box>
+                };
+
+                if (link.to) {
+                  return (
+                    <Box key={link.label} component={Link} to={link.to} sx={linkStyles}>
+                      {link.label}
+                    </Box>
+                  );
+                }
+
+                return (
+                  <Box key={link.label} component="span" sx={linkStyles}>
+                    {link.label}
+                  </Box>
+                );
+              })()
             ))}
           </Box>
         </Box>
