@@ -7,17 +7,6 @@ const getEnv = (key: string, defaultValue?: string): string => {
   return value;
 };
 
-const getEnvBoolean = (key: string, defaultValue: boolean): boolean => {
-  const value = process.env[key];
-  if (value === undefined) return defaultValue;
-
-  const normalized = value.trim().toLowerCase();
-  if (['1', 'true', 'yes', 'on'].includes(normalized)) return true;
-  if (['0', 'false', 'no', 'off'].includes(normalized)) return false;
-
-  throw new Error(`Invalid boolean environment variable: ${key}=${value}`);
-};
-
 const nodeEnv = getEnv('NODE_ENV', 'development');
 const isProduction = nodeEnv === 'production';
 const postgresUser = getEnv('POSTGRES_USER', 'waypoint_user');
@@ -51,8 +40,6 @@ export const config = {
   resendApiKey: getEnv('RESEND_API_KEY', ''),
   nodeEnv,
   port: parseInt(getEnv('PORT', '3001'), 10),
-  seedOnStartup: getEnvBoolean('SEED_ON_STARTUP', !isProduction),
-  cleanDbOnShutdown: getEnvBoolean('CLEAN_DB_ON_SHUTDOWN', !isProduction),
   reminderCheckIntervalMinutes: parseInt(getEnv('REMINDER_CHECK_INTERVAL_MINUTES', '1'), 10),
   reminderEmailRecipient: getEnv('REMINDER_EMAIL_RECIPIENT'),
 };

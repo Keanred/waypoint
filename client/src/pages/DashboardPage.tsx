@@ -210,7 +210,7 @@ export const DashboardPage = () => {
                       description={task.description ?? ''}
                       priorityLabel={task.priority}
                       priorityColor={COLORS.error}
-                      dueLabel={`Due ${new Date(task.dueDate).toLocaleString()}`}
+                      dueLabel={`Overdue ${new Date(task.dueDate).toLocaleString()}`}
                       dueIcon={<EventBusyRoundedIcon sx={{ fontSize: 14 }} />}
                       reminderCount={reminders.filter((r) => r.taskId === task.id).length}
                       reminderIcon={<NotificationsActiveRoundedIcon sx={{ fontSize: 14 }} />}

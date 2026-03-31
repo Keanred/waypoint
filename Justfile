@@ -50,11 +50,11 @@ db-logs:
 db-wait: db-up
     @set -a; source .env; set +a; \
         for i in {1..30}; do \
-            if docker compose --env-file .env exec -T postgres pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" >/dev/null 2>&1; then \
+            if docker compose --env-file .env exec -T postgres pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null 2>&1; then \
                 echo "Postgres is healthy"; \
                 break; \
             fi; \
-            if [ "$$i" -eq 30 ]; then \
+            if [ "$i" -eq 30 ]; then \
                 echo "Postgres did not become healthy in time"; \
                 docker compose --env-file .env logs --tail=50 postgres; \
                 exit 1; \
@@ -74,11 +74,16 @@ db-push: db-wait
 
 dev: db-wait
     set -a; source .env; set +a; \
-        server_port="$${PORT:-3001}"; \
+        server_port="${PORT:-3001}"; \
         bash scripts/startup-banner.sh; \
+        cat server/src/db/seed.sql | docker compose --env-file .env exec -T postgres psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; \
+        cleanup_seeded_entries() { \
+            cat server/src/db/cleanup-seed.sql | docker compose --env-file .env exec -T postgres psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null; \
+            echo "Seeded task cleanup complete."; \
+        }; \
         npm run dev --workspace=server & \
-        server_pid=$$!; \
-        trap 'kill "$$server_pid" >/dev/null 2>&1 || true' EXIT INT TERM; \
+        server_pid=$!; \
+        trap 'cleanup_seeded_entries; kill "$server_pid" >/dev/null 2>&1 || true' EXIT INT TERM; \
         npm run dev --workspace=client
 
 typecheck:
