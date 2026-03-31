@@ -12,6 +12,7 @@ import NativeSelect from '@mui/material/NativeSelect';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
+import { CreateTaskInput } from '@waypoint/schemas';
 import { IconLabel } from '../components/IconLabel';
 import { ModalHeader } from '../components/ModalHeader';
 import { ModalOverlay } from '../components/ModalOverlay';
@@ -46,15 +47,7 @@ const selectSx = {
 type CreateTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: {
-    title: string;
-    description: string;
-    priority: string;
-    dueDate: string;
-    dueTime: string;
-    recurrence: string;
-    recurrenceEnd: string;
-  }) => void;
+  onSubmit?: (data: CreateTaskInput) => Promise<void>;
 };
 
 export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalProps) => {
@@ -63,13 +56,20 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
   const [priority, setPriority] = useState('high');
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
-  const [recurrence, setRecurrence] = useState('none');
+  const [recurrence, setRecurrence] = useState('NONE');
   const [recurrenceEnd, setRecurrenceEnd] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (onSubmit) {
-      onSubmit({ title, description, priority, dueDate, dueTime, recurrence, recurrenceEnd });
+      await onSubmit({
+        title,
+        description,
+        priority: priority as 'low' | 'medium' | 'high',
+        dueDate: new Date(`${dueDate}T${dueTime}`),
+        recurrence: recurrence as 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY',
+        recurringEndDate: recurrenceEnd ? new Date(recurrenceEnd) : undefined,
+      });
     }
     onClose();
   };
@@ -166,10 +166,10 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
               <IconLabel icon={<RepeatRoundedIcon sx={{ fontSize: 'inherit' }} />} label="Recurrence Pattern" />
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
                 <NativeSelect value={recurrence} sx={selectSx} onChange={(e) => setRecurrence(e.target.value)}>
-                  <option value="none">None</option>
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
+                  <option value="NONE">None</option>
+                  <option value="DAILY">Daily</option>
+                  <option value="WEEKLY">Weekly</option>
+                  <option value="MONTHLY">Monthly</option>
                 </NativeSelect>
                 <InputBase
                   type="date"

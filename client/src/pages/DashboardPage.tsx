@@ -18,7 +18,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReminderResponse, TaskResponse } from '@waypoint/schemas';
 
-import { deleteTask, getTasks } from '../api';
+import { createTask, deleteTask, getTasks } from '../api';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { SideNavBar } from '../components/SideNavBar';
@@ -28,6 +28,7 @@ import { TaskGroup } from '../components/TaskGroup';
 import { TopAppBar } from '../components/TopAppBar';
 import { colors } from '../theme';
 
+import { CreateTaskInput } from '@waypoint/schemas';
 import { isPast, isThisWeek, isToday } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { CreateTaskModal } from './CreateTaskModal';
@@ -114,8 +115,13 @@ export const DashboardPage = () => {
     }
   };
 
-  const createTask = (newTask: TaskResponse) => {
-    setTasks((prev) => [...prev, newTask]);
+  const createNewTask = async (newTask: CreateTaskInput) => {
+    try {
+      const task = await createTask(newTask);
+      setTasks((prev) => [...prev, task]);
+    } catch {
+      setError('Failed to create task. Please try again later.');
+    }
   };
 
   return (
@@ -191,18 +197,19 @@ export const DashboardPage = () => {
               >
                 Current Flow
               </Typography>
-              <Typography sx={{ color: colors.onSurfaceVariant, fontSize: '1.125rem', maxWidth: 512 }}>{statusMessage}</Typography>
+              <Typography sx={{ color: colors.onSurfaceVariant, fontSize: '1.125rem', maxWidth: 512 }}>
+                {statusMessage}
+              </Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <StatCard value={String(tasks.length)} label="Active Tasks" valueColor={COLORS.primary} />
               <StatCard value={String(reminders.length)} label="Alerts" valueColor={COLORS.tertiary} />
             </Box>
           </Box>
-
           <CreateTaskModal
             isOpen={isCreateTaskModalOpen}
             onClose={() => setIsCreateTaskModalOpen(false)}
-            onSubmit={createTask}
+            onSubmit={createNewTask}
           />
           {/* Task Groups */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
