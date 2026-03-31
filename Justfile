@@ -77,13 +77,19 @@ dev: db-wait
         server_port="${PORT:-3001}"; \
         bash scripts/startup-banner.sh; \
         cat server/src/db/seed.sql | docker compose --env-file .env exec -T postgres psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; \
+        cleanup_done=0; \
         cleanup_seeded_entries() { \
+            if [ "$cleanup_done" -eq 1 ]; then \
+                return; \
+            fi; \
+            cleanup_done=1; \
             cat server/src/db/cleanup-seed.sql | docker compose --env-file .env exec -T postgres psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null; \
             echo "Seeded task cleanup complete."; \
         }; \
         npm run dev --workspace=server & \
         server_pid=$!; \
-        trap 'cleanup_seeded_entries; kill "$server_pid" >/dev/null 2>&1 || true' EXIT INT TERM; \
+        trap 'cleanup_seeded_entries; kill "$server_pid" >/dev/null 2>&1 || true' EXIT; \
+        trap 'cleanup_seeded_entries; kill "$server_pid" >/dev/null 2>&1 || true; exit 0' INT TERM; \
         npm run dev --workspace=client
 
 typecheck:
