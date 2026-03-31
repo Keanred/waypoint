@@ -1,22 +1,25 @@
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { Link, useMatchRoute } from '@tanstack/react-router';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Typography from '@mui/material/Typography';
+import { Link, useMatchRoute } from '@tanstack/react-router';
+
+import { colors } from '../theme';
 
 interface NavLink {
   label: string;
   active?: boolean;
-  to?: '/' | '/settings';
+  to?: '/' | '/focus' | '/settings';
 }
 
 interface TopAppBarProps {
   brandName: string;
   navLinks: NavLink[];
   addButtonLabel: string;
+  onAddClick?: () => void;
   searchPlaceholder?: string;
 }
 
@@ -24,6 +27,7 @@ export const TopAppBar = ({
   brandName,
   navLinks,
   addButtonLabel,
+  onAddClick,
   searchPlaceholder = 'Search objectives...',
 }: TopAppBarProps) => {
   const matchRoute = useMatchRoute();
@@ -36,7 +40,7 @@ export const TopAppBar = ({
         top: 0,
         width: { xs: '100%', lg: 'calc(100% - 16rem)' },
         zIndex: 50,
-        background: 'linear-gradient(to bottom, #191b26, transparent)',
+        background: `linear-gradient(to bottom, ${colors.surfaceContainerLow}, transparent)`,
       }}
     >
       <Box
@@ -56,7 +60,7 @@ export const TopAppBar = ({
             sx={{
               fontSize: '1.5rem',
               fontWeight: 900,
-              color: '#d7baff',
+              color: colors.primary,
               fontStyle: 'italic',
               fontFamily: 'Manrope',
               letterSpacing: '-0.025em',
@@ -75,7 +79,7 @@ export const TopAppBar = ({
               fontSize: '0.875rem',
             }}
           >
-            {navLinks.map((link) => (
+            {navLinks.map((link) =>
               (() => {
                 const isActive =
                   link.active ??
@@ -93,13 +97,13 @@ export const TopAppBar = ({
                   transition: 'color 0.2s',
                   ...(isActive
                     ? {
-                        color: '#d7baff',
-                        borderBottom: '2px solid #bd93f9',
+                        color: colors.primary,
+                        borderBottom: `2px solid ${colors.primaryContainer}`,
                         pb: 0.5,
                       }
                     : {
                         color: '#94a3b8',
-                        '&:hover': { color: '#e1e1f1' },
+                        '&:hover': { color: colors.onSurface },
                       }),
                 };
 
@@ -116,8 +120,8 @@ export const TopAppBar = ({
                     {link.label}
                   </Box>
                 );
-              })()
-            ))}
+              })(),
+            )}
           </Box>
         </Box>
 
@@ -136,24 +140,24 @@ export const TopAppBar = ({
               transition: 'all 0.2s',
             }}
           >
-            <SearchRoundedIcon sx={{ color: '#968e9c', fontSize: '1.25rem', mr: 1 }} />
+            <SearchRoundedIcon sx={{ color: colors.onSurfaceVariant, fontSize: '1.25rem', mr: 1 }} />
             <InputBase
               placeholder={searchPlaceholder}
               sx={{
-                color: '#e1e1f1',
-                fontSize: '0.875rem',
+                color: colors.onSurface,
                 width: 192,
                 '& input': { p: 0 },
               }}
             />
           </Box>
-          <IconButton sx={{ '&:hover': { bgcolor: '#272935' }, borderRadius: '8px' }}>
-            <NotificationsRoundedIcon sx={{ color: '#e1e1f1' }} />
+          <IconButton sx={{ '&:hover': { bgcolor: colors.surfaceContainerHigh }, borderRadius: '8px' }}>
+            <NotificationsRoundedIcon sx={{ color: colors.onSurface }} />
           </IconButton>
           <Button
+            onClick={onAddClick}
             sx={{
-              bgcolor: '#bd93f9',
-              color: '#11131e',
+              bgcolor: colors.primaryContainer,
+              color: colors.surface,
               px: 2,
               py: 1,
               borderRadius: '8px',
@@ -161,7 +165,7 @@ export const TopAppBar = ({
               fontFamily: 'Manrope',
               fontSize: '0.875rem',
               textTransform: 'none',
-              '&:hover': { opacity: 0.9, bgcolor: '#bd93f9' },
+              '&:hover': { opacity: 0.9, bgcolor: colors.primaryContainer },
               '&:active': { transform: 'scale(0.95)' },
             }}
           >

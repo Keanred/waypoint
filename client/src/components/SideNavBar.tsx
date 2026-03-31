@@ -3,6 +3,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
+import { colors } from '../theme';
+
 export interface NavItem {
   label: string;
   icon: ReactNode;
@@ -25,7 +27,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
       sx={{
         height: '100vh',
         width: 256,
-        bgcolor: '#191b26',
+        bgcolor: colors.surfaceContainerLow,
         display: { xs: 'none', lg: 'flex' },
         flexDirection: 'column',
         py: 4,
@@ -42,7 +44,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
             width: 32,
             height: 32,
             borderRadius: '50%',
-            background: 'linear-gradient(to top right, #d7baff, #bd93f9)',
+            background: `linear-gradient(to top right, ${colors.primary}, ${colors.primaryContainer})`,
           }}
         />
         <Box>
@@ -50,7 +52,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
             sx={{
               fontSize: '1.125rem',
               fontWeight: 700,
-              color: '#bd93f9',
+              color: colors.primaryContainer,
               fontFamily: 'Manrope',
             }}
           >
@@ -59,7 +61,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
           <Typography
             sx={{
               fontSize: '10px',
-              color: '#968e9c',
+              color: colors.onSurfaceVariant,
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
               fontWeight: 500,
@@ -98,15 +100,15 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
               '&:active': { transform: 'translateX(4px)' },
               ...(item.active
                 ? {
-                    bgcolor: '#272935',
-                    color: '#d7baff',
+                    bgcolor: colors.surfaceContainerHigh,
+                    color: colors.primary,
                     borderTopRightRadius: 9999,
                     borderBottomRightRadius: 9999,
-                    borderLeft: '4px solid #bd93f9',
+                    borderLeft: `4px solid ${colors.primaryContainer}`,
                   }
                 : {
-                    color: '#6272a4',
-                    '&:hover': { color: '#f8f8f2', bgcolor: '#1d1f2b' },
+                    color: colors.navInactive,
+                    '&:hover': { color: colors.navHoverText, bgcolor: colors.surfaceContainer },
                   }),
             }}
           >
@@ -136,8 +138,8 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
             fullWidth
             sx={{
               mb: 2,
-              background: 'linear-gradient(to right, #d7baff, #bd93f9)',
-              color: '#411478',
+              background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
+              color: colors.onPrimary,
               py: 1.5,
               borderRadius: '12px',
               fontWeight: 700,
@@ -145,7 +147,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
               textTransform: 'none',
               '&:hover': {
                 opacity: 0.9,
-                background: 'linear-gradient(to right, #d7baff, #bd93f9)',
+                background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
               },
               '&:active': { transform: 'scale(0.95)' },
             }}
@@ -165,9 +167,9 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
               alignItems: 'center',
               gap: 2,
               py: 1,
-              color: '#6272a4',
+              color: colors.navInactive,
               textDecoration: 'none',
-              '&:hover': { color: '#f8f8f2', bgcolor: '#1d1f2b' },
+              '&:hover': { color: colors.navHoverText, bgcolor: colors.surfaceContainer },
               transition: 'all 0.2s',
             }}
           >

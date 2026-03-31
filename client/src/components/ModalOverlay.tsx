@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box';
 import type { ReactNode } from 'react';
 
+import { colors } from '../theme';
+
 interface ModalOverlayProps {
   children: ReactNode;
   maxWidth?: number;
@@ -18,7 +20,7 @@ export const ModalOverlay = ({ children, maxWidth = 672 }: ModalOverlayProps) =>
             left: 40,
             width: 256,
             height: 256,
-            bgcolor: '#d7baff',
+            bgcolor: colors.primary,
             borderRadius: '50%',
             filter: 'blur(100px)',
           }}

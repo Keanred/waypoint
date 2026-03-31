@@ -26,14 +26,16 @@ import { StatCard } from '../components/StatCard';
 import { TaskCard } from '../components/TaskCard';
 import { TaskGroup } from '../components/TaskGroup';
 import { TopAppBar } from '../components/TopAppBar';
+import { colors } from '../theme';
 
 import { isPast, isThisWeek, isToday } from 'date-fns';
 import { useEffect, useState } from 'react';
+import { CreateTaskModal } from './CreateTaskModal';
 
 const COLORS = {
-  error: '#ffb4ab',
-  primary: '#d7baff',
-  tertiary: '#75d4e8',
+  error: colors.error,
+  primary: colors.primary,
+  tertiary: colors.tertiary,
 } as const;
 
 // Sort by ASCENDING order
@@ -65,6 +67,7 @@ const groupTasksByUrgency = (tasks: TaskResponse[]) => {
 export const DashboardPage = () => {
   const [tasks, setTasks] = useState<TaskResponse[]>([]);
   const [reminders, setReminders] = useState<ReminderResponse[]>([]);
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [completingTaskIds, setCompletingTaskIds] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
@@ -111,13 +114,17 @@ export const DashboardPage = () => {
     }
   };
 
+  const createTask = (newTask: TaskResponse) => {
+    setTasks((prev) => [...prev, newTask]);
+  };
+
   return (
     <Box
       sx={{
         display: 'flex',
         minHeight: '100vh',
-        bgcolor: '#11131e',
-        color: '#e1e1f1',
+        bgcolor: colors.surface,
+        color: colors.onSurface,
         fontFamily: 'Inter, sans-serif',
       }}
     >
@@ -145,6 +152,7 @@ export const DashboardPage = () => {
           brandName="Waypoint"
           navLinks={[{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }]}
           addButtonLabel="Add Task"
+          onAddClick={() => setIsCreateTaskModalOpen(true)}
         />
 
         {/* Main Content */}
@@ -177,14 +185,13 @@ export const DashboardPage = () => {
                   fontSize: { xs: '2.25rem', md: '3rem' },
                   fontWeight: 800,
                   fontFamily: 'Manrope',
-                  color: '#e1e1f1',
-                  mb: 1,
+                  color: colors.onSurface,
                   letterSpacing: '-0.025em',
                 }}
               >
                 Current Flow
               </Typography>
-              <Typography sx={{ color: '#968e9c', fontSize: '1.125rem', maxWidth: 512 }}>{statusMessage}</Typography>
+              <Typography sx={{ color: colors.onSurfaceVariant, fontSize: '1.125rem', maxWidth: 512 }}>{statusMessage}</Typography>
             </Box>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <StatCard value={String(tasks.length)} label="Active Tasks" valueColor={COLORS.primary} />
@@ -192,12 +199,17 @@ export const DashboardPage = () => {
             </Box>
           </Box>
 
+          <CreateTaskModal
+            isOpen={isCreateTaskModalOpen}
+            onClose={() => setIsCreateTaskModalOpen(false)}
+            onSubmit={createTask}
+          />
           {/* Task Groups */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {/* Immediate Priority */}
             <TaskGroup label="Immediate Priority" color={COLORS.error}>
               {overdue.length === 0 && dueToday.length === 0 ? (
-                <Typography sx={{ color: '#968e9c', fontStyle: 'italic', px: 2, py: 4 }}>
+                <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
                   No urgent tasks at the moment. Great work staying on top of things!
                 </Typography>
               ) : (
@@ -243,7 +255,7 @@ export const DashboardPage = () => {
             {/* Upcoming Week */}
             <TaskGroup label="Upcoming Week" color={COLORS.primary}>
               {dueThisWeek.length === 0 ? (
-                <Typography sx={{ color: '#968e9c', fontStyle: 'italic', px: 2, py: 4 }}>
+                <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
                   No tasks due this week. Keep up the great work planning ahead!
                 </Typography>
               ) : (
@@ -272,7 +284,7 @@ export const DashboardPage = () => {
             {/* Horizon */}
             <TaskGroup label="Horizon" color={COLORS.tertiary}>
               {later.length === 0 ? (
-                <Typography sx={{ color: '#968e9c', fontStyle: 'italic', px: 2, py: 4 }}>
+                <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
                   No tasks on the horizon. Time to relax or start planning new projects!
                 </Typography>
               ) : (
@@ -312,7 +324,7 @@ export const DashboardPage = () => {
       />
 
       {/* Mobile FAB */}
-      <FloatingActionButton />
+      <FloatingActionButton onClick={() => setIsCreateTaskModalOpen(true)} />
     </Box>
   );
 };

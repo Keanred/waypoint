@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
+import { colors } from '../theme';
+
 export interface BottomNavItem {
   label: string;
   icon: ReactNode;
@@ -51,18 +53,18 @@ export const BottomNavBar = ({ items }: BottomNavBarProps) => {
             '&:active': { transform: 'scale(0.9)' },
             ...(item.active
               ? {
-                  bgcolor: '#bd93f9',
-                  color: '#11131e',
+                  bgcolor: colors.primaryContainer,
+                  color: colors.surface,
                   borderRadius: '16px',
                   px: 3,
                   py: 1,
-                  boxShadow: '0 0 15px rgba(189, 147, 249, 0.4)',
+                  boxShadow: `0 0 15px ${colors.primaryContainer}66`,
                 }
               : {
-                  color: '#6272a4',
+                  color: colors.navInactive,
                   px: 2,
                   py: 1,
-                  '&:hover': { color: '#f8f8f2' },
+                  '&:hover': { color: colors.navHoverText },
                 }),
           }}
         >

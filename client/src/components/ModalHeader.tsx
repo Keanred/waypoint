@@ -3,12 +3,15 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface ModalHeaderProps {
   title: string;
   subtitle?: string;
+  onClose?: () => void;
 }
 
-export const ModalHeader = ({ title, subtitle }: ModalHeaderProps) => {
+export const ModalHeader = ({ title, subtitle, onClose }: ModalHeaderProps) => {
   return (
     <Box sx={{ px: 4, pt: 4, pb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box>
@@ -28,7 +31,7 @@ export const ModalHeader = ({ title, subtitle }: ModalHeaderProps) => {
         {subtitle && (
           <Typography
             sx={{
-              color: '#b5c5fc',
+              color: colors.secondary,
               fontWeight: 500,
               letterSpacing: '0.05em',
               fontSize: '10px',
@@ -40,9 +43,10 @@ export const ModalHeader = ({ title, subtitle }: ModalHeaderProps) => {
         )}
       </Box>
       <IconButton
+        onClick={onClose}
         sx={{
-          color: '#4a4451',
-          '&:hover': { color: '#e1e1f1', bgcolor: '#272935' },
+          color: colors.outlineVariant,
+          '&:hover': { color: colors.onSurface, bgcolor: colors.surfaceContainerHigh },
           transition: 'color 0.2s',
         }}
       >

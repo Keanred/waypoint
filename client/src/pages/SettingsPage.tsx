@@ -22,6 +22,7 @@ import { SettingsSection } from '../components/SettingsSection';
 import { SideNavBar } from '../components/SideNavBar';
 import { ToggleRow } from '../components/ToggleRow';
 import { TopAppBar } from '../components/TopAppBar';
+import { colors } from '../theme';
 
 export const SettingsPage = () => {
   return (
@@ -29,8 +30,8 @@ export const SettingsPage = () => {
       sx={{
         display: 'flex',
         minHeight: '100vh',
-        bgcolor: '#11131e',
-        color: '#e1e1f1',
+        bgcolor: colors.surface,
+        color: colors.onSurface,
         fontFamily: 'Inter, sans-serif',
       }}
     >
@@ -78,13 +79,12 @@ export const SettingsPage = () => {
                   fontWeight: 800,
                   fontFamily: 'Manrope',
                   letterSpacing: '-0.05em',
-                  color: '#e1e1f1',
-                  mb: 1,
+                  color: colors.onSurface,
                 }}
               >
                 Settings
               </Typography>
-              <Typography sx={{ color: '#968e9c', fontWeight: 500 }}>
+              <Typography sx={{ color: colors.onSurfaceVariant, fontWeight: 500 }}>
                 Manage your nocturnal workspace and synchronization preferences.
               </Typography>
             </Box>
@@ -93,7 +93,7 @@ export const SettingsPage = () => {
               {/* Profile Section */}
               <SettingsSection
                 icon={<PersonRoundedIcon sx={{ fontSize: 'inherit' }} />}
-                iconColor="#d7baff"
+                iconColor={colors.primary}
                 title="Profile"
               >
                 <Box
@@ -111,7 +111,7 @@ export const SettingsPage = () => {
               {/* Notification Preferences */}
               <SettingsSection
                 icon={<NotificationsActiveRoundedIcon sx={{ fontSize: 'inherit' }} />}
-                iconColor="#75d4e8"
+                iconColor={colors.tertiary}
                 title="Notification Preferences"
               >
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -131,21 +131,21 @@ export const SettingsPage = () => {
                   >
                     <Box>
                       <Typography sx={{ fontWeight: 700, fontSize: '1.125rem' }}>Test Email</Typography>
-                      <Typography sx={{ fontSize: '0.875rem', color: '#968e9c' }}>
+                      <Typography sx={{ fontSize: '0.875rem', color: colors.onSurfaceVariant }}>
                         Send a sample reminder to your profile email.
                       </Typography>
                     </Box>
                     <Button
                       sx={{
-                        bgcolor: '#374776',
-                        color: '#a7b7ed',
+                        bgcolor: colors.secondaryContainer,
+                        color: colors.onSecondaryContainer,
                         px: 3,
                         py: 1,
                         borderRadius: 9999,
                         fontWeight: 700,
                         fontSize: '0.875rem',
                         textTransform: 'none',
-                        '&:hover': { filter: 'brightness(1.1)', bgcolor: '#374776' },
+                        '&:hover': { filter: 'brightness(1.1)', bgcolor: colors.secondaryContainer },
                         '&:active': { transform: 'scale(0.95)' },
                       }}
                     >
@@ -158,7 +158,7 @@ export const SettingsPage = () => {
               {/* System Section */}
               <SettingsSection
                 icon={<SettingsEthernetRoundedIcon sx={{ fontSize: 'inherit' }} />}
-                iconColor="#ffb4ab"
+                iconColor={colors.error}
                 title="System"
               >
                 <SelectField
@@ -191,17 +191,17 @@ export const SettingsPage = () => {
                     py: 1.5,
                     borderRadius: '12px',
                     fontWeight: 700,
-                    color: '#968e9c',
+                    color: colors.onSurfaceVariant,
                     textTransform: 'none',
-                    '&:hover': { color: '#e1e1f1' },
+                    '&:hover': { color: colors.onSurface },
                   }}
                 >
                   Discard Changes
                 </Button>
                 <Button
                   sx={{
-                    background: 'linear-gradient(to right, #d7baff, #bd93f9)',
-                    color: '#411478',
+                    background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
+                    color: colors.onPrimary,
                     px: 5,
                     py: 1.5,
                     borderRadius: '12px',
@@ -210,7 +210,7 @@ export const SettingsPage = () => {
                     boxShadow: '0 0 20px rgba(189, 147, 249, 0.3)',
                     '&:hover': {
                       boxShadow: '0 0 20px rgba(189, 147, 249, 0.4)',
-                      background: 'linear-gradient(to right, #d7baff, #bd93f9)',
+                      background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
                     },
                     '&:active': { transform: 'scale(0.95)' },
                   }}

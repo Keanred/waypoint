@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface ToggleRowProps {
   title: string;
   description: string;
@@ -13,7 +15,7 @@ export const ToggleRow = ({ title, description, defaultChecked = false }: Toggle
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box>
         <Typography sx={{ fontWeight: 700, fontSize: '1.125rem' }}>{title}</Typography>
-        <Typography sx={{ fontSize: '0.875rem', color: '#968e9c' }}>{description}</Typography>
+        <Typography sx={{ fontSize: '0.875rem', color: colors.onSurfaceVariant }}>{description}</Typography>
       </Box>
       <Switch
         defaultChecked={defaultChecked}
@@ -26,7 +28,7 @@ export const ToggleRow = ({ title, description, defaultChecked = false }: Toggle
             '&.Mui-checked': {
               transform: 'translateX(24px)',
               '& + .MuiSwitch-track': {
-                bgcolor: '#d7baff',
+                bgcolor: colors.primary,
                 opacity: 1,
               },
             },
@@ -38,7 +40,7 @@ export const ToggleRow = ({ title, description, defaultChecked = false }: Toggle
           },
           '& .MuiSwitch-track': {
             borderRadius: 9999,
-            bgcolor: '#323440',
+            bgcolor: colors.surfaceContainerHighest,
             opacity: 1,
           },
         }}

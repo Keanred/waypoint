@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
+import { colors } from '../theme';
+
 interface SettingsSectionProps {
   icon: ReactNode;
   iconColor: string;
@@ -18,7 +20,7 @@ export const SettingsSection = ({ icon, iconColor, title, children }: SettingsSe
       </Box>
       <Box
         sx={{
-          bgcolor: '#191b26',
+          bgcolor: colors.surfaceContainerLow,
           borderRadius: '16px',
           p: 4,
         }}

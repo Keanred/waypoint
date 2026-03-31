@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface SoundPickerProps {
   label: string;
   value: string;
@@ -19,8 +21,8 @@ export const SoundPicker = ({ label, value }: SoundPickerProps) => {
           px: 1.5,
           py: 0.75,
           borderRadius: 9999,
-          bgcolor: '#272935',
-          color: '#e1e1f1',
+          bgcolor: colors.surfaceContainerHigh,
+          color: colors.onSurface,
           fontSize: '0.75rem',
           fontWeight: 500,
           textTransform: 'none',

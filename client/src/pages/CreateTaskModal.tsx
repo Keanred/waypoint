@@ -10,19 +10,20 @@ import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
 import NativeSelect from '@mui/material/NativeSelect';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 import { IconLabel } from '../components/IconLabel';
 import { ModalHeader } from '../components/ModalHeader';
 import { ModalOverlay } from '../components/ModalOverlay';
 import { ReminderChip } from '../components/ReminderChip';
+import { colors } from '../theme';
 
 const fieldSx = {
   bgcolor: 'rgba(50, 52, 64, 0.3)',
   border: '1px solid rgba(74, 68, 81, 0.1)',
   borderRadius: '12px',
   p: 1.5,
-  color: '#e1e1f1',
-  fontSize: '0.875rem',
+  color: colors.onSurface,
   '&:focus-within': {
     boxShadow: '0 0 0 2px rgba(215, 186, 255, 0.2)',
     borderColor: 'rgba(215, 186, 255, 0.3)',
@@ -42,19 +43,55 @@ const selectSx = {
   },
 } as const;
 
-export const CreateTaskModal = () => {
+type CreateTaskModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (data: {
+    title: string;
+    description: string;
+    priority: string;
+    dueDate: string;
+    dueTime: string;
+    recurrence: string;
+    recurrenceEnd: string;
+  }) => void;
+};
+
+export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalProps) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState('high');
+  const [dueDate, setDueDate] = useState('');
+  const [dueTime, setDueTime] = useState('');
+  const [recurrence, setRecurrence] = useState('none');
+  const [recurrenceEnd, setRecurrenceEnd] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onSubmit) {
+      onSubmit({ title, description, priority, dueDate, dueTime, recurrence, recurrenceEnd });
+    }
+    onClose();
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <ModalOverlay>
-      <ModalHeader title="Create New Task" subtitle="Nocturne Protocol v2.4" />
-
-      <Box component="form" sx={{ p: { xs: 4, md: 5 }, display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <ModalHeader title="Create New Task" subtitle="Waypoint Protocol v2.4" onClose={onClose} />
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{ p: { xs: 4, md: 5 }, display: 'flex', flexDirection: 'column', gap: 4 }}
+      >
         {/* Title Field */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
           <Typography
             component="label"
             sx={{
-              color: '#d7baff',
-              fontFamily: 'Manrope',
+              color: colors.primary,
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
@@ -65,13 +102,14 @@ export const CreateTaskModal = () => {
           </Typography>
           <InputBase
             autoFocus
+            value={title}
             placeholder="Task Title..."
+            onChange={(e) => setTitle(e.target.value)}
             sx={{
               fontSize: { xs: '1.875rem', md: '2.25rem' },
               fontFamily: 'Manrope',
               fontWeight: 900,
-              color: '#e1e1f1',
-              '& input::placeholder': { color: 'rgba(74, 68, 81, 0.3)' },
+              color: colors.onSurface,
             }}
           />
         </Box>
@@ -90,7 +128,9 @@ export const CreateTaskModal = () => {
             <InputBase
               multiline
               rows={4}
+              value={description}
               placeholder="Describe the objective..."
+              onChange={(e) => setDescription(e.target.value)}
               sx={{
                 ...fieldSx,
                 alignItems: 'flex-start',
@@ -105,11 +145,10 @@ export const CreateTaskModal = () => {
             {/* Priority */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <IconLabel icon={<PriorityHighRoundedIcon sx={{ fontSize: 'inherit' }} />} label="Priority Level" />
-              <NativeSelect defaultValue="high" sx={selectSx}>
+              <NativeSelect value={priority} sx={selectSx} onChange={(e) => setPriority(e.target.value)}>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
-                <option value="urgent">Urgent</option>
               </NativeSelect>
             </Box>
 
@@ -117,8 +156,8 @@ export const CreateTaskModal = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <IconLabel icon={<EventRoundedIcon sx={{ fontSize: 'inherit' }} />} label="Target Timeline" />
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
-                <InputBase type="date" sx={fieldSx} />
-                <InputBase type="time" sx={fieldSx} />
+                <InputBase type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} sx={fieldSx} />
+                <InputBase type="time" value={dueTime} onChange={(e) => setDueTime(e.target.value)} sx={fieldSx} />
               </Box>
             </Box>
 
@@ -126,13 +165,19 @@ export const CreateTaskModal = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <IconLabel icon={<RepeatRoundedIcon sx={{ fontSize: 'inherit' }} />} label="Recurrence Pattern" />
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
-                <NativeSelect defaultValue="none" sx={selectSx}>
+                <NativeSelect value={recurrence} sx={selectSx} onChange={(e) => setRecurrence(e.target.value)}>
                   <option value="none">None</option>
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
                   <option value="monthly">Monthly</option>
                 </NativeSelect>
-                <InputBase type="date" placeholder="End Date" sx={fieldSx} />
+                <InputBase
+                  type="date"
+                  placeholder="End Date"
+                  value={recurrenceEnd}
+                  onChange={(e) => setRecurrenceEnd(e.target.value)}
+                  sx={fieldSx}
+                />
               </Box>
             </Box>
           </Box>
@@ -151,12 +196,12 @@ export const CreateTaskModal = () => {
                 gap: 1,
               }}
             >
-              <NotificationsActiveRoundedIcon sx={{ color: '#75d4e8' }} />
+              <NotificationsActiveRoundedIcon sx={{ color: colors.tertiary }} />
               Reminders
             </Typography>
             <Button
               sx={{
-                color: '#75d4e8',
+                color: colors.tertiary,
                 fontSize: '10px',
                 fontWeight: 700,
                 textTransform: 'uppercase',
@@ -185,9 +230,8 @@ export const CreateTaskModal = () => {
                 letterSpacing: '-0.05em',
                 '&:hover': {
                   borderColor: 'rgba(117, 212, 232, 0.4)',
-                  color: '#75d4e8',
+                  color: colors.tertiary,
                 },
-                transition: 'all 0.2s',
               }}
               startIcon={<AlarmAddRoundedIcon sx={{ fontSize: '1rem !important' }} />}
             >
@@ -209,8 +253,8 @@ export const CreateTaskModal = () => {
             type="submit"
             sx={{
               flex: 2,
-              background: 'linear-gradient(to right, #d7baff, #bd93f9)',
-              color: '#411478',
+              background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
+              color: colors.onPrimary,
               fontFamily: 'Manrope',
               fontWeight: 900,
               py: 2,
@@ -221,7 +265,7 @@ export const CreateTaskModal = () => {
               boxShadow: '0 0 20px rgba(189, 147, 249, 0.2)',
               '&:hover': {
                 boxShadow: '0 0 30px rgba(189, 147, 249, 0.4)',
-                background: 'linear-gradient(to right, #d7baff, #bd93f9)',
+                background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
               },
               '&:active': { transform: 'scale(0.98)' },
             }}
@@ -229,6 +273,7 @@ export const CreateTaskModal = () => {
             Initialize Task
           </Button>
           <Button
+            onClick={onClose}
             sx={{
               flex: 1,
               px: 4,

@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { DashboardPage } from './pages/DashboardPage';
+import { FocusStudioPage } from './pages/FocusStudioPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { waypointTheme } from './theme';
 
@@ -23,13 +24,19 @@ const dashboardRoute = createRoute({
   component: DashboardPage,
 });
 
+const focusRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'focus',
+  component: FocusStudioPage,
+});
+
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'settings',
   component: SettingsPage,
 });
 
-const routeTree = rootRoute.addChildren([dashboardRoute, settingsRoute]);
+const routeTree = rootRoute.addChildren([dashboardRoute, focusRoute, settingsRoute]);
 
 export const router = createRouter({
   routeTree,

@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface StatCardProps {
   value: string;
   label: string;
@@ -26,7 +28,7 @@ export const StatCard = ({ value, label, valueColor }: StatCardProps) => {
       <Typography
         sx={{
           fontSize: '10px',
-          color: '#968e9c',
+          color: colors.onSurfaceVariant,
           textTransform: 'uppercase',
           letterSpacing: '-0.05em',
         }}

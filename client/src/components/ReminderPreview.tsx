@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
+import { colors } from '../theme';
+
 interface ReminderPreviewProps {
   children: ReactNode;
 }
@@ -21,7 +23,7 @@ export const ReminderPreview = ({ children }: ReminderPreviewProps) => {
       }}
     >
       <Box sx={{ bgcolor: 'rgba(215, 186, 255, 0.1)', p: 1, borderRadius: '8px', display: 'flex' }}>
-        <AutoAwesomeRoundedIcon sx={{ color: '#d7baff' }} />
+        <AutoAwesomeRoundedIcon sx={{ color: colors.primary }} />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
         <Typography
@@ -30,12 +32,12 @@ export const ReminderPreview = ({ children }: ReminderPreviewProps) => {
             fontFamily: 'Inter',
             textTransform: 'uppercase',
             letterSpacing: '-0.05em',
-            color: '#968e9c',
+            color: colors.onSurfaceVariant,
           }}
         >
           Smart Preview
         </Typography>
-        <Typography sx={{ color: '#e1e1f1', fontWeight: 500, lineHeight: 1.4 }}>{children}</Typography>
+        <Typography sx={{ color: colors.onSurface, fontWeight: 500, lineHeight: 1.4 }}>{children}</Typography>
       </Box>
     </Box>
   );

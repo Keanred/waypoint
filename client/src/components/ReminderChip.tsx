@@ -3,13 +3,15 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface ReminderChipProps {
   label: string;
   value: string;
   accentColor?: string;
 }
 
-export const ReminderChip = ({ label, value, accentColor = '#75d4e8' }: ReminderChipProps) => {
+export const ReminderChip = ({ label, value, accentColor = colors.tertiary }: ReminderChipProps) => {
   return (
     <Box
       sx={{
@@ -40,9 +42,9 @@ export const ReminderChip = ({ label, value, accentColor = '#75d4e8' }: Reminder
       <IconButton
         size="small"
         sx={{
-          color: '#4a4451',
+          color: colors.outlineVariant,
           p: 0.25,
-          '&:hover': { color: '#ffb4ab' },
+          '&:hover': { color: colors.error },
           transition: 'color 0.2s',
         }}
       >

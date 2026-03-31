@@ -1,56 +1,70 @@
 import { createTheme } from '@mui/material/styles';
 
-export const dashboardColors = {
-  background: '#0b0e18',
-  surface: '#0b0e18',
-  surfaceLow: '#10131f',
-  surfaceContainer: '#161926',
-  surfaceContainerHigh: '#1c1f2e',
-  surfaceContainerHighest: '#222535',
-  surfaceContainerLowest: '#000000',
-  surfaceBright: '#282b3d',
-  outline: '#737483',
-  outlineVariant: '#454754',
-  textPrimary: '#ececfd',
-  textSecondary: '#a9aab9',
-  primary: '#c49aff',
-  primaryContainer: '#b68df2',
-  secondary: '#fd77c4',
-  tertiary: '#b8ffbb',
-  error: '#ff6e84',
-  errorDim: '#d73357',
-  successDim: '#42ef72',
+export const colors = {
+  // Primary
+  primary: '#d7baff',
+  primaryContainer: '#bd93f9',
+  onPrimary: '#411478',
+  onPrimaryContainer: '#4e2484',
+
+  // Secondary
+  secondary: '#b5c5fc',
+  secondaryContainer: '#374776',
+  onSecondaryContainer: '#a7b7ed',
+
+  // Tertiary
+  tertiary: '#75d4e8',
+
+  // Error
+  error: '#ffb4ab',
+  errorContainer: '#93000a',
+
+  // Surface
+  surface: '#11131e',
+  surfaceContainerLowest: '#0b0e18',
+  surfaceContainerLow: '#191b26',
+  surfaceContainer: '#1d1f2b',
+  surfaceContainerHigh: '#272935',
+  surfaceContainerHighest: '#323440',
+
+  // On Surface
+  onSurface: '#e1e1f1',
+  onSurfaceVariant: '#968e9c',
+
+  // Outline
+  outlineVariant: '#4a4451',
+
+  // Navigation
+  navInactive: '#6272a4',
+  navHoverText: '#f8f8f2',
 } as const;
 
 export const waypointTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: dashboardColors.primary,
-      dark: dashboardColors.primaryContainer,
-      contrastText: '#1a003b',
+      main: colors.primary,
+      dark: colors.primaryContainer,
+      contrastText: colors.onPrimary,
     },
     secondary: {
-      main: dashboardColors.secondary,
-      contrastText: '#520039',
+      main: colors.secondary,
+      dark: colors.secondaryContainer,
+      contrastText: colors.onSecondaryContainer,
     },
     error: {
-      main: dashboardColors.error,
-      dark: dashboardColors.errorDim,
-    },
-    success: {
-      main: dashboardColors.tertiary,
-      dark: dashboardColors.successDim,
+      main: colors.error,
+      dark: colors.errorContainer,
     },
     background: {
-      default: dashboardColors.background,
-      paper: dashboardColors.surfaceContainer,
+      default: colors.surface,
+      paper: colors.surfaceContainer,
     },
     text: {
-      primary: dashboardColors.textPrimary,
-      secondary: dashboardColors.textSecondary,
+      primary: colors.onSurface,
+      secondary: colors.onSurfaceVariant,
     },
-    divider: dashboardColors.outlineVariant,
+    divider: colors.outlineVariant,
   },
   shape: {
     borderRadius: 12,
@@ -85,8 +99,8 @@ export const waypointTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: dashboardColors.background,
-          color: dashboardColors.textPrimary,
+          backgroundColor: colors.surface,
+          color: colors.onSurface,
         },
       },
     },

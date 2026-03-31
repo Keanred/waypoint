@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
+import { colors } from '../theme';
+
 interface TaskCardProps {
   taskId: string;
   title: string;
@@ -37,8 +39,8 @@ export const TaskCard = ({
   return (
     <Box
       sx={{
-        bgcolor: '#191b26',
-        '&:hover': { bgcolor: '#1d1f2b' },
+        bgcolor: colors.surfaceContainerLow,
+        '&:hover': { bgcolor: colors.surfaceContainer },
         transition: 'all 0.3s',
         borderRadius: '16px',
         p: 3,
@@ -52,7 +54,7 @@ export const TaskCard = ({
     >
       <Box sx={{ flex: 1 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
-          <Typography sx={{ fontSize: '1.25rem', fontWeight: 700, color: '#e1e1f1' }}>{title}</Typography>
+          <Typography sx={{ fontSize: '1.25rem', fontWeight: 700, color: colors.onSurface }}>{title}</Typography>
           <Box
             sx={{
               bgcolor: `${priorityColor}1A`,
@@ -70,8 +72,7 @@ export const TaskCard = ({
         </Box>
         <Typography
           sx={{
-            color: '#968e9c',
-            fontSize: '0.875rem',
+            color: colors.onSurfaceVariant,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -101,8 +102,7 @@ export const TaskCard = ({
               display: 'flex',
               alignItems: 'center',
               gap: 0.75,
-              color: '#968e9c',
-              fontSize: '0.75rem',
+              color: colors.onSurfaceVariant,
             }}
           >
             {reminderIcon}
@@ -119,9 +119,9 @@ export const TaskCard = ({
           sx={{
             width: 40,
             height: 40,
-            bgcolor: '#323440',
+            bgcolor: colors.surfaceContainerHighest,
             color: '#ccc3d3',
-            '&:hover': { bgcolor: '#d7baff', color: '#411478' },
+            '&:hover': { bgcolor: colors.primary, color: colors.onPrimary },
             transition: 'all 0.2s',
           }}
         >
@@ -134,7 +134,7 @@ export const TaskCard = ({
             width: 48,
             height: 48,
             border: '2px solid rgba(74, 68, 81, 0.3)',
-            color: '#4a4451',
+            color: colors.outlineVariant,
             '&:hover': {
               borderColor: borderColor,
               bgcolor: `${borderColor}0D`,

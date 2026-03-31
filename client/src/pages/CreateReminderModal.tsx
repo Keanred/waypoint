@@ -9,13 +9,14 @@ import Typography from '@mui/material/Typography';
 import { ModalOverlay } from '../components/ModalOverlay';
 import { ReminderPreview } from '../components/ReminderPreview';
 import { SoundPicker } from '../components/SoundPicker';
+import { colors } from '../theme';
 
 const fieldSx = {
-  bgcolor: '#0b0e18',
+  bgcolor: colors.surfaceContainerLowest,
   borderRadius: '12px',
   px: 2,
   py: 1.5,
-  color: '#e1e1f1',
+  color: colors.onSurface,
   '&:focus-within': {
     boxShadow: '0 0 0 2px rgba(215, 186, 255, 0.4)',
   },
@@ -28,7 +29,7 @@ const labelSx = {
   fontWeight: 700,
   textTransform: 'uppercase',
   letterSpacing: '0.1em',
-  color: '#968e9c',
+  color: colors.onSurfaceVariant,
 } as const;
 
 export const CreateReminderModal = () => {
@@ -37,8 +38,8 @@ export const CreateReminderModal = () => {
       {/* Header */}
       <Box sx={{ px: 4, pt: 4, pb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
-          <NotificationsActiveRoundedIcon sx={{ color: '#d7baff' }} />
-          <Typography sx={{ fontSize: '1.25rem', fontFamily: 'Manrope', fontWeight: 700, color: '#e1e1f1' }}>
+          <NotificationsActiveRoundedIcon sx={{ color: colors.primary }} />
+          <Typography sx={{ fontSize: '1.25rem', fontFamily: 'Manrope', fontWeight: 700, color: colors.onSurface }}>
             New Alert
           </Typography>
         </Box>
@@ -63,8 +64,7 @@ export const CreateReminderModal = () => {
                 fontSize: '1.125rem',
                 fontFamily: 'Manrope',
                 fontWeight: 700,
-                color: '#d7baff',
-                '& input::placeholder': { color: 'rgba(150, 142, 156, 0.3)' },
+                color: colors.primary,
               }}
             />
           </Box>
@@ -89,8 +89,7 @@ export const CreateReminderModal = () => {
                   '&:focus': { bgcolor: 'transparent' },
                 },
                 '& .MuiNativeSelect-icon': {
-                  color: '#968e9c',
-                  fontSize: '1.25rem',
+                  color: colors.onSurfaceVariant,
                 },
               }}
             >
@@ -105,7 +104,7 @@ export const CreateReminderModal = () => {
         {/* Smart Preview */}
         <ReminderPreview>
           Nocturne will{' '}
-          <Typography component="span" sx={{ color: '#75d4e8' }}>
+          <Typography component="span" sx={{ color: colors.tertiary }}>
             Remind me 30 Minutes
           </Typography>{' '}
           before the scheduled start time.
@@ -134,9 +133,9 @@ export const CreateReminderModal = () => {
             borderRadius: '12px',
             fontSize: '0.875rem',
             fontWeight: 700,
-            color: '#968e9c',
+            color: colors.onSurfaceVariant,
             textTransform: 'none',
-            '&:hover': { color: '#e1e1f1', bgcolor: '#272935' },
+            '&:hover': { color: colors.onSurface, bgcolor: colors.surfaceContainerHigh },
             transition: 'all 0.2s',
           }}
         >
@@ -149,12 +148,12 @@ export const CreateReminderModal = () => {
             borderRadius: '12px',
             fontSize: '0.875rem',
             fontWeight: 700,
-            background: 'linear-gradient(to bottom right, #d7baff, #bd93f9)',
-            color: '#4e2484',
+            background: `linear-gradient(to bottom right, ${colors.primary}, ${colors.primaryContainer})`,
+            color: colors.onPrimaryContainer,
             textTransform: 'none',
             boxShadow: '0 10px 30px rgba(189, 147, 249, 0.1)',
             '&:hover': {
-              background: 'linear-gradient(to bottom right, #d7baff, #bd93f9)',
+              background: `linear-gradient(to bottom right, ${colors.primary}, ${colors.primaryContainer})`,
             },
             '&:active': { transform: 'scale(0.95)' },
           }}

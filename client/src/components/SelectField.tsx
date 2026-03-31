@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import NativeSelect from '@mui/material/NativeSelect';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface SelectOption {
   label: string;
   value: string;
@@ -23,7 +25,7 @@ export const SelectField = ({ label, options, defaultValue, helperText }: Select
         sx={{
           fontSize: '0.875rem',
           fontWeight: 700,
-          color: '#4a4451',
+          color: colors.outlineVariant,
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
           px: 0.5,
@@ -37,11 +39,11 @@ export const SelectField = ({ label, options, defaultValue, helperText }: Select
           IconComponent={ExpandMoreRoundedIcon}
           sx={{
             width: '100%',
-            bgcolor: '#323440',
+            bgcolor: colors.surfaceContainerHighest,
             borderRadius: '12px',
             px: 2,
             py: 1.5,
-            color: '#e1e1f1',
+            color: colors.onSurface,
             fontSize: '1rem',
             '&:before, &:after': { display: 'none' },
             '& select': {
@@ -51,7 +53,7 @@ export const SelectField = ({ label, options, defaultValue, helperText }: Select
               '&:focus': { bgcolor: 'transparent' },
             },
             '& .MuiNativeSelect-icon': {
-              color: '#968e9c',
+              color: colors.onSurfaceVariant,
               right: 16,
             },
           }}
@@ -64,7 +66,7 @@ export const SelectField = ({ label, options, defaultValue, helperText }: Select
         </NativeSelect>
       </Box>
       {helperText && (
-        <Typography sx={{ fontSize: '0.75rem', color: '#968e9c', pt: 1, px: 0.5 }}>{helperText}</Typography>
+        <Typography sx={{ fontSize: '0.75rem', color: colors.onSurfaceVariant, pt: 1, px: 0.5 }}>{helperText}</Typography>
       )}
     </Box>
   );

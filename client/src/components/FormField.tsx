@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import InputBase from '@mui/material/InputBase';
 import Typography from '@mui/material/Typography';
 
+import { colors } from '../theme';
+
 interface FormFieldProps {
   label: string;
   type?: string;
@@ -17,7 +19,7 @@ export const FormField = ({ label, type = 'text', defaultValue, placeholder }: F
         sx={{
           fontSize: '0.875rem',
           fontWeight: 700,
-          color: '#4a4451',
+          color: colors.outlineVariant,
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
           px: 0.5,
@@ -30,11 +32,11 @@ export const FormField = ({ label, type = 'text', defaultValue, placeholder }: F
         defaultValue={defaultValue}
         placeholder={placeholder}
         sx={{
-          bgcolor: '#323440',
+          bgcolor: colors.surfaceContainerHighest,
           borderRadius: '12px',
           px: 2,
           py: 1.5,
-          color: '#e1e1f1',
+          color: colors.onSurface,
           fontSize: '1rem',
           '&:focus-within': {
             boxShadow: '0 0 0 2px rgba(215, 186, 255, 0.5)',
