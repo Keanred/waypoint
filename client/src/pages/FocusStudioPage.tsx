@@ -45,10 +45,10 @@ export const FocusStudioPage = () => {
         appName="Waypoint"
         tagline="Productivity Engine"
         navItems={[
-          { label: 'Dashboard', icon: <DashboardRoundedIcon /> },
-          { label: 'Focus Studio', icon: <TimerRoundedIcon />, active: true },
-          { label: 'Analytics', icon: <LeaderboardRoundedIcon /> },
-          { label: 'Settings', icon: <SettingsRoundedIcon /> },
+          { label: 'Dashboard', icon: <DashboardRoundedIcon />, to: '/' },
+          { label: 'Focus Studio', icon: <TimerRoundedIcon />, active: true, to: '/focus' },
+          { label: 'Analytics', icon: <LeaderboardRoundedIcon />, to: '/analytics' },
+          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
         ]}
       />
 
@@ -678,10 +678,10 @@ export const FocusStudioPage = () => {
       {/* Mobile Navigation */}
       <BottomNavBar
         items={[
-          { label: 'Focus', icon: <TimerRoundedIcon />, active: true },
-          { label: 'Home', icon: <HomeRoundedIcon /> },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon /> },
-          { label: 'Settings', icon: <SettingsRoundedIcon /> },
+          { label: 'Focus', icon: <TimerRoundedIcon />, active: true, to: '/focus' },
+          { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
+          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/analytics' },
+          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
         ]}
       />
 

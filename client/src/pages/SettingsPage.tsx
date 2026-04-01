@@ -40,10 +40,10 @@ export const SettingsPage = () => {
         appName="Task Master"
         tagline="Precision focus"
         navItems={[
-          { label: 'Overview', icon: <DashboardRoundedIcon /> },
-          { label: 'High Priority', icon: <PriorityHighRoundedIcon /> },
-          { label: 'Upcoming', icon: <EventRoundedIcon /> },
-          { label: 'Completed', icon: <CheckCircleRoundedIcon /> },
+          { label: 'Overview', icon: <DashboardRoundedIcon />, to: '/' },
+          { label: 'High Priority', icon: <PriorityHighRoundedIcon />, to: '/focus' },
+          { label: 'Upcoming', icon: <EventRoundedIcon />, to: '/analytics' },
+          { label: 'Completed', icon: <CheckCircleRoundedIcon />, to: '/settings' },
         ]}
         actionLabel="New Focus Session"
         footerItems={[
@@ -226,10 +226,10 @@ export const SettingsPage = () => {
       {/* Mobile Bottom Nav */}
       <BottomNavBar
         items={[
-          { label: 'Home', icon: <HomeRoundedIcon /> },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon /> },
-          { label: 'Alerts', icon: <AlarmRoundedIcon /> },
-          { label: 'Settings', icon: <SettingsRoundedIcon />, active: true },
+          { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
+          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
+          { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
+          { label: 'Settings', icon: <SettingsRoundedIcon />, active: true, to: '/settings' },
         ]}
       />
     </Box>

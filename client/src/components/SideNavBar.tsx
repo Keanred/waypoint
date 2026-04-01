@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
 import { colors } from '../theme';
@@ -9,6 +10,7 @@ export interface NavItem {
   label: string;
   icon: ReactNode;
   active?: boolean;
+  to?: string;
 }
 
 interface SideNavBarProps {
@@ -21,6 +23,8 @@ interface SideNavBarProps {
 }
 
 export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabel, actionIcon }: SideNavBarProps) => {
+  const navigate = useNavigate();
+
   return (
     <Box
       component="aside"
@@ -87,8 +91,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
         {navItems.map((item) => (
           <Box
             key={item.label}
-            component="a"
-            href="#"
+            onClick={item.to ? () => navigate({ to: item.to }) : undefined}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -96,6 +99,7 @@ export const SideNavBar = ({ appName, tagline, navItems, footerItems, actionLabe
               py: 1.5,
               px: 3,
               textDecoration: 'none',
+              cursor: item.to ? 'pointer' : 'default',
               transition: 'transform 0.15s, background 0.2s, color 0.2s',
               '&:active': { transform: 'translateX(4px)' },
               ...(item.active

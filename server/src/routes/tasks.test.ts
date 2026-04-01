@@ -31,6 +31,11 @@ const mockReminder = {
   createdAt: new Date('2026-03-27T00:00:00.000Z'),
 };
 
+const mockCreateTaskResponse = {
+  task: mockTask,
+  reminders: [mockReminder],
+};
+
 const mockGetTasksResponse = {
   tasks: [mockTask],
   reminders: [mockReminder],
@@ -121,24 +126,27 @@ describe('POST /api/tasks', () => {
     recurrence: 'NONE',
   };
 
-  it('returns 201 with the created task when input is valid', async () => {
-    vi.mocked(tasksService.createTask).mockResolvedValue(mockTask);
+  it('returns 201 with the created task and reminders when input is valid', async () => {
+    vi.mocked(tasksService.createTask).mockResolvedValue(mockCreateTaskResponse);
 
     const res = await request(app).post('/api/tasks').send(validInput);
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
-    expect(res.body.data.id).toBe(TASK_ID);
-    expect(res.body.data.title).toBe('Write tests');
+    expect(res.body.data.task.id).toBe(TASK_ID);
+    expect(res.body.data.task.title).toBe('Write tests');
+    expect(res.body.data.reminders).toHaveLength(1);
   });
 
-  it('calls createTask service with the Zod-parsed input', async () => {
-    vi.mocked(tasksService.createTask).mockResolvedValue(mockTask);
+  it('calls createTask service with the Zod-parsed input including reminders', async () => {
+    vi.mocked(tasksService.createTask).mockResolvedValue(mockCreateTaskResponse);
 
-    await request(app).post('/api/tasks').send(validInput);
+    await request(app).post('/api/tasks').send({ ...validInput, reminders: [{ offsetValue: 1, offsetUnit: 'DAYS' }] });
 
     expect(tasksService.createTask).toHaveBeenCalledOnce();
-    expect(tasksService.createTask).toHaveBeenCalledWith(expect.objectContaining({ title: 'New Task' }));
+    expect(tasksService.createTask).toHaveBeenCalledWith(
+      expect.objectContaining({ title: 'New Task', reminders: [{ offsetValue: 1, offsetUnit: 'DAYS' }] }),
+    );
   });
 
   it('returns 400 when title is missing', async () => {
@@ -193,8 +201,28 @@ describe('POST /api/tasks', () => {
     expect(tasksService.createTask).not.toHaveBeenCalled();
   });
 
+  it('returns 400 when reminders contain an invalid offsetUnit', async () => {
+    const res = await request(app)
+      .post('/api/tasks')
+      .send({ ...validInput, reminders: [{ offsetValue: 1, offsetUnit: 'WEEKS' }] });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(tasksService.createTask).not.toHaveBeenCalled();
+  });
+
+  it('returns 400 when reminders contain a non-positive offsetValue', async () => {
+    const res = await request(app)
+      .post('/api/tasks')
+      .send({ ...validInput, reminders: [{ offsetValue: 0, offsetUnit: 'DAYS' }] });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(tasksService.createTask).not.toHaveBeenCalled();
+  });
+
   it('creates the task when optional fields are omitted', async () => {
-    vi.mocked(tasksService.createTask).mockResolvedValue(mockTask);
+    vi.mocked(tasksService.createTask).mockResolvedValue({ task: mockTask, reminders: [] });
 
     const res = await request(app)
       .post('/api/tasks')
@@ -202,6 +230,7 @@ describe('POST /api/tasks', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
+    expect(res.body.data.reminders).toEqual([]);
   });
 
   it('returns 500 when the service throws', async () => {

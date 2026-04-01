@@ -5,7 +5,9 @@ import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
 import NativeSelect from '@mui/material/NativeSelect';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
+import { CreateReminderInput } from '@waypoint/schemas';
 import { ModalOverlay } from '../components/ModalOverlay';
 import { ReminderPreview } from '../components/ReminderPreview';
 import { SoundPicker } from '../components/SoundPicker';
@@ -32,7 +34,17 @@ const labelSx = {
   color: colors.onSurfaceVariant,
 } as const;
 
-export const CreateReminderModal = () => {
+type CreateReminderModalProps = {
+  onClose: () => void;
+  onAddReminder: (reminder: Omit<CreateReminderInput, 'taskId'>) => void;
+};
+
+export const CreateReminderModal = ({
+  onClose,
+  onAddReminder,
+}: CreateReminderModalProps) => {
+  const [offsetValue, setOffsetValue] = useState(1);
+  const [offsetUnit, setOffsetUnit] = useState('DAYS');
   return (
     <ModalOverlay maxWidth={448}>
       {/* Header */}
@@ -58,7 +70,8 @@ export const CreateReminderModal = () => {
             </Typography>
             <InputBase
               type="number"
-              defaultValue="30"
+              value={offsetValue}
+              onChange={(e) => setOffsetValue(parseInt(e.target.value, 10))}
               sx={{
                 ...fieldSx,
                 fontSize: '1.125rem',
@@ -75,8 +88,9 @@ export const CreateReminderModal = () => {
               Offset Unit
             </Typography>
             <NativeSelect
-              defaultValue="hours"
+              value={offsetUnit}
               IconComponent={UnfoldMoreRoundedIcon}
+              onChange={(e) => setOffsetUnit(e.target.value)}
               sx={{
                 ...fieldSx,
                 width: '100%',
@@ -93,10 +107,9 @@ export const CreateReminderModal = () => {
                 },
               }}
             >
-              <option value="minutes">Minutes</option>
-              <option value="hours">Hours</option>
-              <option value="days">Days</option>
-              <option value="weeks">Weeks</option>
+              <option value="MINUTES">Minutes</option>
+              <option value="HOURS">Hours</option>
+              <option value="DAYS">Days</option>
             </NativeSelect>
           </Box>
         </Box>
@@ -105,7 +118,7 @@ export const CreateReminderModal = () => {
         <ReminderPreview>
           Nocturne will{' '}
           <Typography component="span" sx={{ color: colors.tertiary }}>
-            Remind me 30 Minutes
+            Remind me {offsetValue} {offsetUnit.toLowerCase()}
           </Typography>{' '}
           before the scheduled start time.
         </ReminderPreview>
@@ -138,10 +151,18 @@ export const CreateReminderModal = () => {
             '&:hover': { color: colors.onSurface, bgcolor: colors.surfaceContainerHigh },
             transition: 'all 0.2s',
           }}
+          onClick={onClose}
         >
           Cancel
         </Button>
         <Button
+          onClick={() => {
+            onAddReminder({
+              offsetValue,
+              offsetUnit: offsetUnit as CreateReminderInput['offsetUnit'],
+            });
+            onClose();
+          }}
           sx={{
             px: 4,
             py: 1.5,

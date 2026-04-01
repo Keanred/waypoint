@@ -9,9 +9,10 @@ interface ReminderChipProps {
   label: string;
   value: string;
   accentColor?: string;
+  onRemove?: () => void;
 }
 
-export const ReminderChip = ({ label, value, accentColor = colors.tertiary }: ReminderChipProps) => {
+export const ReminderChip = ({ label, value, accentColor = colors.tertiary, onRemove }: ReminderChipProps) => {
   return (
     <Box
       sx={{
@@ -41,6 +42,7 @@ export const ReminderChip = ({ label, value, accentColor = colors.tertiary }: Re
       </Box>
       <IconButton
         size="small"
+        onClick={onRemove}
         sx={{
           color: colors.outlineVariant,
           p: 0.25,

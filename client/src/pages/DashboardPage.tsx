@@ -10,10 +10,11 @@ import EventRoundedIcon from '@mui/icons-material/EventRounded';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReminderResponse, TaskResponse } from '@waypoint/schemas';
@@ -28,7 +29,7 @@ import { TaskGroup } from '../components/TaskGroup';
 import { TopAppBar } from '../components/TopAppBar';
 import { colors } from '../theme';
 
-import { CreateTaskInput } from '@waypoint/schemas';
+import { CreateTaskWithRemindersInput } from '@waypoint/schemas';
 import { isPast, isThisWeek, isToday } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { CreateTaskModal } from './CreateTaskModal';
@@ -115,10 +116,11 @@ export const DashboardPage = () => {
     }
   };
 
-  const createNewTask = async (newTask: CreateTaskInput) => {
+  const createNewTask = async (input: CreateTaskWithRemindersInput) => {
     try {
-      const task = await createTask(newTask);
+      const { task, reminders: createdReminders } = await createTask(input);
       setTasks((prev) => [...prev, task]);
+      setReminders((prev) => [...prev, ...createdReminders]);
     } catch {
       setError('Failed to create task. Please try again later.');
     }
@@ -139,9 +141,9 @@ export const DashboardPage = () => {
         appName="Task Master"
         tagline="Precision focus"
         navItems={[
-          { label: 'Overview', icon: <DashboardRoundedIcon />, active: true },
-          { label: 'High Priority', icon: <PriorityHighRoundedIcon /> },
-          { label: 'Upcoming', icon: <EventRoundedIcon /> },
+          { label: 'Overview', icon: <DashboardRoundedIcon />, active: true, to: '/' },
+          { label: 'Focus Studio', icon: <TimerRoundedIcon />, to: '/focus' },
+          { label: 'Analytics', icon: <LeaderboardRoundedIcon />, to: '/analytics' },
           { label: 'Completed', icon: <CheckCircleRoundedIcon /> },
         ]}
         actionLabel="New Focus Session"
@@ -323,10 +325,10 @@ export const DashboardPage = () => {
       {/* Mobile Navigation */}
       <BottomNavBar
         items={[
-          { label: 'Home', icon: <HomeRoundedIcon />, active: true },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon /> },
-          { label: 'Alerts', icon: <AlarmRoundedIcon /> },
-          { label: 'Settings', icon: <SettingsRoundedIcon /> },
+          { label: 'Home', icon: <HomeRoundedIcon />, active: true, to: '/' },
+          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
+          { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
+          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
         ]}
       />
 

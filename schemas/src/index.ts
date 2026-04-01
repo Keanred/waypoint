@@ -50,6 +50,13 @@ const TaskResponseSchema = z.object({
 export type TaskResponse = z.infer<typeof TaskResponseSchema>;
 export { TaskResponseSchema as TaskResponse };
 
+const ReminderInputSchema = z.object({
+  offsetValue: z.number().int().positive(),
+  offsetUnit: OffsetUnitSchema.default('DAYS'),
+});
+export type ReminderInput = z.infer<typeof ReminderInputSchema>;
+export { ReminderInputSchema as ReminderInput };
+
 const CreateReminderInputSchema = z.object({
   offsetValue: z.number().int().positive(),
   offsetUnit: OffsetUnitSchema.default('DAYS'),
@@ -57,6 +64,12 @@ const CreateReminderInputSchema = z.object({
 });
 export type CreateReminderInput = z.infer<typeof CreateReminderInputSchema>;
 export { CreateReminderInputSchema as CreateReminderInput };
+
+const CreateTaskWithRemindersInputSchema = CreateTaskInputSchema.extend({
+  reminders: z.array(ReminderInputSchema).optional().default([]),
+});
+export type CreateTaskWithRemindersInput = z.infer<typeof CreateTaskWithRemindersInputSchema>;
+export { CreateTaskWithRemindersInputSchema as CreateTaskWithRemindersInput };
 
 const ReminderResponseSchema = z.object({
   id: z.string().uuid(),
@@ -71,6 +84,13 @@ export { ReminderResponseSchema as ReminderResponse };
 
 export type Task = Pick<z.infer<typeof TaskResponseSchema>, 'id' | 'title' | 'description' | 'priority' | 'dueDate'>;
 export type Reminder = Pick<z.infer<typeof ReminderResponseSchema>, 'id' | 'offsetValue' | 'offsetUnit'>;
+
+const CreateTaskResponseSchema = z.object({
+  task: TaskResponseSchema,
+  reminders: z.array(ReminderResponseSchema),
+});
+export type CreateTaskResponse = z.infer<typeof CreateTaskResponseSchema>;
+export { CreateTaskResponseSchema as CreateTaskResponse };
 
 const GetTasksResponseSchema = z.object({
   tasks: z.array(TaskResponseSchema),

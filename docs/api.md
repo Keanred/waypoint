@@ -72,7 +72,7 @@ Response:
 
 ### POST /tasks
 
-Creates a new task.
+Creates a new task, optionally with reminders in a single atomic operation.
 
 - Status: `201 Created`
 - Status: `400 Bad Request` for schema validation errors
@@ -86,7 +86,11 @@ Request body:
   "description": "Optional",
   "dueDate": "2026-04-01T00:00:00.000Z",
   "recurrence": "NONE",
-  "recurringEndDate": "2026-05-01T00:00:00.000Z"
+  "recurringEndDate": "2026-05-01T00:00:00.000Z",
+  "reminders": [
+    { "offsetValue": 1, "offsetUnit": "DAYS" },
+    { "offsetValue": 30, "offsetUnit": "MINUTES" }
+  ]
 }
 ```
 
@@ -98,6 +102,8 @@ Notes:
 - `recurringEndDate` is optional.
 - `dueDate` cannot be in the past.
 - `recurringEndDate` cannot be before `dueDate`.
+- `reminders` is optional and defaults to `[]`. Each reminder requires a positive integer `offsetValue` and an `offsetUnit` (defaults to `DAYS`).
+- The task and its reminders are created atomically in a single database transaction.
 
 Success response (`201`):
 
@@ -105,14 +111,35 @@ Success response (`201`):
 {
   "success": true,
   "data": {
-    "id": "00000000-0000-0000-0000-000000000001",
-    "title": "New task",
-    "description": "Optional",
-    "dueDate": "2026-04-01T00:00:00.000Z",
-    "recurrence": "NONE",
-    "recurringEndDate": null,
-    "createdAt": "2026-03-28T10:00:00.000Z",
-    "updatedAt": "2026-03-28T10:00:00.000Z"
+    "task": {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "title": "New task",
+      "description": "Optional",
+      "priority": "medium",
+      "dueDate": "2026-04-01T00:00:00.000Z",
+      "recurrence": "NONE",
+      "recurringEndDate": null,
+      "createdAt": "2026-03-28T10:00:00.000Z",
+      "updatedAt": "2026-03-28T10:00:00.000Z"
+    },
+    "reminders": [
+      {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "taskId": "00000000-0000-0000-0000-000000000001",
+        "offsetValue": 1,
+        "offsetUnit": "DAYS",
+        "sentAt": null,
+        "createdAt": "2026-03-28T10:00:00.000Z"
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000003",
+        "taskId": "00000000-0000-0000-0000-000000000001",
+        "offsetValue": 30,
+        "offsetUnit": "MINUTES",
+        "sentAt": null,
+        "createdAt": "2026-03-28T10:00:00.000Z"
+      }
+    ]
   }
 }
 ```

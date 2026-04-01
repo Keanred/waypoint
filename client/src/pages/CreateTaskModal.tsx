@@ -12,12 +12,13 @@ import NativeSelect from '@mui/material/NativeSelect';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
-import { CreateTaskInput } from '@waypoint/schemas';
+import { CreateReminderInput, CreateTaskInput, CreateTaskWithRemindersInput } from '@waypoint/schemas';
 import { IconLabel } from '../components/IconLabel';
 import { ModalHeader } from '../components/ModalHeader';
 import { ModalOverlay } from '../components/ModalOverlay';
 import { ReminderChip } from '../components/ReminderChip';
 import { colors } from '../theme';
+import { CreateReminderModal } from './CreateReminderModal';
 
 const fieldSx = {
   bgcolor: 'rgba(50, 52, 64, 0.3)',
@@ -47,7 +48,7 @@ const selectSx = {
 type CreateTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: CreateTaskInput) => Promise<void>;
+  onSubmit?: (input: CreateTaskWithRemindersInput) => Promise<void>;
 };
 
 export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalProps) => {
@@ -58,6 +59,8 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
   const [dueTime, setDueTime] = useState('');
   const [recurrence, setRecurrence] = useState('NONE');
   const [recurrenceEnd, setRecurrenceEnd] = useState('');
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
+  const [reminders, setReminders] = useState<Omit<CreateReminderInput, 'taskId'>[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,10 +68,11 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
       await onSubmit({
         title,
         description,
-        priority: priority as 'low' | 'medium' | 'high',
+        priority: priority as CreateTaskInput['priority'],
         dueDate: new Date(`${dueDate}T${dueTime}`),
-        recurrence: recurrence as 'NONE' | 'DAILY' | 'WEEKLY' | 'MONTHLY',
+        recurrence: recurrence as CreateTaskInput['recurrence'],
         recurringEndDate: recurrenceEnd ? new Date(recurrenceEnd) : undefined,
+        reminders,
       });
     }
     onClose();
@@ -185,6 +189,12 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
 
         {/* Reminders Section */}
         <Box sx={{ pt: 3, borderTop: '1px solid rgba(74, 68, 81, 0.1)' }}>
+          {isReminderModalOpen ? (
+            <CreateReminderModal
+              onClose={() => setIsReminderModalOpen(false)}
+              onAddReminder={(reminder) => setReminders((prev) => [...prev, reminder])}
+            />
+          ) : null}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
             <Typography
               sx={{
@@ -214,7 +224,14 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
             </Button>
           </Box>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
-            <ReminderChip label="Notification" value="1 Day before" />
+            {reminders.map((r, i) => (
+              <ReminderChip
+                key={i}
+                label="Notification"
+                value={`${r.offsetValue} ${r.offsetUnit.charAt(0) + r.offsetUnit.slice(1).toLowerCase()} before`}
+                onRemove={() => setReminders((prev) => prev.filter((_, idx) => idx !== i))}
+              />
+            ))}
             <Button
               sx={{
                 display: 'flex',
@@ -234,6 +251,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
                 },
               }}
               startIcon={<AlarmAddRoundedIcon sx={{ fontSize: '1rem !important' }} />}
+              onClick={() => setIsReminderModalOpen(true)}
             >
               New Alert
             </Button>

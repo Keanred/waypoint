@@ -1,6 +1,7 @@
 import type {
   CreateReminderInput,
-  CreateTaskInput,
+  CreateTaskResponse,
+  CreateTaskWithRemindersInput,
   GetTasksResponse,
   ReminderResponse,
   TaskResponse,
@@ -125,8 +126,8 @@ const request = async <TResponse, TBody = unknown>(
 
 export const getTasks = (): Promise<GetTasksResponse> => request<GetTasksResponse>('/tasks');
 
-export const createTask = (input: CreateTaskInput): Promise<TaskResponse> =>
-  request<TaskResponse, CreateTaskInput>('/tasks', { method: 'POST', body: input });
+export const createTask = (input: CreateTaskWithRemindersInput): Promise<CreateTaskResponse> =>
+  request<CreateTaskResponse, CreateTaskWithRemindersInput>('/tasks', { method: 'POST', body: input });
 
 export const updateTask = (id: string, input: UpdateTaskInput): Promise<TaskResponse> =>
   request<TaskResponse, UpdateTaskInput>(`/tasks/${id}`, { method: 'PATCH', body: input });

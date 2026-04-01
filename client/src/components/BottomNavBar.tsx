@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 
 import { colors } from '../theme';
@@ -8,6 +9,7 @@ export interface BottomNavItem {
   label: string;
   icon: ReactNode;
   active?: boolean;
+  to?: string;
 }
 
 interface BottomNavBarProps {
@@ -15,6 +17,8 @@ interface BottomNavBarProps {
 }
 
 export const BottomNavBar = ({ items }: BottomNavBarProps) => {
+  const navigate = useNavigate();
+
   return (
     <Box
       component="nav"
@@ -41,14 +45,14 @@ export const BottomNavBar = ({ items }: BottomNavBarProps) => {
       {items.map((item) => (
         <Box
           key={item.label}
-          component="a"
-          href="#"
+          onClick={item.to ? () => navigate({ to: item.to }) : undefined}
           sx={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             textDecoration: 'none',
+            cursor: item.to ? 'pointer' : 'default',
             transition: 'transform 0.15s, color 0.2s',
             '&:active': { transform: 'scale(0.9)' },
             ...(item.active

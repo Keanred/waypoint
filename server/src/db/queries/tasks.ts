@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from '../client';
-import { NewTask, Reminder, reminders, Task, tasks } from '../schema';
+import { NewReminder, NewTask, Reminder, reminders, Task, tasks } from '../schema';
 
 export const dbGetTasks = async (): Promise<{ tasks: Task; reminders: Reminder | null }[]> => {
   const taskResults = await db.select().from(tasks).leftJoin(reminders, eq(tasks.id, reminders.taskId));
@@ -15,6 +15,23 @@ export const dbGetTaskById = async (id: string): Promise<Task | null> => {
 export const dbInsertTask = async (task: NewTask) => {
   const [newTask] = await db.insert(tasks).values(task).returning();
   return newTask;
+};
+
+export const dbInsertTaskWithReminders = async (
+  task: NewTask,
+  reminderInputs: Omit<NewReminder, 'taskId'>[],
+): Promise<{ task: Task; reminders: Reminder[] }> => {
+  return await db.transaction(async (tx) => {
+    const [newTask] = await tx.insert(tasks).values(task).returning();
+    let createdReminders: Reminder[] = [];
+    if (reminderInputs.length > 0) {
+      createdReminders = await tx
+        .insert(reminders)
+        .values(reminderInputs.map((r) => ({ ...r, taskId: newTask.id })))
+        .returning();
+    }
+    return { task: newTask, reminders: createdReminders };
+  });
 };
 
 export const dbUpsertTask = async (id: string, updates: Partial<NewTask>) => {

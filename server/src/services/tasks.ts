@@ -1,21 +1,35 @@
-import { CreateTaskInput, GetTasksResponse, TaskResponse, UpdateTaskInput } from '@waypoint/schemas';
-import { dbDeleteTask, dbGetTaskById, dbGetTasks, dbInsertTask, dbUpsertTask } from '../db/queries/tasks';
+import {
+  CreateTaskResponse,
+  CreateTaskWithRemindersInput,
+  GetTasksResponse,
+  TaskResponse,
+  UpdateTaskInput,
+} from '@waypoint/schemas';
+import { dbDeleteTask, dbGetTaskById, dbGetTasks, dbInsertTaskWithReminders, dbUpsertTask } from '../db/queries/tasks';
 import { HttpError } from '../errors/http';
 
 export const getTasks = async (): Promise<GetTasksResponse> => {
   const taskResults = await dbGetTasks();
+
+  const taskById = new Map<string, GetTasksResponse['tasks'][number]>();
+  for (const result of taskResults) {
+    if (!taskById.has(result.tasks.id)) {
+      taskById.set(result.tasks.id, {
+        id: result.tasks.id,
+        title: result.tasks.title,
+        description: result.tasks.description,
+        priority: result.tasks.priority,
+        dueDate: result.tasks.dueDate,
+        recurrence: result.tasks.recurrence,
+        recurringEndDate: result.tasks.recurringEndDate,
+        createdAt: result.tasks.createdAt,
+        updatedAt: result.tasks.updatedAt,
+      });
+    }
+  }
+
   const tasks: GetTasksResponse = {
-    tasks: taskResults.map((result) => ({
-      id: result.tasks.id,
-      title: result.tasks.title,
-      description: result.tasks.description,
-      priority: result.tasks.priority,
-      dueDate: result.tasks.dueDate,
-      recurrence: result.tasks.recurrence,
-      recurringEndDate: result.tasks.recurringEndDate,
-      createdAt: result.tasks.createdAt,
-      updatedAt: result.tasks.updatedAt,
-    })),
+    tasks: Array.from(taskById.values()),
     reminders: taskResults
       .filter((result) => result.reminders !== null && result.reminders.id !== null)
       .map((result) => ({
@@ -30,14 +44,15 @@ export const getTasks = async (): Promise<GetTasksResponse> => {
   return tasks;
 };
 
-export const createTask = async (task: CreateTaskInput): Promise<TaskResponse> => {
+export const createTask = async (input: CreateTaskWithRemindersInput): Promise<CreateTaskResponse> => {
+  const { reminders: reminderInputs, ...task } = input;
   if (task.dueDate && new Date(task.dueDate) < new Date()) {
     throw new HttpError(422, 'Due date cannot be in the past');
   }
   if (task.recurringEndDate && task.dueDate && new Date(task.recurringEndDate) < new Date(task.dueDate)) {
     throw new HttpError(422, 'Recurring end date cannot be before due date');
   }
-  const result: TaskResponse = await dbInsertTask(task);
+  const result = await dbInsertTaskWithReminders(task, reminderInputs);
   return result;
 };
 

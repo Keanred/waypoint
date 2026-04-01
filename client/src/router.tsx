@@ -2,6 +2,7 @@ import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/re
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 
+import { AnalyticsPage } from './pages/AnalyticsPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { FocusStudioPage } from './pages/FocusStudioPage';
 import { SettingsPage } from './pages/SettingsPage';
@@ -36,7 +37,13 @@ const settingsRoute = createRoute({
   component: SettingsPage,
 });
 
-const routeTree = rootRoute.addChildren([dashboardRoute, focusRoute, settingsRoute]);
+const analyticsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'analytics',
+  component: AnalyticsPage,
+});
+
+const routeTree = rootRoute.addChildren([dashboardRoute, focusRoute, settingsRoute, analyticsRoute]);
 
 export const router = createRouter({
   routeTree,
