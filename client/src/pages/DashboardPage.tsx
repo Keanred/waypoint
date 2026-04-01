@@ -20,13 +20,11 @@ import Typography from '@mui/material/Typography';
 import type { ReminderResponse, TaskResponse } from '@waypoint/schemas';
 
 import { createTask, deleteTask, getTasks } from '../api';
-import { BottomNavBar } from '../components/BottomNavBar';
 import { FloatingActionButton } from '../components/FloatingActionButton';
-import { SideNavBar } from '../components/SideNavBar';
+import { PageLayout } from '../components/PageLayout';
 import { StatCard } from '../components/StatCard';
 import { TaskCard } from '../components/TaskCard';
 import { TaskGroup } from '../components/TaskGroup';
-import { TopAppBar } from '../components/TopAppBar';
 import { colors } from '../theme';
 
 import { CreateTaskWithRemindersInput } from '@waypoint/schemas';
@@ -127,54 +125,42 @@ export const DashboardPage = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        minHeight: '100vh',
-        bgcolor: colors.surface,
-        color: colors.onSurface,
-        fontFamily: 'Inter, sans-serif',
-      }}
-    >
-      {/* Desktop Sidebar */}
-      <SideNavBar
-        appName="Task Master"
-        tagline="Precision focus"
-        navItems={[
-          { label: 'Overview', icon: <DashboardRoundedIcon />, active: true, to: '/' },
-          { label: 'Focus Studio', icon: <TimerRoundedIcon />, to: '/focus' },
-          { label: 'Analytics', icon: <LeaderboardRoundedIcon />, to: '/analytics' },
-          { label: 'Completed', icon: <CheckCircleRoundedIcon /> },
+    <>
+      <PageLayout
+        sidebar={{
+          appName: 'Task Master',
+          tagline: 'Precision focus',
+          navItems: [
+            { label: 'Overview', icon: <DashboardRoundedIcon />, active: true, to: '/' },
+            { label: 'Focus Studio', icon: <TimerRoundedIcon />, to: '/focus' },
+            { label: 'Analytics', icon: <LeaderboardRoundedIcon />, to: '/analytics' },
+            { label: 'Completed', icon: <CheckCircleRoundedIcon /> },
+          ],
+          actionLabel: 'New Focus Session',
+          actionIcon: <BoltRoundedIcon sx={{ fontSize: '1rem' }} />,
+          footerItems: [
+            { label: 'Archive', icon: <ArchiveRoundedIcon /> },
+            { label: 'Support', icon: <HelpOutlineRoundedIcon /> },
+          ],
+        }}
+        topBar={{
+          brandName: 'Waypoint',
+          navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
+          addButtonLabel: 'Add Task',
+          onAddClick: () => setIsCreateTaskModalOpen(true),
+        }}
+        bottomNav={[
+          { label: 'Home', icon: <HomeRoundedIcon />, active: true, to: '/' },
+          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
+          { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
+          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
         ]}
-        actionLabel="New Focus Session"
-        actionIcon={<BoltRoundedIcon sx={{ fontSize: '1rem' }} />}
-        footerItems={[
-          { label: 'Archive', icon: <ArchiveRoundedIcon /> },
-          { label: 'Support', icon: <HelpOutlineRoundedIcon /> },
-        ]}
-      />
-
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        {/* Top Header */}
-        <TopAppBar
-          brandName="Waypoint"
-          navLinks={[{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }]}
-          addButtonLabel="Add Task"
-          onAddClick={() => setIsCreateTaskModalOpen(true)}
-        />
-
-        {/* Main Content */}
-        <Box
-          component="main"
-          sx={{
-            pt: 12,
-            pb: 16,
-            px: { xs: 2, md: 6 },
-            maxWidth: 1440,
-            mx: 'auto',
-            width: '100%',
-          }}
-        >
+      >
+          <CreateTaskModal
+            isOpen={isCreateTaskModalOpen}
+            onClose={() => setIsCreateTaskModalOpen(false)}
+            onSubmit={createNewTask}
+          />
           {/* Header Section */}
           <Box
             component="section"
@@ -319,21 +305,8 @@ export const DashboardPage = () => {
               )}
             </TaskGroup>
           </Box>
-        </Box>
-      </Box>
-
-      {/* Mobile Navigation */}
-      <BottomNavBar
-        items={[
-          { label: 'Home', icon: <HomeRoundedIcon />, active: true, to: '/' },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
-          { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
-          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
-        ]}
-      />
-
-      {/* Mobile FAB */}
-      <FloatingActionButton onClick={() => setIsCreateTaskModalOpen(true)} />
-    </Box>
+        </PageLayout>
+        <FloatingActionButton onClick={() => setIsCreateTaskModalOpen(true)} />
+      </>
   );
 };

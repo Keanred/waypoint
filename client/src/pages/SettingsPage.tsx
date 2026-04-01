@@ -17,61 +17,49 @@ import Typography from '@mui/material/Typography';
 
 import { BottomNavBar } from '../components/BottomNavBar';
 import { FormField } from '../components/FormField';
+import { PageLayout } from '../components/PageLayout';
 import { SelectField } from '../components/SelectField';
 import { SettingsSection } from '../components/SettingsSection';
 import { SideNavBar } from '../components/SideNavBar';
 import { ToggleRow } from '../components/ToggleRow';
 import { TopAppBar } from '../components/TopAppBar';
 import { colors } from '../theme';
+import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
+import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 export const SettingsPage = () => {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        minHeight: '100vh',
-        bgcolor: colors.surface,
-        color: colors.onSurface,
-        fontFamily: 'Inter, sans-serif',
-      }}
-    >
-      {/* Desktop Sidebar */}
-      <SideNavBar
-        appName="Task Master"
-        tagline="Precision focus"
-        navItems={[
+    <PageLayout
+      sidebar={{
+        appName: 'Task Master',
+        tagline: 'Precision focus',
+        navItems: [
           { label: 'Overview', icon: <DashboardRoundedIcon />, to: '/' },
           { label: 'High Priority', icon: <PriorityHighRoundedIcon />, to: '/focus' },
           { label: 'Upcoming', icon: <EventRoundedIcon />, to: '/analytics' },
           { label: 'Completed', icon: <CheckCircleRoundedIcon />, to: '/settings' },
-        ]}
-        actionLabel="New Focus Session"
-        footerItems={[
+        ],
+        actionLabel: 'New Focus Session',
+        footerItems: [
           { label: 'Archive', icon: <ArchiveRoundedIcon /> },
           { label: 'Support', icon: <HelpOutlineRoundedIcon /> },
-        ]}
-      />
-
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        {/* Top Header */}
-        <TopAppBar
-          brandName="Nocturne Task"
-          navLinks={[{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }]}
-          addButtonLabel="Add Task"
-        />
-
-        {/* Main Content */}
-        <Box
-          component="main"
-          sx={{
-            flex: 1,
-            p: { xs: 4, md: 6, lg: 10 },
-            pt: { xs: 14, md: 14, lg: 14 },
-            overflowY: 'auto',
-          }}
-        >
-          <Box sx={{ maxWidth: 896, mx: 'auto' }}>
-            {/* Page Header */}
+        ],
+      }}
+      topBar={{
+        brandName: 'Nocturne Task',
+        navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
+        addButtonLabel: 'Add Task',
+      }}
+      bottomNav={[
+        { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
+        { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
+        { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
+        { label: 'Settings', icon: <SettingsRoundedIcon />, active: true, to: '/settings' },
+      ]}
+      maxWidth={896}
+    >
+      {/* Page Header */}
             <Box component="header" sx={{ mb: 6 }}>
               <Typography
                 sx={{
@@ -219,19 +207,6 @@ export const SettingsPage = () => {
                 </Button>
               </Box>
             </Box>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Mobile Bottom Nav */}
-      <BottomNavBar
-        items={[
-          { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
-          { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
-          { label: 'Settings', icon: <SettingsRoundedIcon />, active: true, to: '/settings' },
-        ]}
-      />
-    </Box>
-  );
-};
+        </PageLayout>
+    );
+  };

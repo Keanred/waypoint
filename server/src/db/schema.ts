@@ -1,4 +1,4 @@
-import { index, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, index, integer, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // Enums
 export const recurrenceEnum = pgEnum('recurrence', ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']);
@@ -46,8 +46,25 @@ export const reminders = pgTable(
   }),
 );
 
+export const settings = pgTable('settings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  displayName: text('display_name').notNull(),
+  reminderEmail: text('reminder_email').notNull(),
+  timezone: text('timezone').notNull().default('utc'),
+  browserNotificationsEnabled: boolean('browser_notifications_enabled').notNull().default(true),
+  desktopNotificationsEnabled: boolean('desktop_notifications_enabled').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
+
 export type Task = typeof tasks.$inferSelect;
 export type NewTask = typeof tasks.$inferInsert;
 
 export type Reminder = typeof reminders.$inferSelect;
 export type NewReminder = typeof reminders.$inferInsert;
+
+export type Setting = typeof settings.$inferSelect;
+export type NewSetting = typeof settings.$inferInsert;
