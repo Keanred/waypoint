@@ -38,14 +38,7 @@ type PageLayoutProps = {
   onAddClick?: () => void;
 };
 
-export const PageLayout = ({
-  children,
-  sidebar,
-  topBar,
-  bottomNav,
-  maxWidth = 1440,
-  mainSx = {},
-}: PageLayoutProps) => {
+export const PageLayout = ({ children, sidebar, topBar, bottomNav, maxWidth = 1440, mainSx = {} }: PageLayoutProps) => {
   return (
     <Box
       sx={{

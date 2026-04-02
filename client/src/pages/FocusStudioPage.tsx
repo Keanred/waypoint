@@ -1,15 +1,12 @@
 import AddTaskRoundedIcon from '@mui/icons-material/AddTaskRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import DoNotDisturbOnRoundedIcon from '@mui/icons-material/DoNotDisturbOnRounded';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import EqualizerRoundedIcon from '@mui/icons-material/EqualizerRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import PauseCircleRoundedIcon from '@mui/icons-material/PauseCircleRounded';
 import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
 import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import WaterDropRoundedIcon from '@mui/icons-material/WaterDropRounded';
@@ -19,16 +16,21 @@ import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
 
 import { BottomNavBar } from '../components/BottomNavBar';
-import { colors } from '../theme';
 import { FocusTimer } from '../components/FocusTimer';
 import { SideNavBar } from '../components/SideNavBar';
+import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
+import { colors } from '../theme';
 import { TaskSelectionModal } from './TaskSelectionModal';
 
 export const FocusStudioPage = () => {
+  const sidebarConfig = createSidebarConfig('focus', {
+    actionLabel: undefined,
+    actionIcon: undefined,
+    footerItems: undefined,
+  });
+  const handleTaskSelectionClose = () => undefined;
 
   return (
     <Box
@@ -42,14 +44,12 @@ export const FocusStudioPage = () => {
     >
       {/* Desktop Sidebar */}
       <SideNavBar
-        appName="Waypoint"
-        tagline="Productivity Engine"
-        navItems={[
-          { label: 'Dashboard', icon: <DashboardRoundedIcon />, to: '/' },
-          { label: 'Focus Studio', icon: <TimerRoundedIcon />, active: true, to: '/focus' },
-          { label: 'Analytics', icon: <LeaderboardRoundedIcon />, to: '/analytics' },
-          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
-        ]}
+        appName={sidebarConfig.appName}
+        tagline={sidebarConfig.tagline}
+        navItems={sidebarConfig.navItems}
+        actionLabel={sidebarConfig.actionLabel}
+        actionIcon={sidebarConfig.actionIcon}
+        footerItems={sidebarConfig.footerItems}
       />
 
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
@@ -575,9 +575,7 @@ export const FocusStudioPage = () => {
                     +4
                   </Box>
                 </Box>
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, ml: 1 }}>
-                  6 Deep Blocks
-                </Typography>
+                <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, ml: 1 }}>6 Deep Blocks</Typography>
               </Box>
             </Box>
 
@@ -621,9 +619,7 @@ export const FocusStudioPage = () => {
                   <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: colors.onSurface }}>
                     Midnight Lo-Fi
                   </Typography>
-                  <Typography sx={{ fontSize: '0.625rem', color: colors.onSurfaceVariant }}>
-                    Chillhop Beats
-                  </Typography>
+                  <Typography sx={{ fontSize: '0.625rem', color: colors.onSurfaceVariant }}>Chillhop Beats</Typography>
                 </Box>
               </Box>
             </Box>
@@ -676,17 +672,10 @@ export const FocusStudioPage = () => {
       </Box>
 
       {/* Mobile Navigation */}
-      <BottomNavBar
-        items={[
-          { label: 'Focus', icon: <TimerRoundedIcon />, active: true, to: '/focus' },
-          { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/analytics' },
-          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
-        ]}
-      />
+      <BottomNavBar items={createBottomNavItems('focus')} />
 
       {/* Task Selection Modal */}
-      <TaskSelectionModal isOpen={false} onClose={() => {}} />
+      <TaskSelectionModal isOpen={false} onClose={handleTaskSelectionClose} />
     </Box>
   );
 };

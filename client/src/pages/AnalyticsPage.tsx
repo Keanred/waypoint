@@ -1,21 +1,11 @@
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
-import BoltRoundedIcon from '@mui/icons-material/BoltRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import InsightsRoundedIcon from '@mui/icons-material/InsightsRounded';
 import LeakAddRoundedIcon from '@mui/icons-material/LeakAddRounded';
 import LocalFireDepartmentRoundedIcon from '@mui/icons-material/LocalFireDepartmentRounded';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { PageLayout } from '../components/PageLayout';
+import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
 import { StatCard } from '../components/StatCard';
 import { colors } from '../theme';
 
@@ -25,28 +15,9 @@ const BAR_HEIGHTS = ['40%', '60%', '55%', '85%', '45%', '30%', '25%'] as const;
 export const AnalyticsPage = () => {
   return (
     <PageLayout
-      sidebar={{
-        appName: 'Waypoint',
-        tagline: 'High-End Productivity',
-        navItems: [
-          { label: 'Overview', icon: <DashboardRoundedIcon />, to: '/' },
-          { label: 'Focus Studio', icon: <TimerRoundedIcon />, to: '/focus' },
-          { label: 'Analytics', icon: <InsightsRoundedIcon />, active: true, to: '/analytics' },
-          { label: 'Completed', icon: <CheckCircleRoundedIcon /> },
-        ],
-        actionLabel: 'New Task',
-        footerItems: [
-          { label: 'Help', icon: <HelpOutlineRoundedIcon /> },
-          { label: 'Logout', icon: <LogoutRoundedIcon /> },
-        ],
-      }}
+      sidebar={createSidebarConfig('analytics')}
       topBar={null}
-      bottomNav={[
-        { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
-        { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
-        { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
-        { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
-      ]}
+      bottomNav={createBottomNavItems('analytics')}
       maxWidth={1600}
       mainSx={{ p: { xs: 4, lg: 6 }, pb: { xs: 16, lg: 6 } }}
     >

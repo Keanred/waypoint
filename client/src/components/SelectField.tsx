@@ -66,7 +66,9 @@ export const SelectField = ({ label, options, defaultValue, helperText }: Select
         </NativeSelect>
       </Box>
       {helperText && (
-        <Typography sx={{ fontSize: '0.75rem', color: colors.onSurfaceVariant, pt: 1, px: 0.5 }}>{helperText}</Typography>
+        <Typography sx={{ fontSize: '0.75rem', color: colors.onSurfaceVariant, pt: 1, px: 0.5 }}>
+          {helperText}
+        </Typography>
       )}
     </Box>
   );

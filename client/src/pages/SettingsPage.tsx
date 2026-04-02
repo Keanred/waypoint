@@ -1,16 +1,6 @@
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
-import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import EventRoundedIcon from '@mui/icons-material/EventRounded';
-import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
-import PriorityHighRoundedIcon from '@mui/icons-material/PriorityHighRounded';
 import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -19,38 +9,20 @@ import { FormField } from '../components/FormField';
 import { PageLayout } from '../components/PageLayout';
 import { SelectField } from '../components/SelectField';
 import { SettingsSection } from '../components/SettingsSection';
+import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
 import { ToggleRow } from '../components/ToggleRow';
 import { colors } from '../theme';
 
 export const SettingsPage = () => {
   return (
     <PageLayout
-      sidebar={{
-        appName: 'Task Master',
-        tagline: 'Precision focus',
-        navItems: [
-          { label: 'Overview', icon: <DashboardRoundedIcon />, to: '/' },
-          { label: 'High Priority', icon: <PriorityHighRoundedIcon />, to: '/focus' },
-          { label: 'Upcoming', icon: <EventRoundedIcon />, to: '/analytics' },
-          { label: 'Completed', icon: <CheckCircleRoundedIcon />, to: '/settings' },
-        ],
-        actionLabel: 'New Focus Session',
-        footerItems: [
-          { label: 'Archive', icon: <ArchiveRoundedIcon /> },
-          { label: 'Support', icon: <HelpOutlineRoundedIcon /> },
-        ],
-      }}
+      sidebar={createSidebarConfig('settings')}
       topBar={{
         brandName: 'Nocturne Task',
         navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
         addButtonLabel: 'Add Task',
       }}
-      bottomNav={[
-        { label: 'Home', icon: <HomeRoundedIcon />, to: '/' },
-        { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
-        { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
-        { label: 'Settings', icon: <SettingsRoundedIcon />, active: true, to: '/settings' },
-      ]}
+      bottomNav={createBottomNavItems('settings')}
       maxWidth={896}
     >
       {/* Page Header */}

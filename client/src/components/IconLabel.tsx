@@ -2,8 +2,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { ReactNode } from 'react';
 
-import { colors } from '../theme';
-
 interface IconLabelProps {
   icon: ReactNode;
   label: string;

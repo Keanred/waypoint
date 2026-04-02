@@ -1,6 +1,6 @@
-import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
+import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { DashboardPage } from './pages/DashboardPage';

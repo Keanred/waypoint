@@ -37,14 +37,7 @@ export const FocusTimer = ({ minutes, seconds, progress }: FocusTimerProps) => {
         }}
       >
         {/* Background track */}
-        <circle
-          cx="50"
-          cy="50"
-          r={radius}
-          fill="transparent"
-          stroke="rgba(39, 41, 53, 0.4)"
-          strokeWidth="0.8"
-        />
+        <circle cx="50" cy="50" r={radius} fill="transparent" stroke="rgba(39, 41, 53, 0.4)" strokeWidth="0.8" />
         {/* Progress arc */}
         <circle
           cx="50"

@@ -1,26 +1,16 @@
-import AlarmRoundedIcon from '@mui/icons-material/AlarmRounded';
-import ArchiveRoundedIcon from '@mui/icons-material/ArchiveRounded';
-import BoltRoundedIcon from '@mui/icons-material/BoltRounded';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import EventBusyRoundedIcon from '@mui/icons-material/EventBusyRounded';
 import EventRoundedIcon from '@mui/icons-material/EventRounded';
-import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
-import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import LeaderboardRoundedIcon from '@mui/icons-material/LeaderboardRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import type { TaskResponse } from '@waypoint/schemas';
 
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { PageLayout } from '../components/PageLayout';
+import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
 import { StatCard } from '../components/StatCard';
 import { TaskCard } from '../components/TaskCard';
 import { TaskGroup } from '../components/TaskGroup';
@@ -155,34 +145,14 @@ export const DashboardPage = () => {
   return (
     <>
       <PageLayout
-        sidebar={{
-          appName: 'Task Master',
-          tagline: 'Precision focus',
-          navItems: [
-            { label: 'Overview', icon: <DashboardRoundedIcon />, active: true, to: '/' },
-            { label: 'Focus Studio', icon: <TimerRoundedIcon />, to: '/focus' },
-            { label: 'Analytics', icon: <LeaderboardRoundedIcon />, to: '/analytics' },
-            { label: 'Completed', icon: <CheckCircleRoundedIcon /> },
-          ],
-          actionLabel: 'New Focus Session',
-          actionIcon: <BoltRoundedIcon sx={{ fontSize: '1rem' }} />,
-          footerItems: [
-            { label: 'Archive', icon: <ArchiveRoundedIcon /> },
-            { label: 'Support', icon: <HelpOutlineRoundedIcon /> },
-          ],
-        }}
+        sidebar={createSidebarConfig('dashboard')}
         topBar={{
           brandName: 'Waypoint',
           navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
           addButtonLabel: 'Add Task',
           onAddClick: () => setIsCreateTaskModalOpen(true),
         }}
-        bottomNav={[
-          { label: 'Home', icon: <HomeRoundedIcon />, active: true, to: '/' },
-          { label: 'Tasks', icon: <FormatListBulletedRoundedIcon />, to: '/focus' },
-          { label: 'Alerts', icon: <AlarmRoundedIcon />, to: '/analytics' },
-          { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
-        ]}
+        bottomNav={createBottomNavItems('dashboard')}
       >
         <CreateTaskModal
           isOpen={isCreateTaskModalOpen}
