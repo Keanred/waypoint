@@ -15,6 +15,13 @@
       "when": 1774870169709,
       "tag": "0001_mute_black_widow",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775147929850,
+      "tag": "0002_old_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

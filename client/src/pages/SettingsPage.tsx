@@ -5,20 +5,185 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { FormField } from '../components/FormField';
+import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
+import { Timezone } from '@waypoint/schemas';
+import { useEffect, useState } from 'react';
+import { ApiClientError } from '../api';
 import { PageLayout } from '../components/PageLayout';
-import { SelectField } from '../components/SelectField';
 import { SettingsSection } from '../components/SettingsSection';
 import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
-import { ToggleRow } from '../components/ToggleRow';
+import { useCreateSettingsMutation, useSettingsQuery, useUpdateSettingsMutation } from '../settingsQuery';
 import { colors } from '../theme';
 
+const timezoneOptions = [
+  { label: 'UTC (Coordinated Universal Time)', value: 'utc' },
+  { label: 'EST (Eastern Standard Time)', value: 'est' },
+  { label: 'CET (Central European Time)', value: 'cet' },
+  { label: 'JST (Japan Standard Time)', value: 'jst' },
+];
+
+const shouldInitializeSettings = (args: {
+  isError: boolean;
+  settingsError: unknown;
+  isInitializingSettings: boolean;
+  hasInitializedSettings: boolean;
+}) => {
+  const { isError, settingsError, isInitializingSettings, hasInitializedSettings } = args;
+
+  if (!isError) {
+    return false;
+  }
+
+  if (!(settingsError instanceof ApiClientError)) {
+    return false;
+  }
+
+  if (settingsError.status !== 404) {
+    return false;
+  }
+
+  if (isInitializingSettings) {
+    return false;
+  }
+
+  return !hasInitializedSettings;
+};
+
+const shouldShowSettingsError = (args: {
+  isError: boolean;
+  settingsError: unknown;
+  isPending: boolean;
+  hasSettings: boolean;
+  hasInitializationError: boolean;
+  settings: unknown;
+}) => {
+  const { isError, settingsError, isPending, hasSettings, hasInitializationError, settings } = args;
+
+  const hasUnexpectedFetchError = () => {
+    if (!isError) {
+      return false;
+    }
+
+    if (!(settingsError instanceof ApiClientError)) {
+      return true;
+    }
+
+    return settingsError.status !== 404;
+  };
+
+  const failedAfterInitializationAttempt = () => {
+    if (isPending) {
+      return false;
+    }
+
+    if (hasSettings) {
+      return false;
+    }
+
+    return hasInitializationError;
+  };
+
+  const missingSettingsAfterLoad = () => {
+    if (isPending) {
+      return false;
+    }
+
+    return !settings;
+  };
+
+  return hasUnexpectedFetchError() || failedAfterInitializationAttempt() || missingSettingsAfterLoad();
+};
+
 export const SettingsPage = () => {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [timezone, setTimezone] = useState<Timezone>('utc');
+  const [browserNotifications, setBrowserNotifications] = useState(true);
+  const [desktopNotifications, setDesktopNotifications] = useState(false);
+
+  const { mutate: updateSettingMutate } = useUpdateSettingsMutation();
+
+  const {
+    mutate: initializeSettings,
+    isPending: isInitializingSettings,
+    isSuccess: hasInitializedSettings,
+    isError: hasInitializationError,
+  } = useCreateSettingsMutation();
+
+  const {
+    data: settings,
+    error: settingsError,
+    isPending: isSettingsPending,
+    isError,
+    isSuccess: hasSettings,
+  } = useSettingsQuery();
+
+  useEffect(() => {
+    if (shouldInitializeSettings({ isError, settingsError, isInitializingSettings, hasInitializedSettings })) {
+      initializeSettings();
+    }
+  }, [hasInitializedSettings, initializeSettings, isError, isInitializingSettings, settingsError]);
+
+  useEffect(() => {
+    if (!settings) {
+      return;
+    }
+
+    setFullName(settings.displayName);
+    setEmail(settings.reminderEmail);
+    setTimezone(settings.timezone);
+    setBrowserNotifications(settings.browserNotificationsEnabled);
+    setDesktopNotifications(settings.desktopNotificationsEnabled);
+  }, [settings]);
+
+  const isPending = isInitializingSettings || isSettingsPending;
+
+  if (isPending) {
+    return (
+      <PageLayout
+        sidebar={createSidebarConfig('settings')}
+        topBar={{
+          brandName: 'Waypoint',
+          navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
+          addButtonLabel: 'Add Task',
+        }}
+        bottomNav={createBottomNavItems('settings')}
+        maxWidth={896}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+          <Typography sx={{ color: colors.onSurfaceVariant, fontSize: '1.25rem' }}>Loading settings...</Typography>
+        </Box>
+      </PageLayout>
+    );
+  }
+
+  if (shouldShowSettingsError({ isError, settingsError, isPending, hasSettings, hasInitializationError, settings })) {
+    return (
+      <PageLayout
+        sidebar={createSidebarConfig('settings')}
+        topBar={{
+          brandName: 'Waypoint',
+          navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
+          addButtonLabel: 'Add Task',
+        }}
+        bottomNav={createBottomNavItems('settings')}
+        maxWidth={896}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
+          <Typography sx={{ color: colors.error, fontSize: '1.25rem' }}>
+            Failed to load settings. Please try again later.
+          </Typography>
+        </Box>
+      </PageLayout>
+    );
+  }
   return (
     <PageLayout
       sidebar={createSidebarConfig('settings')}
       topBar={{
-        brandName: 'Nocturne Task',
+        brandName: 'Waypoint',
         navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
         addButtonLabel: 'Add Task',
       }}
@@ -57,8 +222,25 @@ export const SettingsPage = () => {
               gap: 3,
             }}
           >
-            <FormField label="Full Name" defaultValue="Julian Nocturne" />
-            <FormField label="Email for Reminders" type="email" defaultValue="julian@nocturne.studio" />
+            <TextField
+              id="settings-display-name"
+              name="displayName"
+              label="Full Name"
+              value={fullName}
+              autoComplete="name"
+              fullWidth
+              onChange={(e) => setFullName(e.target.value)}
+            />
+            <TextField
+              id="settings-reminder-email"
+              name="reminderEmail"
+              label="Email for Reminders"
+              type="email"
+              value={email}
+              autoComplete="email"
+              fullWidth
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </Box>
         </SettingsSection>
 
@@ -69,11 +251,24 @@ export const SettingsPage = () => {
           title="Notification Preferences"
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <ToggleRow
-              title="Browser Notifications"
-              description="Receive real-time alerts for task deadlines."
-              defaultChecked
-            />
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: '1.125rem' }}>Browser Notifications</Typography>
+                <Typography sx={{ fontSize: '0.875rem', color: colors.onSurfaceVariant }}>
+                  Receive real-time alerts for task deadlines.
+                </Typography>
+              </Box>
+              <Switch checked={browserNotifications} onChange={(_event, checked) => setBrowserNotifications(checked)} />
+            </Box>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: '1.125rem' }}>Desktop Notifications</Typography>
+                <Typography sx={{ fontSize: '0.875rem', color: colors.onSurfaceVariant }}>
+                  Show desktop notification toasts in supported environments.
+                </Typography>
+              </Box>
+              <Switch checked={desktopNotifications} onChange={(_event, checked) => setDesktopNotifications(checked)} />
+            </Box>
             <Box
               sx={{
                 display: 'flex',
@@ -115,17 +310,23 @@ export const SettingsPage = () => {
           iconColor={colors.error}
           title="System"
         >
-          <SelectField
+          <TextField
+            id="settings-timezone"
+            name="timezone"
+            select
             label="Timezone"
-            defaultValue="utc"
-            options={[
-              { label: 'UTC (Coordinated Universal Time)', value: 'utc' },
-              { label: 'EST (Eastern Standard Time)', value: 'est' },
-              { label: 'CET (Central European Time)', value: 'cet' },
-              { label: 'JST (Japan Standard Time)', value: 'jst' },
-            ]}
-            helperText="All task deadlines will be synchronized to this timezone."
-          />
+            value={timezone}
+            autoComplete="off"
+            helperText="All task deadlines will be synchronized to this timezone"
+            fullWidth
+            onChange={(e) => setTimezone(e.target.value as Timezone)}
+          >
+            {timezoneOptions.map((opt) => (
+              <MenuItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </SettingsSection>
 
         {/* Actions */}
@@ -153,6 +354,15 @@ export const SettingsPage = () => {
             Discard Changes
           </Button>
           <Button
+            onClick={() => {
+              updateSettingMutate({
+                displayName: fullName,
+                reminderEmail: email,
+                timezone,
+                browserNotificationsEnabled: browserNotifications,
+                desktopNotificationsEnabled: desktopNotifications,
+              });
+            }}
             sx={{
               background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
               color: colors.onPrimary,

@@ -1,9 +1,11 @@
 import type {
   CreateReminderInput,
+  CreateSettingInput,
   CreateTaskResponse,
   CreateTaskWithRemindersInput,
   GetTasksResponse,
   ReminderResponse,
+  SettingsResponse,
   TaskResponse,
   UpdateTaskInput,
 } from '@waypoint/schemas';
@@ -143,3 +145,11 @@ export const createReminder = (taskId: string, input: Omit<CreateReminderInput, 
 
 export const deleteReminder = (taskId: string, reminderId: string): Promise<DeleteReminderResponse> =>
   request<DeleteReminderResponse>(`/tasks/${taskId}/reminders/${reminderId}`, { method: 'DELETE' });
+
+export const getSettings = (): Promise<SettingsResponse> => request<SettingsResponse>('/settings');
+
+export const createSettings = (settings?: CreateSettingInput): Promise<SettingsResponse> =>
+  request<SettingsResponse, CreateSettingInput | undefined>('/settings', { method: 'POST', body: settings });
+
+export const updateSettings = (settings: Partial<CreateSettingInput>): Promise<SettingsResponse> =>
+  request<SettingsResponse, Partial<CreateSettingInput>>('/settings', { method: 'PATCH', body: settings });

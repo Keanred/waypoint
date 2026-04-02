@@ -23,7 +23,7 @@ type BottomNavBarItem = {
 
 type TopAppBarProps = {
   brandName: string;
-  navLinks?: Array<{ label: string; to?: string }>;
+  navLinks?: Array<{ label: string; to?: '/' | '/focus' | '/settings' }>;
   addButtonLabel?: string;
   onAddClick?: () => void;
 };
@@ -64,8 +64,8 @@ export const PageLayout = ({ children, sidebar, topBar, bottomNav, maxWidth = 14
         {topBar && (
           <TopAppBar
             brandName={topBar.brandName}
-            navLinks={topBar.navLinks}
-            addButtonLabel={topBar.addButtonLabel}
+            navLinks={topBar.navLinks ?? []}
+            addButtonLabel={topBar.addButtonLabel ?? 'Add task'}
             onAddClick={topBar.onAddClick}
           />
         )}
