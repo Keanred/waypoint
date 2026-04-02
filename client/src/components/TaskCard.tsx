@@ -19,7 +19,6 @@ interface TaskCardProps {
   reminderIcon: ReactNode;
   borderColor: string;
   onComplete?: (taskId: string) => void;
-  isCompleting?: boolean;
 }
 
 export const TaskCard = ({
@@ -34,7 +33,6 @@ export const TaskCard = ({
   reminderIcon,
   borderColor,
   onComplete,
-  isCompleting = false,
 }: TaskCardProps) => {
   return (
     <Box
@@ -129,7 +127,6 @@ export const TaskCard = ({
         </IconButton>
         <IconButton
           onClick={() => onComplete?.(taskId)}
-          disabled={isCompleting}
           sx={{
             width: 48,
             height: 48,

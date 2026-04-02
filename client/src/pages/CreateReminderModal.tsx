@@ -23,7 +23,7 @@ const fieldSx = {
     boxShadow: '0 0 0 2px rgba(215, 186, 255, 0.4)',
   },
   transition: 'all 0.2s',
-} as const;
+};
 
 const labelSx = {
   fontSize: '0.75rem',
@@ -32,17 +32,14 @@ const labelSx = {
   textTransform: 'uppercase',
   letterSpacing: '0.1em',
   color: colors.onSurfaceVariant,
-} as const;
+};
 
 type CreateReminderModalProps = {
   onClose: () => void;
   onAddReminder: (reminder: Omit<CreateReminderInput, 'taskId'>) => void;
 };
 
-export const CreateReminderModal = ({
-  onClose,
-  onAddReminder,
-}: CreateReminderModalProps) => {
+export const CreateReminderModal = ({ onClose, onAddReminder }: CreateReminderModalProps) => {
   const [offsetValue, setOffsetValue] = useState(1);
   const [offsetUnit, setOffsetUnit] = useState('DAYS');
   return (

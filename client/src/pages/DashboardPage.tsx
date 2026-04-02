@@ -17,9 +17,8 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import type { ReminderResponse, TaskResponse } from '@waypoint/schemas';
+import type { TaskResponse } from '@waypoint/schemas';
 
-import { createTask, deleteTask, getTasks } from '../api';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { PageLayout } from '../components/PageLayout';
 import { StatCard } from '../components/StatCard';
@@ -27,9 +26,9 @@ import { TaskCard } from '../components/TaskCard';
 import { TaskGroup } from '../components/TaskGroup';
 import { colors } from '../theme';
 
-import { CreateTaskWithRemindersInput } from '@waypoint/schemas';
 import { isPast, isThisWeek, isToday } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { completeTaskMutation, createTaskMutation, useTasksQuery } from '../tasksQuery';
 import { CreateTaskModal } from './CreateTaskModal';
 
 const COLORS = {
@@ -64,65 +63,94 @@ const groupTasksByUrgency = (tasks: TaskResponse[]) => {
   };
 };
 
+const getStatusMessage = (taskCount: number, reminderCount: number) => {
+  const taskWord = taskCount === 1 ? 'task' : 'tasks';
+  const alertWord = reminderCount === 1 ? 'alert' : 'alerts';
+
+  return `You have ${taskCount} active ${taskWord} and ${reminderCount} ${alertWord}.`;
+};
+
+type TaskSectionProps = {
+  label: string;
+  color: string;
+  tasks: TaskResponse[];
+  reminders: { taskId: string }[];
+  emptyMessage: string;
+  getDueLabel: (task: TaskResponse) => string;
+  getDueIcon: (task: TaskResponse) => JSX.Element;
+  getReminderIcon: (task: TaskResponse) => JSX.Element;
+  onComplete: (taskId: string) => void;
+};
+
+const TaskSection = ({
+  label,
+  color,
+  tasks,
+  reminders,
+  emptyMessage,
+  getDueLabel,
+  getDueIcon,
+  getReminderIcon,
+  onComplete,
+}: TaskSectionProps) => {
+  if (tasks.length === 0) {
+    return (
+      <TaskGroup label={label} color={color}>
+        <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
+          {emptyMessage}
+        </Typography>
+      </TaskGroup>
+    );
+  }
+
+  return (
+    <TaskGroup label={label} color={color}>
+      {tasks.map((task) => (
+        <TaskCard
+          key={task.id}
+          taskId={task.id}
+          title={task.title}
+          description={task.description ?? ''}
+          priorityLabel={task.priority}
+          priorityColor={color}
+          dueLabel={getDueLabel(task)}
+          dueIcon={getDueIcon(task)}
+          reminderCount={reminders.filter((reminder) => reminder.taskId === task.id).length}
+          reminderIcon={getReminderIcon(task)}
+          borderColor={color}
+          onComplete={onComplete}
+        />
+      ))}
+    </TaskGroup>
+  );
+};
+
 export const DashboardPage = () => {
-  const [tasks, setTasks] = useState<TaskResponse[]>([]);
-  const [reminders, setReminders] = useState<ReminderResponse[]>([]);
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [completingTaskIds, setCompletingTaskIds] = useState<Record<string, boolean>>({});
-  const [error, setError] = useState<string | null>(null);
+
+  const { data, isPending, isError } = useTasksQuery();
+
+  const { mutate: completeTask } = completeTaskMutation();
+  const { mutate: createNewTask } = createTaskMutation();
+
+  if (isError) {
+    return 'Something went wrong while fetching your tasks. Please try again later.';
+  }
+
+  if (isPending) {
+    return 'Loading your tasks...';
+  }
+
+  if (!data) {
+    return 'No task data is available right now.';
+  }
+
+  const tasks = data.tasks;
+  const reminders = data.reminders;
+  const statusMessage = getStatusMessage(tasks.length, reminders.length);
 
   const { overdue, dueToday, dueThisWeek, later } = groupTasksByUrgency(tasks);
-
-  const statusMessage =
-    error ??
-    (isLoading
-      ? 'Syncing your latest tasks from the API.'
-      : 'Maximize focus by crushing the immediate deadlines first.');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await getTasks();
-        setTasks(response.tasks);
-        setReminders(response.reminders);
-      } catch {
-        setError('Failed to load tasks. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void fetchData();
-  }, []);
-
-  const completeTask = async (taskId: string) => {
-    setCompletingTaskIds((prev) => ({ ...prev, [taskId]: true }));
-    try {
-      await deleteTask(taskId);
-      setTasks((prev) => prev.filter((task) => task.id !== taskId));
-      setReminders((prev) => prev.filter((reminder) => reminder.taskId !== taskId));
-    } catch {
-      setError('Failed to mark task as done. Please try again later.');
-    } finally {
-      setCompletingTaskIds((prev) => {
-        const next = { ...prev };
-        delete next[taskId];
-        return next;
-      });
-    }
-  };
-
-  const createNewTask = async (input: CreateTaskWithRemindersInput) => {
-    try {
-      const { task, reminders: createdReminders } = await createTask(input);
-      setTasks((prev) => [...prev, task]);
-      setReminders((prev) => [...prev, ...createdReminders]);
-    } catch {
-      setError('Failed to create task. Please try again later.');
-    }
-  };
+  const immediateTasks = [...overdue, ...dueToday];
 
   return (
     <>
@@ -156,157 +184,103 @@ export const DashboardPage = () => {
           { label: 'Settings', icon: <SettingsRoundedIcon />, to: '/settings' },
         ]}
       >
-          <CreateTaskModal
-            isOpen={isCreateTaskModalOpen}
-            onClose={() => setIsCreateTaskModalOpen(false)}
-            onSubmit={createNewTask}
-          />
-          {/* Header Section */}
-          <Box
-            component="section"
-            sx={{
-              mb: 6,
-              display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              alignItems: { md: 'flex-end' },
-              justifyContent: 'space-between',
-              gap: 3,
+        <CreateTaskModal
+          isOpen={isCreateTaskModalOpen}
+          onClose={() => setIsCreateTaskModalOpen(false)}
+          onSubmit={createNewTask}
+        />
+        {/* Header Section */}
+        <Box
+          component="section"
+          sx={{
+            mb: 6,
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            alignItems: { md: 'flex-end' },
+            justifyContent: 'space-between',
+            gap: 3,
+          }}
+        >
+          <Box>
+            <Typography
+              sx={{
+                fontSize: { xs: '2.25rem', md: '3rem' },
+                fontWeight: 800,
+                fontFamily: 'Manrope',
+                color: colors.onSurface,
+                letterSpacing: '-0.025em',
+              }}
+            >
+              Current Flow
+            </Typography>
+            <Typography sx={{ color: colors.onSurfaceVariant, fontSize: '1.125rem', maxWidth: 512 }}>
+              {statusMessage}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <StatCard value={String(tasks.length)} label="Active Tasks" valueColor={COLORS.primary} />
+            <StatCard value={String(reminders.length)} label="Alerts" valueColor={COLORS.tertiary} />
+          </Box>
+        </Box>
+        {/* Task Groups */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <TaskSection
+            label="Immediate Priority"
+            color={COLORS.error}
+            tasks={immediateTasks}
+            reminders={reminders}
+            emptyMessage="No urgent tasks at the moment. Great work staying on top of things!"
+            getDueLabel={(task) => {
+              const dueDate = new Date(task.dueDate);
+              if (isPast(dueDate) && !isToday(dueDate)) {
+                return `Overdue ${dueDate.toLocaleString()}`;
+              }
+
+              return `Due Today ${dueDate.toLocaleString()}`;
             }}
-          >
-            <Box>
-              <Typography
-                sx={{
-                  fontSize: { xs: '2.25rem', md: '3rem' },
-                  fontWeight: 800,
-                  fontFamily: 'Manrope',
-                  color: colors.onSurface,
-                  letterSpacing: '-0.025em',
-                }}
-              >
-                Current Flow
-              </Typography>
-              <Typography sx={{ color: colors.onSurfaceVariant, fontSize: '1.125rem', maxWidth: 512 }}>
-                {statusMessage}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <StatCard value={String(tasks.length)} label="Active Tasks" valueColor={COLORS.primary} />
-              <StatCard value={String(reminders.length)} label="Alerts" valueColor={COLORS.tertiary} />
-            </Box>
-          </Box>
-          <CreateTaskModal
-            isOpen={isCreateTaskModalOpen}
-            onClose={() => setIsCreateTaskModalOpen(false)}
-            onSubmit={createNewTask}
+            getDueIcon={(task) => {
+              const dueDate = new Date(task.dueDate);
+              if (isPast(dueDate) && !isToday(dueDate)) {
+                return <EventBusyRoundedIcon sx={{ fontSize: 14 }} />;
+              }
+
+              return <EventRoundedIcon sx={{ fontSize: 14 }} />;
+            }}
+            getReminderIcon={(task) => {
+              const dueDate = new Date(task.dueDate);
+              if (isPast(dueDate) && !isToday(dueDate)) {
+                return <NotificationsActiveRoundedIcon sx={{ fontSize: 14 }} />;
+              }
+
+              return <NotificationsRoundedIcon sx={{ fontSize: 14 }} />;
+            }}
+            onComplete={completeTask}
           />
-          {/* Task Groups */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Immediate Priority */}
-            <TaskGroup label="Immediate Priority" color={COLORS.error}>
-              {overdue.length === 0 && dueToday.length === 0 ? (
-                <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
-                  No urgent tasks at the moment. Great work staying on top of things!
-                </Typography>
-              ) : (
-                <>
-                  {overdue.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      taskId={task.id}
-                      title={task.title}
-                      description={task.description ?? ''}
-                      priorityLabel={task.priority}
-                      priorityColor={COLORS.error}
-                      dueLabel={`Overdue ${new Date(task.dueDate).toLocaleString()}`}
-                      dueIcon={<EventBusyRoundedIcon sx={{ fontSize: 14 }} />}
-                      reminderCount={reminders.filter((r) => r.taskId === task.id).length}
-                      reminderIcon={<NotificationsActiveRoundedIcon sx={{ fontSize: 14 }} />}
-                      borderColor={COLORS.error}
-                      onComplete={completeTask}
-                      isCompleting={Boolean(completingTaskIds[task.id])}
-                    />
-                  ))}
-                  {dueToday.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      taskId={task.id}
-                      title={task.title}
-                      description={task.description ?? ''}
-                      priorityLabel={task.priority}
-                      priorityColor={COLORS.error}
-                      dueLabel={`Due ${new Date(task.dueDate).toLocaleString()}`}
-                      dueIcon={<EventRoundedIcon sx={{ fontSize: 14 }} />}
-                      reminderCount={reminders.filter((r) => r.taskId === task.id).length}
-                      reminderIcon={<NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
-                      borderColor={COLORS.error}
-                      onComplete={completeTask}
-                      isCompleting={Boolean(completingTaskIds[task.id])}
-                    />
-                  ))}
-                </>
-              )}
-            </TaskGroup>
-
-            {/* Upcoming Week */}
-            <TaskGroup label="Upcoming Week" color={COLORS.primary}>
-              {dueThisWeek.length === 0 ? (
-                <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
-                  No tasks due this week. Keep up the great work planning ahead!
-                </Typography>
-              ) : (
-                <>
-                  {dueThisWeek.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      taskId={task.id}
-                      title={task.title}
-                      description={task.description ?? ''}
-                      priorityLabel={task.priority}
-                      priorityColor={COLORS.primary}
-                      dueLabel={`Due ${new Date(task.dueDate).toLocaleString()}`}
-                      dueIcon={<CalendarTodayRoundedIcon sx={{ fontSize: 14 }} />}
-                      reminderCount={reminders.filter((r) => r.taskId === task.id).length}
-                      reminderIcon={<NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
-                      borderColor={COLORS.primary}
-                      onComplete={completeTask}
-                      isCompleting={Boolean(completingTaskIds[task.id])}
-                    />
-                  ))}
-                </>
-              )}
-            </TaskGroup>
-
-            {/* Horizon */}
-            <TaskGroup label="Horizon" color={COLORS.tertiary}>
-              {later.length === 0 ? (
-                <Typography sx={{ color: colors.onSurfaceVariant, fontStyle: 'italic', px: 2, py: 4 }}>
-                  No tasks on the horizon. Time to relax or start planning new projects!
-                </Typography>
-              ) : (
-                <>
-                  {later.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      taskId={task.id}
-                      title={task.title}
-                      description={task.description ?? ''}
-                      priorityLabel={task.priority}
-                      priorityColor={COLORS.tertiary}
-                      dueLabel={`Due ${new Date(task.dueDate).toLocaleString()}`}
-                      dueIcon={<CalendarMonthRoundedIcon sx={{ fontSize: 14 }} />}
-                      reminderCount={reminders.filter((r) => r.taskId === task.id).length}
-                      reminderIcon={<NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
-                      borderColor={COLORS.tertiary}
-                      onComplete={completeTask}
-                      isCompleting={Boolean(completingTaskIds[task.id])}
-                    />
-                  ))}
-                </>
-              )}
-            </TaskGroup>
-          </Box>
-        </PageLayout>
-        <FloatingActionButton onClick={() => setIsCreateTaskModalOpen(true)} />
-      </>
+          <TaskSection
+            label="Upcoming Week"
+            color={COLORS.primary}
+            tasks={dueThisWeek}
+            reminders={reminders}
+            emptyMessage="No tasks due this week. Keep up the great work planning ahead!"
+            getDueLabel={(task) => `Due This Week ${new Date(task.dueDate).toLocaleString()}`}
+            getDueIcon={() => <CalendarTodayRoundedIcon sx={{ fontSize: 14 }} />}
+            getReminderIcon={() => <NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
+            onComplete={completeTask}
+          />
+          <TaskSection
+            label="Horizon"
+            color={COLORS.tertiary}
+            tasks={later}
+            reminders={reminders}
+            emptyMessage="No tasks on the horizon. Time to relax or start planning new projects!"
+            getDueLabel={(task) => `Due Later ${new Date(task.dueDate).toLocaleString()}`}
+            getDueIcon={() => <CalendarMonthRoundedIcon sx={{ fontSize: 14 }} />}
+            getReminderIcon={() => <NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
+            onComplete={completeTask}
+          />
+        </Box>
+      </PageLayout>
+      <FloatingActionButton onClick={() => setIsCreateTaskModalOpen(true)} />
+    </>
   );
 };

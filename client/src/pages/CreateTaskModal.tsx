@@ -48,7 +48,7 @@ const selectSx = {
 type CreateTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (input: CreateTaskWithRemindersInput) => Promise<void>;
+  onSubmit?: (input: CreateTaskWithRemindersInput) => void;
 };
 
 export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalProps) => {
@@ -62,10 +62,27 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
   const [reminders, setReminders] = useState<Omit<CreateReminderInput, 'taskId'>[]>([]);
 
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setPriority('high');
+    setDueDate('');
+    setDueTime('');
+    setRecurrence('NONE');
+    setRecurrenceEnd('');
+    setIsReminderModalOpen(false);
+    setReminders([]);
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (onSubmit) {
-      await onSubmit({
+      onSubmit({
         title,
         description,
         priority: priority as CreateTaskInput['priority'],
@@ -75,7 +92,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
         reminders,
       });
     }
-    onClose();
+    handleClose();
   };
 
   if (!isOpen) {
@@ -84,7 +101,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
 
   return (
     <ModalOverlay>
-      <ModalHeader title="Create New Task" subtitle="Waypoint Protocol v2.4" onClose={onClose} />
+      <ModalHeader title="Create New Task" subtitle="Waypoint Protocol v2.4" onClose={handleClose} />
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -291,7 +308,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
             Initialize Task
           </Button>
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             sx={{
               flex: 1,
               px: 4,
