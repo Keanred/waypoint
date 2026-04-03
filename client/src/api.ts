@@ -137,6 +137,9 @@ export const updateTask = (id: string, input: UpdateTaskInput): Promise<TaskResp
 export const deleteTask = (id: string): Promise<DeleteTaskResponse> =>
   request<DeleteTaskResponse>(`/tasks/${id}`, { method: 'DELETE' });
 
+export const sendTestEmail = (): Promise<{ message: string }> =>
+  request<{ message: string }>('/tasks/test', { method: 'GET' });
+
 export const createReminder = (taskId: string, input: Omit<CreateReminderInput, 'taskId'>): Promise<ReminderResponse> =>
   request<ReminderResponse, Omit<CreateReminderInput, 'taskId'>>(`/tasks/${taskId}/reminders`, {
     method: 'POST',

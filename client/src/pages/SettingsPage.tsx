@@ -3,14 +3,16 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import SettingsEthernetRoundedIcon from '@mui/icons-material/SettingsEthernetRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 
+import Alert from '@mui/material/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { Timezone } from '@waypoint/schemas';
 import { useEffect, useState } from 'react';
-import { ApiClientError } from '../api';
+import { ApiClientError, sendTestEmail } from '../api';
 import { PageLayout } from '../components/PageLayout';
 import { SettingsSection } from '../components/SettingsSection';
 import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
@@ -102,7 +104,25 @@ export const SettingsPage = () => {
   const [timezone, setTimezone] = useState<Timezone>('utc');
   const [browserNotifications, setBrowserNotifications] = useState(true);
   const [desktopNotifications, setDesktopNotifications] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastSeverity, setToastSeverity] = useState<'success' | 'error'>('success');
+  const [toastMessage, setToastMessage] = useState('');
 
+  const showToast = (severity: 'success' | 'error', message: string) => {
+    setToastSeverity(severity);
+    setToastMessage(message);
+    setToastOpen(true);
+  };
+
+  const handleSendTestEmail = async () => {
+    try {
+      await sendTestEmail();
+      showToast('success', 'Test email sent successfully. Please check your inbox.');
+    } catch (error) {
+      console.error('Error sending test email:', error);
+      showToast('error', 'Failed to send test email. Please try again later.');
+    }
+  };
   const { mutate: updateSettingMutate } = useUpdateSettingsMutation();
 
   const {
@@ -285,6 +305,7 @@ export const SettingsPage = () => {
                 </Typography>
               </Box>
               <Button
+                onClick={handleSendTestEmail}
                 sx={{
                   bgcolor: colors.secondaryContainer,
                   color: colors.onSecondaryContainer,
@@ -355,13 +376,23 @@ export const SettingsPage = () => {
           </Button>
           <Button
             onClick={() => {
-              updateSettingMutate({
-                displayName: fullName,
-                reminderEmail: email,
-                timezone,
-                browserNotificationsEnabled: browserNotifications,
-                desktopNotificationsEnabled: desktopNotifications,
-              });
+              updateSettingMutate(
+                {
+                  displayName: fullName,
+                  reminderEmail: email,
+                  timezone,
+                  browserNotificationsEnabled: browserNotifications,
+                  desktopNotificationsEnabled: desktopNotifications,
+                },
+                {
+                  onSuccess: () => {
+                    showToast('success', 'Settings saved successfully.');
+                  },
+                  onError: () => {
+                    showToast('error', 'Failed to save settings. Please try again.');
+                  },
+                },
+              );
             }}
             sx={{
               background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
@@ -383,6 +414,16 @@ export const SettingsPage = () => {
           </Button>
         </Box>
       </Box>
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={3000}
+        onClose={() => setToastOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setToastOpen(false)} severity={toastSeverity} variant="filled" sx={{ width: '100%' }}>
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </PageLayout>
   );
 };

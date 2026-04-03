@@ -1,5 +1,12 @@
-import { CreateTaskResponse, CreateTaskWithRemindersInput, GetTasksResponse, TaskResponse, UpdateTaskInput } from '@waypoint/schemas';
+import {
+  CreateTaskResponse,
+  CreateTaskWithRemindersInput,
+  GetTasksResponse,
+  TaskResponse,
+  UpdateTaskInput,
+} from '@waypoint/schemas';
 import { Request, Response, Router } from 'express';
+import { sendTestEmail } from '../services/scheduler';
 import { createTask, deleteTask, getTasks, updateTask } from '../services/tasks';
 
 const tasksRouter = Router();
@@ -46,6 +53,11 @@ tasksRouter.delete('/tasks/:id', async (req: Request, res: Response): Promise<vo
   }
 
   res.status(200).json({ success: true, data: result });
+});
+
+tasksRouter.get('/tasks/test', async (_req: Request, res: Response): Promise<void> => {
+  await sendTestEmail();
+  res.status(200).json({ success: true, data: 'Test endpoint is working!' });
 });
 
 export default tasksRouter;

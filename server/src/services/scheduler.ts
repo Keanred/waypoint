@@ -1,3 +1,5 @@
+import cron from 'node-cron';
+import { config } from '../config';
 import {
   dbCountUnsentRemindersByTaskId,
   dbGetRemindersByTaskId,
@@ -6,8 +8,6 @@ import {
 import { dbInsertTask } from '../db/queries/tasks';
 import { EmailService } from './email';
 import { getUnsentRemainders, markReminderAsSent } from './reminders';
-import cron from 'node-cron';
-import { config } from '../config';
 
 let isRunning = false;
 
@@ -50,7 +50,7 @@ const getNextDueDate = (dueDate: Date, recurrence: RecurringTask['recurrence']) 
 
 export const checkAndSendReminders = async () => {
   if (isRunning) {
-    console.warn("Reminder check is already running, skipping this cycle.");
+    console.warn('Reminder check is already running, skipping this cycle.');
     return;
   }
   isRunning = true;
@@ -143,4 +143,31 @@ export const startReminderScheduler = () => {
 
   cron.schedule(cronExpression, checkAndSendReminders);
   console.log(`📅 Reminder scheduler started - checking every ${intervalMinutes} minute(s)`);
+};
+
+export const sendTestEmail = async () => {
+  const testTask: RecurringTask = {
+    id: 'test-task-id',
+    title: 'Test Task',
+    description: 'This is a test task for email reminders.',
+    priority: 'medium',
+    dueDate: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
+    recurrence: 'NONE',
+    recurringEndDate: null,
+  };
+
+  const testReminder = {
+    id: 'test-reminder-id',
+    taskId: testTask.id,
+    offsetValue: 5,
+    offsetUnit: 'MINUTES' as 'MINUTES' | 'HOURS' | 'DAYS',
+    sentAt: null,
+  };
+
+  const result = await emailService.sendReminderEmail(testTask, testReminder);
+  if (result.success) {
+    console.log('✅ Test email sent successfully');
+  } else {
+    console.error(`❌ Failed to send test email: ${result.error}`);
+  }
 };
