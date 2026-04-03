@@ -3,7 +3,6 @@ import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
-import ScheduleRoundedIcon from '@mui/icons-material/ScheduleRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import Box from '@mui/material/Box';
@@ -11,7 +10,9 @@ import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
 import type { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { useMemo, useState } from 'react';
 
+import { Reminder, Task } from '@waypoint/schemas';
 import { ModalHeader } from '../components/ModalHeader';
 import { ModalOverlay } from '../components/ModalOverlay';
 import { colors } from '../theme';
@@ -21,7 +22,6 @@ interface NorthStarTask {
   title: string;
   priority: 'High' | 'Medium' | 'Low';
   project: string;
-  duration: string;
 }
 
 const priorityStyles: Record<NorthStarTask['priority'], { bgcolor: string; color: string }> = {
@@ -39,36 +39,11 @@ const priorityStyles: Record<NorthStarTask['priority'], { bgcolor: string; color
   },
 };
 
-const tasks: NorthStarTask[] = [
-  {
-    id: '1',
-    title: 'Design System Audit & Component Refactor',
-    priority: 'High',
-    project: 'Waypoint v2',
-    duration: '45m',
-  },
-  {
-    id: '2',
-    title: 'API Documentation: Authentication Flow',
-    priority: 'High',
-    project: 'Core Engine',
-    duration: '30m',
-  },
-  {
-    id: '3',
-    title: 'Weekly Stakeholder Sync Preparation',
-    priority: 'Medium',
-    project: 'Management',
-    duration: '15m',
-  },
-  {
-    id: '4',
-    title: 'Refactor Tailwind Config for Dark Mode',
-    priority: 'High',
-    project: 'Frontend',
-    duration: '25m',
-  },
-];
+const normalizePriority = (priority: string | null | undefined): NorthStarTask['priority'] => {
+  if (priority === 'High' || priority === 'high') return 'High';
+  if (priority === 'Low' || priority === 'low') return 'Low';
+  return 'Medium';
+};
 
 const metaSx = (isSelected: boolean): SxProps<Theme> => ({
   display: 'flex',
@@ -97,13 +72,16 @@ const inheritTypoSx: SxProps<Theme> = {
 interface TaskItemProps {
   task: NorthStarTask;
   isSelected: boolean;
+  onSelect?: (id: string) => void;
 }
 
-const NorthStarTaskItem = ({ task, isSelected }: TaskItemProps) => {
-  const pStyle = priorityStyles[task.priority];
+const NorthStarTaskItem = ({ task, isSelected, onSelect }: TaskItemProps) => {
+  const normalizedPriority = normalizePriority(task.priority);
+  const pStyle = priorityStyles[normalizedPriority];
 
   return (
     <Box
+      onClick={() => onSelect?.(task.id)}
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -128,39 +106,6 @@ const NorthStarTaskItem = ({ task, isSelected }: TaskItemProps) => {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
-        {/* Radio indicator */}
-        <Box
-          sx={{
-            mt: 0.25,
-            width: 24,
-            height: 24,
-            borderRadius: '4px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            ...(isSelected
-              ? { bgcolor: 'rgba(189, 147, 249, 0.2)' }
-              : {
-                  bgcolor: colors.surfaceContainerHighest,
-                  border: '1px solid rgba(74, 68, 81, 0.3)',
-                }),
-          }}
-        >
-          <Box
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              ...(isSelected
-                ? {
-                    bgcolor: colors.primary,
-                    boxShadow: '0 0 8px rgba(215, 186, 255, 0.8)',
-                  }
-                : { bgcolor: 'transparent' }),
-            }}
-          />
-        </Box>
-
         <Box>
           <Typography
             sx={{
@@ -193,15 +138,11 @@ const NorthStarTaskItem = ({ task, isSelected }: TaskItemProps) => {
                 letterSpacing: '0.08em',
               }}
             >
-              {task.priority}
+              {normalizedPriority}
             </Typography>
             <Box sx={metaSx(isSelected)}>
               <FolderRoundedIcon sx={{ fontSize: '0.875rem' }} />
               <Typography sx={{ fontSize: '0.75rem' }}>{task.project}</Typography>
-            </Box>
-            <Box sx={metaSx(isSelected)}>
-              <ScheduleRoundedIcon sx={{ fontSize: '0.875rem' }} />
-              <Typography sx={{ fontSize: '0.75rem' }}>{task.duration}</Typography>
             </Box>
           </Box>
         </Box>
@@ -224,15 +165,43 @@ const NorthStarTaskItem = ({ task, isSelected }: TaskItemProps) => {
 interface NorthStarModalProps {
   isOpen: boolean;
   onClose: () => void;
+  tasks?: { tasks: Task[]; reminders: Reminder[] } | null;
+  selectedTaskIds?: string[] | null;
+  onSelectTask?: (taskIds: string[]) => void;
 }
 
-export const NorthStarModal = ({ isOpen, onClose }: NorthStarModalProps) => {
+export const NorthStarModal = ({ isOpen, onClose, tasks, selectedTaskIds, onSelectTask }: NorthStarModalProps) => {
+  const [query, setQuery] = useState('');
+  const [localSelectedTaskIds, setLocalSelectedTaskIds] = useState<string[]>(selectedTaskIds ?? []);
+
+  const filteredTasks = useMemo(() => {
+    if (!tasks?.tasks) {
+      return [];
+    }
+
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) {
+      return tasks.tasks;
+    }
+
+    return tasks.tasks.filter((task) => task.title.toLowerCase().includes(normalizedQuery));
+  }, [query, tasks]);
+
+  const handleToggleTask = (taskId: string) => {
+    setLocalSelectedTaskIds((prev) => (prev.includes(taskId) ? prev.filter((id) => id !== taskId) : [...prev, taskId]));
+  };
+
+  const handleStartSession = () => {
+    if (localSelectedTaskIds.length > 0) {
+      onSelectTask?.(localSelectedTaskIds);
+    }
+    onClose();
+  };
+
   if (!isOpen) return null;
 
-  const selectedId = '1';
-
   return (
-    <ModalOverlay maxWidth={576}>
+    <ModalOverlay maxWidth={576} height={800}>
       {/* Header */}
       <Box sx={{ px: 4, pt: 4, pb: 2 }}>
         <ModalHeader
@@ -261,6 +230,8 @@ export const NorthStarModal = ({ isOpen, onClose }: NorthStarModalProps) => {
           <InputBase
             placeholder="Search objectives or projects..."
             fullWidth
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
             sx={{
               color: colors.onSurface,
               fontSize: '0.875rem',
@@ -293,8 +264,18 @@ export const NorthStarModal = ({ isOpen, onClose }: NorthStarModalProps) => {
             py: 2,
           }}
         >
-          {tasks.map((task) => (
-            <NorthStarTaskItem key={task.id} task={task} isSelected={task.id === selectedId} />
+          {filteredTasks.map((t) => (
+            <NorthStarTaskItem
+              key={t.id}
+              task={{
+                id: t.id,
+                title: t.title,
+                priority: normalizePriority(t.priority),
+                project: 'Project Alpha',
+              }}
+              isSelected={localSelectedTaskIds.includes(t.id)}
+              onSelect={(id) => handleToggleTask(id)}
+            />
           ))}
         </Box>
       </Box>
@@ -311,6 +292,8 @@ export const NorthStarModal = ({ isOpen, onClose }: NorthStarModalProps) => {
       >
         <Button
           fullWidth
+          onClick={handleStartSession}
+          disabled={localSelectedTaskIds.length === 0}
           sx={{
             height: 56,
             background: `linear-gradient(to right, ${colors.primary}, ${colors.primaryContainer})`,
@@ -332,6 +315,10 @@ export const NorthStarModal = ({ isOpen, onClose }: NorthStarModalProps) => {
             display: 'flex',
             alignItems: 'center',
             gap: 1.5,
+            '&.Mui-disabled': {
+              opacity: 0.5,
+              color: colors.onPrimaryContainer,
+            },
           }}
         >
           Start Session

@@ -19,6 +19,7 @@ interface TaskCardProps {
   reminderIcon: ReactNode;
   borderColor: string;
   onComplete?: (taskId: string) => void;
+  onClick?: (taskId: string) => void;
 }
 
 export const TaskCard = ({
@@ -33,6 +34,7 @@ export const TaskCard = ({
   reminderIcon,
   borderColor,
   onComplete,
+  onClick,
 }: TaskCardProps) => {
   return (
     <Box
@@ -114,6 +116,7 @@ export const TaskCard = ({
       {/* Actions */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
         <IconButton
+          onClick={() => onClick?.(taskId)}
           sx={{
             width: 40,
             height: 40,

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CreateTaskWithRemindersInput } from '@waypoint/schemas';
-import { createTask, deleteTask, getTasks } from './api';
+import { CreateTaskWithRemindersInput, UpdateTaskInput } from '@waypoint/schemas';
+import { createTask, deleteTask, getTasks, updateTask } from './api';
 
 const TASKS_QUERY_KEY = 'tasks';
 
@@ -29,6 +29,18 @@ export const completeTaskMutation = () => {
   return useMutation({
     mutationFn: async (id: string) => {
       await deleteTask(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [TASKS_QUERY_KEY] });
+    },
+  });
+};
+
+export const updateTaskMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, input }: { id: string; input: UpdateTaskInput }) => {
+      await updateTask(id, input);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [TASKS_QUERY_KEY] });

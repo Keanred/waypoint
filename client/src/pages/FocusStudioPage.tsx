@@ -1,15 +1,14 @@
 import AddTaskRoundedIcon from '@mui/icons-material/AddTaskRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import DoNotDisturbOnRoundedIcon from '@mui/icons-material/DoNotDisturbOnRounded';
+import {
+  default as CheckCircleRoundedIcon,
+  default as RadioButtonCheckedRoundedIcon,
+} from '@mui/icons-material/CheckCircleRounded';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
-import EqualizerRoundedIcon from '@mui/icons-material/EqualizerRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import PauseCircleRoundedIcon from '@mui/icons-material/PauseCircleRounded';
 import RadioButtonUncheckedRoundedIcon from '@mui/icons-material/RadioButtonUncheckedRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded';
-import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
-import WaterDropRoundedIcon from '@mui/icons-material/WaterDropRounded';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -17,12 +16,18 @@ import InputBase from '@mui/material/InputBase';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 
+import { useEffect, useRef, useState } from 'react';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { FocusTimer } from '../components/FocusTimer';
 import { SideNavBar } from '../components/SideNavBar';
 import { createBottomNavItems, createSidebarConfig } from '../components/SidebarConfig';
+import { completeTaskMutation, useTasksQuery } from '../tasksQuery';
 import { colors } from '../theme';
-import { TaskSelectionModal } from './TaskSelectionModal';
+import { NorthStarModal } from './NorthStarModal';
+
+const focusDurationSeconds = 25 * 60;
+const breakDurationSeconds = 5 * 60;
+type TimerPhase = 'focus' | 'break';
 
 export const FocusStudioPage = () => {
   const sidebarConfig = createSidebarConfig('focus', {
@@ -30,7 +35,109 @@ export const FocusStudioPage = () => {
     actionIcon: undefined,
     footerItems: undefined,
   });
-  const handleTaskSelectionClose = () => undefined;
+  const low = colors.surfaceContainerLow;
+  const lowest = colors.surfaceContainerLowest;
+  const focusCanvasBg = `radial-gradient(circle at 50% 50%, ${low} 0%, ${lowest} 100%)`;
+  const [isZenMode, setZenMode] = useState(true);
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(true);
+  const toggleZenMode = () => setZenMode((prev) => !prev);
+  const openTaskModal = () => setIsTaskModalOpen(true);
+  const [selectedTaskIds, setSelectedTaskIds] = useState<string[] | null>(null);
+
+  const [timerPhase, setTimerPhase] = useState<TimerPhase>('focus');
+  const [remainingSeconds, setRemainingSeconds] = useState(focusDurationSeconds);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
+  const intervalRef = useRef<number | null>(null);
+
+  const clearTimerInterval = () => {
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    if (isTaskModalOpen || !isTimerRunning) {
+      clearTimerInterval();
+      return;
+    }
+
+    intervalRef.current = window.setInterval(() => {
+      setRemainingSeconds((prevSeconds) => {
+        if (prevSeconds > 0) {
+          return prevSeconds - 1;
+        }
+
+        const nextPhase: TimerPhase = timerPhase === 'focus' ? 'break' : 'focus';
+        setTimerPhase(nextPhase);
+        return nextPhase === 'focus' ? focusDurationSeconds : breakDurationSeconds;
+      });
+    }, 1000);
+
+    return () => clearTimerInterval();
+  }, [isTaskModalOpen, isTimerRunning, timerPhase]);
+
+  const handlePause = () => {
+    setIsTimerRunning(false);
+    clearTimerInterval();
+  };
+
+  const handleResume = () => {
+    setIsTimerRunning(true);
+  };
+
+  const handleSkip = () => {
+    const nextPhase: TimerPhase = timerPhase === 'focus' ? 'break' : 'focus';
+    setTimerPhase(nextPhase);
+    setRemainingSeconds(nextPhase === 'focus' ? focusDurationSeconds : breakDurationSeconds);
+  };
+
+  const currentDuration = timerPhase === 'focus' ? focusDurationSeconds : breakDurationSeconds;
+  const timerMinutes = Math.floor(remainingSeconds / 60);
+  const timerSeconds = remainingSeconds % 60;
+  const timerProgress = 1 - remainingSeconds / currentDuration;
+
+  const { data: tasks, isPending, isError } = useTasksQuery();
+  const { mutate: completeTask } = completeTaskMutation();
+
+  if (isPending) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          bgcolor: colors.surface,
+          color: colors.onSurface,
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        <Typography sx={{ fontSize: '1.25rem', color: colors.onSurfaceVariant }}>Loading tasks...</Typography>
+      </Box>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          bgcolor: colors.surface,
+          color: colors.onSurface,
+          fontFamily: 'Inter, sans-serif',
+        }}
+      >
+        <Typography sx={{ fontSize: '1.25rem', color: colors.error }}>Failed to load tasks.</Typography>
+      </Box>
+    );
+  }
+
+  const selectedTasks = selectedTaskIds ? (tasks?.tasks.filter((task) => selectedTaskIds.includes(task.id)) ?? []) : [];
+  const selectedTask = selectedTasks[0] ?? null;
 
   return (
     <Box
@@ -51,7 +158,13 @@ export const FocusStudioPage = () => {
         actionIcon={sidebarConfig.actionIcon}
         footerItems={sidebarConfig.footerItems}
       />
-
+      <NorthStarModal
+        isOpen={isTaskModalOpen}
+        onClose={() => setIsTaskModalOpen(false)}
+        tasks={tasks}
+        selectedTaskIds={selectedTaskIds}
+        onSelectTask={setSelectedTaskIds}
+      />
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Top Header */}
         <Box
@@ -168,8 +281,9 @@ export const FocusStudioPage = () => {
                 Zen Mode
               </Typography>
               <Switch
-                checked={true}
+                checked={isZenMode}
                 size="small"
+                onClick={toggleZenMode}
                 sx={{
                   '& .MuiSwitch-switchBase.Mui-checked': { color: colors.onPrimary },
                   '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { bgcolor: colors.primary },
@@ -191,7 +305,7 @@ export const FocusStudioPage = () => {
             justifyContent: 'center',
             p: { xs: 3, md: 6 },
             overflow: 'hidden',
-            background: `radial-gradient(circle at 50% 50%, ${colors.surfaceContainerLow} 0%, ${colors.surfaceContainerLowest} 100%)`,
+            background: focusCanvasBg,
           }}
         >
           {/* Atmospheric Glows */}
@@ -247,7 +361,7 @@ export const FocusStudioPage = () => {
                   color: colors.error,
                 }}
               >
-                High Priority
+                {selectedTask?.priority ?? 'No Priority'}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, position: 'relative' }}>
@@ -261,9 +375,10 @@ export const FocusStudioPage = () => {
                   mb: 1,
                 }}
               >
-                Finalize Project Horizon
+                {selectedTask?.title ?? 'Select Your North Star'}
               </Typography>
               <IconButton
+                onClick={openTaskModal}
                 sx={{
                   color: colors.onSurfaceVariant,
                   opacity: 0,
@@ -287,74 +402,99 @@ export const FocusStudioPage = () => {
                 mb: 4,
               }}
             >
-              Sub-task: Review architectural documentation for sprint v2.4
+              {selectedTask?.description
+                ? `Sub-task: ${selectedTask.description}`
+                : 'Choose a task to begin focus mode.'}
             </Typography>
 
             {/* Session Goals */}
             <Box
               sx={{
-                display: 'inline-flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1,
                 py: 2,
                 px: 4,
                 borderRadius: '16px',
                 bgcolor: 'rgba(25, 27, 38, 0.3)',
                 border: '1px solid rgba(74, 68, 81, 0.1)',
                 backdropFilter: 'blur(8px)',
+                width: '100%',
+                maxWidth: 360,
+                mx: 'auto',
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <CheckCircleRoundedIcon sx={{ fontSize: '0.875rem', color: colors.primary }} />
-                <Typography
+              {selectedTasks.length > 0 ? (
+                selectedTasks.map((task, i) => (
+                  <Box
+                    key={task.id}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 2,
+                      py: 1,
+                      borderBottom: '1px solid rgba(74, 68, 81, 0.18)',
+                      '&:last-of-type': {
+                        borderBottom: 'none',
+                      },
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontSize: '0.625rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.15em',
+                        color: colors.onSurfaceVariant,
+                        textAlign: 'left',
+                      }}
+                    >
+                      {task.title}
+                    </Typography>
+                    {i === 0 ? (
+                      <RadioButtonCheckedRoundedIcon
+                        sx={{ fontSize: '0.95rem', color: 'rgba(150, 142, 156, 0.7)', flexShrink: 0 }}
+                      />
+                    ) : (
+                      <RadioButtonUncheckedRoundedIcon
+                        sx={{ fontSize: '0.95rem', color: 'rgba(150, 142, 156, 0.7)', flexShrink: 0 }}
+                      />
+                    )}
+                  </Box>
+                ))
+              ) : (
+                <Box
                   sx={{
-                    fontSize: '0.625rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.15em',
-                    color: colors.onSurfaceVariant,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    py: 1,
                   }}
                 >
-                  Review Docs
-                </Typography>
-              </Box>
-              <Box sx={{ width: 1, height: 12, bgcolor: 'rgba(74, 68, 81, 0.3)' }} />
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <RadioButtonUncheckedRoundedIcon sx={{ fontSize: '0.875rem', color: 'rgba(150, 142, 156, 0.4)' }} />
-                <Typography
-                  sx={{
-                    fontSize: '0.625rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.15em',
-                    color: colors.onSurfaceVariant,
-                  }}
-                >
-                  Update Architecture
-                </Typography>
-              </Box>
-              <Box sx={{ width: 1, height: 12, bgcolor: 'rgba(74, 68, 81, 0.3)' }} />
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <RadioButtonUncheckedRoundedIcon sx={{ fontSize: '0.875rem', color: 'rgba(150, 142, 156, 0.4)' }} />
-                <Typography
-                  sx={{
-                    fontSize: '0.625rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.15em',
-                    color: colors.onSurfaceVariant,
-                  }}
-                >
-                  Sync with Lead
-                </Typography>
-              </Box>
+                  <Typography
+                    sx={{
+                      fontSize: '0.625rem',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.15em',
+                      color: colors.onSurfaceVariant,
+                      textAlign: 'left',
+                    }}
+                  >
+                    No specific goals for this session.
+                  </Typography>
+                  <RadioButtonUncheckedRoundedIcon
+                    sx={{ fontSize: '0.95rem', color: 'rgba(150, 142, 156, 0.7)', flexShrink: 0 }}
+                  />
+                </Box>
+              )}
             </Box>
           </Box>
 
           {/* Timer */}
           <Box sx={{ zIndex: 1, mb: 8 }}>
-            <FocusTimer minutes={25} seconds={0} progress={0} />
+            <FocusTimer minutes={timerMinutes} seconds={timerSeconds} progress={timerProgress} />
           </Box>
 
           {/* Focus Controls */}
@@ -370,6 +510,7 @@ export const FocusStudioPage = () => {
           >
             <Button
               startIcon={<PauseCircleRoundedIcon sx={{ fontSize: '1.125rem' }} />}
+              onClick={isTimerRunning ? handlePause : handleResume}
               sx={{
                 px: 4,
                 py: 2,
@@ -383,10 +524,15 @@ export const FocusStudioPage = () => {
                 '&:hover': { color: colors.onSurface, bgcolor: colors.surfaceContainerHigh },
               }}
             >
-              Pause
+              {isTimerRunning ? 'Pause' : 'Resume'}
             </Button>
 
             <Button
+              onClick={() => {
+                if (selectedTaskIds) {
+                  completeTask(selectedTaskIds[0]);
+                }
+              }}
               sx={{
                 px: 6,
                 py: 2.5,
@@ -411,6 +557,7 @@ export const FocusStudioPage = () => {
 
             <Button
               startIcon={<SkipNextRoundedIcon sx={{ fontSize: '1.125rem' }} />}
+              onClick={handleSkip}
               sx={{
                 px: 4,
                 py: 2,
@@ -431,6 +578,7 @@ export const FocusStudioPage = () => {
           {/* Change Current Focus */}
           <Box sx={{ zIndex: 1, mt: 6 }}>
             <Button
+              onClick={openTaskModal}
               startIcon={<AddTaskRoundedIcon sx={{ fontSize: '0.875rem' }} />}
               sx={{
                 px: 3,
@@ -451,182 +599,8 @@ export const FocusStudioPage = () => {
             </Button>
           </Box>
 
-          {/* Secondary Metadata Grid */}
-          <Box
-            sx={{
-              zIndex: 1,
-              mt: 10,
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-              gap: 4,
-              width: '100%',
-              maxWidth: 896,
-            }}
-          >
-            {/* Focus Score */}
-            <Box
-              sx={{
-                p: 3,
-                borderRadius: '16px',
-                bgcolor: 'rgba(25, 27, 38, 0.4)',
-                border: '1px solid rgba(74, 68, 81, 0.1)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.625rem',
-                  fontWeight: 700,
-                  color: colors.onSurfaceVariant,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  mb: 2,
-                }}
-              >
-                Focus Score
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-                <Typography
-                  sx={{ fontSize: '1.875rem', fontFamily: 'Manrope', fontWeight: 800, color: colors.tertiary }}
-                >
-                  98%
-                </Typography>
-                <Typography sx={{ fontSize: '0.75rem', color: 'rgba(117, 212, 232, 0.6)', mb: 0.5 }}>
-                  +4% from avg
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  width: '100%',
-                  height: 6,
-                  bgcolor: colors.surfaceContainerHighest,
-                  borderRadius: 9999,
-                  mt: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    height: '100%',
-                    width: '98%',
-                    bgcolor: colors.tertiary,
-                    borderRadius: 9999,
-                    boxShadow: '0 0 8px rgba(117, 212, 232, 0.4)',
-                  }}
-                />
-              </Box>
-            </Box>
-
-            {/* Today's Sessions */}
-            <Box
-              sx={{
-                p: 3,
-                borderRadius: '16px',
-                bgcolor: 'rgba(25, 27, 38, 0.4)',
-                border: '1px solid rgba(74, 68, 81, 0.1)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.625rem',
-                  fontWeight: 700,
-                  color: colors.onSurfaceVariant,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  mb: 2,
-                }}
-              >
-                Today&apos;s Sessions
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Box sx={{ display: 'flex', '& > *:not(:first-of-type)': { ml: -1 } }}>
-                  {[1, 2].map((i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: '50%',
-                        bgcolor: colors.primary,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        border: '2px solid #0b0e18',
-                      }}
-                    >
-                      <TimerRoundedIcon sx={{ color: colors.onPrimary, fontSize: '0.75rem' }} />
-                    </Box>
-                  ))}
-                  <Box
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: '50%',
-                      bgcolor: colors.surfaceContainerHighest,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '2px solid #0b0e18',
-                      fontSize: '0.625rem',
-                      fontWeight: 700,
-                      color: colors.onSurfaceVariant,
-                    }}
-                  >
-                    +4
-                  </Box>
-                </Box>
-                <Typography sx={{ fontSize: '0.875rem', fontWeight: 500, ml: 1 }}>6 Deep Blocks</Typography>
-              </Box>
-            </Box>
-
-            {/* Current Playlist */}
-            <Box
-              sx={{
-                p: 3,
-                borderRadius: '16px',
-                bgcolor: 'rgba(25, 27, 38, 0.4)',
-                border: '1px solid rgba(74, 68, 81, 0.1)',
-                backdropFilter: 'blur(8px)',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: '0.625rem',
-                  fontWeight: 700,
-                  color: colors.onSurfaceVariant,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.15em',
-                  mb: 2,
-                }}
-              >
-                Current Playlist
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '8px',
-                    bgcolor: colors.secondaryContainer,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <EqualizerRoundedIcon sx={{ color: colors.onSecondaryContainer }} />
-                </Box>
-                <Box>
-                  <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: colors.onSurface }}>
-                    Midnight Lo-Fi
-                  </Typography>
-                  <Typography sx={{ fontSize: '0.625rem', color: colors.onSurfaceVariant }}>Chillhop Beats</Typography>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-
           {/* Zen Mode Decorative Elements */}
-          {
+          {isZenMode && (
             <Box
               sx={{
                 position: 'absolute',
@@ -639,43 +613,13 @@ export const FocusStudioPage = () => {
                 transition: 'opacity 0.5s',
                 '&:hover': { opacity: 1 },
               }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <WaterDropRoundedIcon sx={{ fontSize: '0.875rem', color: colors.tertiary }} />
-                <Typography
-                  sx={{
-                    fontSize: '0.625rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.15em',
-                  }}
-                >
-                  Ambient Rain
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <DoNotDisturbOnRoundedIcon sx={{ fontSize: '0.875rem', color: colors.primary }} />
-                <Typography
-                  sx={{
-                    fontSize: '0.625rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.15em',
-                  }}
-                >
-                  Notifications Muted
-                </Typography>
-              </Box>
-            </Box>
-          }
+            ></Box>
+          )}
         </Box>
       </Box>
 
       {/* Mobile Navigation */}
       <BottomNavBar items={createBottomNavItems('focus')} />
-
-      {/* Task Selection Modal */}
-      <TaskSelectionModal isOpen={false} onClose={handleTaskSelectionClose} />
     </Box>
   );
 };

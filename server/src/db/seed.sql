@@ -13,7 +13,7 @@ WITH seed_rows (
     (
       'Submit expense report',
       'Finalize and submit last week''s travel reimbursements. [seed:waypoint-demo]',
-      'high'::task_priority,
+      'High'::task_priority,
       date_trunc('hour', now()) + interval '-6 days' + interval '11 hours',
       'NONE'::recurrence,
       1,
@@ -22,7 +22,7 @@ WITH seed_rows (
     (
       'Follow up with vendor',
       'Confirm revised quote and expected delivery timeline. [seed:waypoint-demo]',
-      'low'::task_priority,
+      'Low'::task_priority,
       date_trunc('hour', now()) + interval '-2 days' + interval '14 hours',
       'NONE'::recurrence,
       3,
@@ -31,7 +31,7 @@ WITH seed_rows (
     (
       'Welcome to Waypoint',
       'This task was created automatically as startup seed data. [seed:waypoint-demo]',
-      'medium'::task_priority,
+      'Medium'::task_priority,
       date_trunc('hour', now()) + interval '6 hours',
       'NONE'::recurrence,
       2,
@@ -40,7 +40,7 @@ WITH seed_rows (
     (
       'Plan this week',
       'Review priorities and block focused time for key deliverables. [seed:waypoint-demo]',
-      'high'::task_priority,
+      'High'::task_priority,
       date_trunc('hour', now()) + interval '2 days' + interval '9 hours',
       'WEEKLY'::recurrence,
       1,
@@ -49,7 +49,7 @@ WITH seed_rows (
     (
       'Check recurring bills',
       'Confirm all monthly subscriptions and invoices are accounted for. [seed:waypoint-demo]',
-      'medium'::task_priority,
+      'Medium'::task_priority,
       date_trunc('hour', now()) + interval '10 days' + interval '16 hours',
       'MONTHLY'::recurrence,
       6,
@@ -58,7 +58,7 @@ WITH seed_rows (
     (
       'Stretch break',
       'Quick posture reset and short walk. [seed:waypoint-demo]',
-      'low'::task_priority,
+      'Low'::task_priority,
       date_trunc('hour', now()) + interval '1 day' + interval '13 hours',
       'DAILY'::recurrence,
       30,
@@ -67,7 +67,7 @@ WITH seed_rows (
     (
       'Backup project notes',
       'Export notes and sync to secure backup storage. [seed:waypoint-demo]',
-      'high'::task_priority,
+      'High'::task_priority,
       date_trunc('hour', now()) + interval '5 weeks' + interval '12 hours',
       'NONE'::recurrence,
       3,
@@ -76,7 +76,7 @@ WITH seed_rows (
     (
       'Archive completed tasks',
       'Clean up completed entries and confirm reporting tags. [seed:waypoint-demo]',
-      'medium'::task_priority,
+      'Medium'::task_priority,
       date_trunc('hour', now()) + interval '3 weeks' + interval '10 hours',
       'NONE'::recurrence,
       1,
@@ -85,7 +85,7 @@ WITH seed_rows (
     (
       'Refresh team docs',
       'Update onboarding docs and process references. [seed:waypoint-demo]',
-      'low'::task_priority,
+      'Low'::task_priority,
       date_trunc('hour', now()) + interval '7 weeks' + interval '15 hours',
       'MONTHLY'::recurrence,
       12,

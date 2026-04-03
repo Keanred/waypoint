@@ -5,7 +5,7 @@ const RecurrenceTypeSchema = z.enum(['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']);
 export type RecurrenceType = z.infer<typeof RecurrenceTypeSchema>;
 export { RecurrenceTypeSchema as RecurrenceType };
 
-const TaskPrioritySchema = z.enum(['low', 'medium', 'high']);
+const TaskPrioritySchema = z.enum(['Low', 'Medium', 'High']);
 export type TaskPriority = z.infer<typeof TaskPrioritySchema>;
 export { TaskPrioritySchema as TaskPriority };
 
@@ -21,7 +21,7 @@ export { TimezoneSchema as Timezone };
 const CreateTaskInputSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
-  priority: TaskPrioritySchema.default('medium'),
+  priority: TaskPrioritySchema.default('Medium'),
   dueDate: z.coerce.date(),
   recurrence: RecurrenceTypeSchema.default('NONE'),
   recurringEndDate: z.coerce.date().optional(),

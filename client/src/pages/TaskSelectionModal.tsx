@@ -14,6 +14,7 @@ import { colors } from '../theme';
 interface TaskSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setSelectedTask?: (taskId: string) => void;
 }
 
 export const TaskSelectionModal = ({ isOpen, onClose }: TaskSelectionModalProps) => {

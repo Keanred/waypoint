@@ -18,7 +18,7 @@ import { colors } from '../theme';
 
 import { isPast, isThisWeek, isToday } from 'date-fns';
 import { useState } from 'react';
-import { completeTaskMutation, createTaskMutation, useTasksQuery } from '../tasksQuery';
+import { completeTaskMutation, createTaskMutation, updateTaskMutation, useTasksQuery } from '../tasksQuery';
 import { CreateTaskModal } from './CreateTaskModal';
 
 const COLORS = {
@@ -70,6 +70,7 @@ type TaskSectionProps = {
   getDueIcon: (task: TaskResponse) => JSX.Element;
   getReminderIcon: (task: TaskResponse) => JSX.Element;
   onComplete: (taskId: string) => void;
+  onClick?: (taskId: string) => void;
 };
 
 const TaskSection = ({
@@ -82,6 +83,7 @@ const TaskSection = ({
   getDueIcon,
   getReminderIcon,
   onComplete,
+  onClick,
 }: TaskSectionProps) => {
   if (tasks.length === 0) {
     return (
@@ -109,6 +111,7 @@ const TaskSection = ({
           reminderIcon={getReminderIcon(task)}
           borderColor={color}
           onComplete={onComplete}
+          onClick={onClick}
         />
       ))}
     </TaskGroup>
@@ -117,11 +120,13 @@ const TaskSection = ({
 
 export const DashboardPage = () => {
   const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const [taskBeingEdited, setTaskBeingEdited] = useState<TaskResponse | null>(null);
 
   const { data, isPending, isError } = useTasksQuery();
 
   const { mutate: completeTask } = completeTaskMutation();
   const { mutate: createNewTask } = createTaskMutation();
+  const { mutate: updateTask } = updateTaskMutation();
 
   if (isError) {
     return 'Something went wrong while fetching your tasks. Please try again later.';
@@ -139,6 +144,26 @@ export const DashboardPage = () => {
   const reminders = data.reminders;
   const statusMessage = getStatusMessage(tasks.length, reminders.length);
 
+  const openCreateTaskModal = () => {
+    setTaskBeingEdited(null);
+    setIsCreateTaskModalOpen(true);
+  };
+
+  const closeTaskModal = () => {
+    setTaskBeingEdited(null);
+    setIsCreateTaskModalOpen(false);
+  };
+
+  const openEditTaskModal = (taskId: string) => {
+    const selectedTask = tasks.find((task) => task.id === taskId);
+    if (!selectedTask) {
+      return;
+    }
+
+    setTaskBeingEdited(selectedTask);
+    setIsCreateTaskModalOpen(true);
+  };
+
   const { overdue, dueToday, dueThisWeek, later } = groupTasksByUrgency(tasks);
   const immediateTasks = [...overdue, ...dueToday];
 
@@ -150,14 +175,16 @@ export const DashboardPage = () => {
           brandName: 'Waypoint',
           navLinks: [{ label: 'Dashboard', to: '/' }, { label: 'Deadlines' }, { label: 'Settings', to: '/settings' }],
           addButtonLabel: 'Add Task',
-          onAddClick: () => setIsCreateTaskModalOpen(true),
+          onAddClick: openCreateTaskModal,
         }}
         bottomNav={createBottomNavItems('dashboard')}
       >
         <CreateTaskModal
           isOpen={isCreateTaskModalOpen}
-          onClose={() => setIsCreateTaskModalOpen(false)}
+          initialTask={taskBeingEdited}
+          onClose={closeTaskModal}
           onSubmit={createNewTask}
+          onUpdate={(id, input) => updateTask({ id, input })}
         />
         {/* Header Section */}
         <Box
@@ -225,6 +252,7 @@ export const DashboardPage = () => {
               return <NotificationsRoundedIcon sx={{ fontSize: 14 }} />;
             }}
             onComplete={completeTask}
+            onClick={openEditTaskModal}
           />
           <TaskSection
             label="Upcoming Week"
@@ -236,6 +264,7 @@ export const DashboardPage = () => {
             getDueIcon={() => <CalendarTodayRoundedIcon sx={{ fontSize: 14 }} />}
             getReminderIcon={() => <NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
             onComplete={completeTask}
+            onClick={openEditTaskModal}
           />
           <TaskSection
             label="Horizon"
@@ -247,10 +276,11 @@ export const DashboardPage = () => {
             getDueIcon={() => <CalendarMonthRoundedIcon sx={{ fontSize: 14 }} />}
             getReminderIcon={() => <NotificationsRoundedIcon sx={{ fontSize: 14 }} />}
             onComplete={completeTask}
+            onClick={openEditTaskModal}
           />
         </Box>
       </PageLayout>
-      <FloatingActionButton onClick={() => setIsCreateTaskModalOpen(true)} />
+      <FloatingActionButton onClick={openCreateTaskModal} />
     </>
   );
 };

@@ -115,7 +115,7 @@ Success response (`201`):
       "id": "00000000-0000-0000-0000-000000000001",
       "title": "New task",
       "description": "Optional",
-      "priority": "medium",
+      "priority": "Medium",
       "dueDate": "2026-04-01T00:00:00.000Z",
       "recurrence": "NONE",
       "recurringEndDate": null,

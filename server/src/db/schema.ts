@@ -3,7 +3,7 @@ import { boolean, index, integer, pgEnum, pgTable, text, timestamp, uuid } from 
 // Enums
 export const recurrenceEnum = pgEnum('recurrence', ['NONE', 'DAILY', 'WEEKLY', 'MONTHLY']);
 export const offsetUnitEnum = pgEnum('offset_unit', ['MINUTES', 'HOURS', 'DAYS']);
-export const taskPriorityEnum = pgEnum('task_priority', ['low', 'medium', 'high']);
+export const taskPriorityEnum = pgEnum('task_priority', ['Low', 'Medium', 'High']);
 
 // Tasks table
 export const tasks = pgTable(
@@ -12,7 +12,7 @@ export const tasks = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     title: text('title').notNull(),
     description: text('description'),
-    priority: taskPriorityEnum('priority').default('medium').notNull(),
+    priority: taskPriorityEnum('priority').default('Medium').notNull(),
     dueDate: timestamp('due_date', { withTimezone: true }).notNull(),
     recurrence: recurrenceEnum('recurrence').default('NONE').notNull(),
     recurringEndDate: timestamp('recurring_end_date', { withTimezone: true }),

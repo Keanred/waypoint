@@ -6,9 +6,10 @@ import { colors } from '../theme';
 interface ModalOverlayProps {
   children: ReactNode;
   maxWidth?: number;
+  height?: number;
 }
 
-export const ModalOverlay = ({ children, maxWidth = 672 }: ModalOverlayProps) => {
+export const ModalOverlay = ({ children, maxWidth = 672, height = 600 }: ModalOverlayProps) => {
   return (
     <>
       {/* Background ambient glow */}
@@ -58,6 +59,7 @@ export const ModalOverlay = ({ children, maxWidth = 672 }: ModalOverlayProps) =>
           sx={{
             width: '100%',
             maxWidth,
+            height,
             borderRadius: '2.5rem',
             border: '1px solid rgba(74, 68, 81, 0.2)',
             overflow: 'hidden',

@@ -37,7 +37,7 @@ type RecurringTask = {
   id: string;
   title: string;
   description: string | null;
-  priority: 'low' | 'medium' | 'high';
+  priority: 'Low' | 'Medium' | 'High';
   dueDate: Date;
   recurrence: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'NONE';
   recurringEndDate: Date | null;
@@ -150,7 +150,7 @@ export const sendTestEmail = async () => {
     id: 'test-task-id',
     title: 'Test Task',
     description: 'This is a test task for email reminders.',
-    priority: 'medium',
+    priority: 'Medium',
     dueDate: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
     recurrence: 'NONE',
     recurringEndDate: null,

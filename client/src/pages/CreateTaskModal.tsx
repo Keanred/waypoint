@@ -10,9 +10,9 @@ import Button from '@mui/material/Button';
 import InputBase from '@mui/material/InputBase';
 import NativeSelect from '@mui/material/NativeSelect';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { CreateReminderInput, CreateTaskInput, CreateTaskWithRemindersInput } from '@waypoint/schemas';
+import { CreateReminderInput, CreateTaskInput, CreateTaskWithRemindersInput, TaskResponse, UpdateTaskInput } from '@waypoint/schemas';
 import { IconLabel } from '../components/IconLabel';
 import { ModalHeader } from '../components/ModalHeader';
 import { ModalOverlay } from '../components/ModalOverlay';
@@ -48,13 +48,38 @@ const selectSx = {
 type CreateTaskModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  initialTask?: TaskResponse | null;
   onSubmit?: (input: CreateTaskWithRemindersInput) => void;
+  onUpdate?: (taskId: string, input: UpdateTaskInput) => void;
 };
 
-export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalProps) => {
+const toDateInputValue = (date: Date | string): string => {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    return '';
+  }
+
+  const year = parsed.getFullYear();
+  const month = String(parsed.getMonth() + 1).padStart(2, '0');
+  const day = String(parsed.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const toTimeInputValue = (date: Date | string): string => {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) {
+    return '';
+  }
+
+  const hours = String(parsed.getHours()).padStart(2, '0');
+  const minutes = String(parsed.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
+};
+
+export const CreateTaskModal = ({ isOpen, onClose, initialTask, onSubmit, onUpdate }: CreateTaskModalProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('high');
+  const [priority, setPriority] = useState<CreateTaskInput['priority']>('High');
   const [dueDate, setDueDate] = useState('');
   const [dueTime, setDueTime] = useState('');
   const [recurrence, setRecurrence] = useState('NONE');
@@ -62,10 +87,12 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
   const [reminders, setReminders] = useState<Omit<CreateReminderInput, 'taskId'>[]>([]);
 
+  const isEditMode = Boolean(initialTask);
+
   const resetForm = () => {
     setTitle('');
     setDescription('');
-    setPriority('high');
+    setPriority('High');
     setDueDate('');
     setDueTime('');
     setRecurrence('NONE');
@@ -81,19 +108,53 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
+    const normalizedRecurrence = recurrence as CreateTaskInput['recurrence'];
+    const normalizedDueDate = new Date(`${dueDate}T${dueTime}`);
+    const normalizedRecurringEndDate = recurrenceEnd ? new Date(recurrenceEnd) : undefined;
+
+    if (isEditMode && initialTask && onUpdate) {
+      onUpdate(initialTask.id, {
+        title,
+        description,
+        priority,
+        dueDate: normalizedDueDate,
+        recurrence: normalizedRecurrence,
+        recurringEndDate: normalizedRecurringEndDate,
+      });
+    } else if (onSubmit) {
       onSubmit({
         title,
         description,
-        priority: priority as CreateTaskInput['priority'],
-        dueDate: new Date(`${dueDate}T${dueTime}`),
-        recurrence: recurrence as CreateTaskInput['recurrence'],
-        recurringEndDate: recurrenceEnd ? new Date(recurrenceEnd) : undefined,
+        priority,
+        dueDate: normalizedDueDate,
+        recurrence: normalizedRecurrence,
+        recurringEndDate: normalizedRecurringEndDate,
         reminders,
       });
     }
     handleClose();
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    if (!initialTask) {
+      resetForm();
+      return;
+    }
+
+    setTitle(initialTask.title);
+    setDescription(initialTask.description ?? '');
+    setPriority(initialTask.priority);
+    setDueDate(toDateInputValue(initialTask.dueDate));
+    setDueTime(toTimeInputValue(initialTask.dueDate));
+    setRecurrence(initialTask.recurrence);
+    setRecurrenceEnd(initialTask.recurringEndDate ? toDateInputValue(initialTask.recurringEndDate) : '');
+    setIsReminderModalOpen(false);
+    setReminders([]);
+  }, [initialTask, isOpen]);
 
   if (!isOpen) {
     return null;
@@ -101,7 +162,11 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
 
   return (
     <ModalOverlay>
-      <ModalHeader title="Create New Task" subtitle="Waypoint Protocol v2.4" onClose={handleClose} />
+      <ModalHeader
+        title={isEditMode ? 'Edit Task' : 'Create New Task'}
+        subtitle={isEditMode ? 'Update task details and timeline.' : 'Waypoint Protocol v2.4'}
+        onClose={handleClose}
+      />
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -166,10 +231,14 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
             {/* Priority */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
               <IconLabel icon={<PriorityHighRoundedIcon sx={{ fontSize: 'inherit' }} />} label="Priority Level" />
-              <NativeSelect value={priority} sx={selectSx} onChange={(e) => setPriority(e.target.value)}>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+              <NativeSelect
+                value={priority}
+                sx={selectSx}
+                onChange={(e) => setPriority(e.target.value as CreateTaskInput['priority'])}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
               </NativeSelect>
             </Box>
 
@@ -204,76 +273,77 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
           </Box>
         </Box>
 
-        {/* Reminders Section */}
-        <Box sx={{ pt: 3, borderTop: '1px solid rgba(74, 68, 81, 0.1)' }}>
-          {isReminderModalOpen ? (
-            <CreateReminderModal
-              onClose={() => setIsReminderModalOpen(false)}
-              onAddReminder={(reminder) => setReminders((prev) => [...prev, reminder])}
-            />
-          ) : null}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-            <Typography
-              sx={{
-                fontFamily: 'Manrope',
-                fontWeight: 700,
-                fontSize: '1.125rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-              }}
-            >
-              <NotificationsActiveRoundedIcon sx={{ color: colors.tertiary }} />
-              Reminders
-            </Typography>
-            <Button
-              sx={{
-                color: colors.tertiary,
-                fontSize: '10px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                '&:hover': { color: '#a3eeff', bgcolor: 'transparent' },
-              }}
-              startIcon={<AddCircleRoundedIcon sx={{ fontSize: '0.875rem !important' }} />}
-            >
-              Add Offset
-            </Button>
-          </Box>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
-            {reminders.map((r, i) => (
-              <ReminderChip
-                key={i}
-                label="Notification"
-                value={`${r.offsetValue} ${r.offsetUnit.charAt(0) + r.offsetUnit.slice(1).toLowerCase()} before`}
-                onRemove={() => setReminders((prev) => prev.filter((_, idx) => idx !== i))}
+        {!isEditMode && (
+          <Box sx={{ pt: 3, borderTop: '1px solid rgba(74, 68, 81, 0.1)' }}>
+            {isReminderModalOpen ? (
+              <CreateReminderModal
+                onClose={() => setIsReminderModalOpen(false)}
+                onAddReminder={(reminder) => setReminders((prev) => [...prev, reminder])}
               />
-            ))}
-            <Button
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                px: 2,
-                py: 1.5,
-                border: '1px dashed rgba(74, 68, 81, 0.2)',
-                borderRadius: '12px',
-                color: 'rgba(74, 68, 81, 0.6)',
-                textTransform: 'uppercase',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                letterSpacing: '-0.05em',
-                '&:hover': {
-                  borderColor: 'rgba(117, 212, 232, 0.4)',
+            ) : null}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Typography
+                sx={{
+                  fontFamily: 'Manrope',
+                  fontWeight: 700,
+                  fontSize: '1.125rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                }}
+              >
+                <NotificationsActiveRoundedIcon sx={{ color: colors.tertiary }} />
+                Reminders
+              </Typography>
+              <Button
+                sx={{
                   color: colors.tertiary,
-                },
-              }}
-              startIcon={<AlarmAddRoundedIcon sx={{ fontSize: '1rem !important' }} />}
-              onClick={() => setIsReminderModalOpen(true)}
-            >
-              New Alert
-            </Button>
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  '&:hover': { color: '#a3eeff', bgcolor: 'transparent' },
+                }}
+                startIcon={<AddCircleRoundedIcon sx={{ fontSize: '0.875rem !important' }} />}
+              >
+                Add Offset
+              </Button>
+            </Box>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+              {reminders.map((r, i) => (
+                <ReminderChip
+                  key={i}
+                  label="Notification"
+                  value={`${r.offsetValue} ${r.offsetUnit.charAt(0) + r.offsetUnit.slice(1).toLowerCase()} before`}
+                  onRemove={() => setReminders((prev) => prev.filter((_, idx) => idx !== i))}
+                />
+              ))}
+              <Button
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  px: 2,
+                  py: 1.5,
+                  border: '1px dashed rgba(74, 68, 81, 0.2)',
+                  borderRadius: '12px',
+                  color: 'rgba(74, 68, 81, 0.6)',
+                  textTransform: 'uppercase',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  letterSpacing: '-0.05em',
+                  '&:hover': {
+                    borderColor: 'rgba(117, 212, 232, 0.4)',
+                    color: colors.tertiary,
+                  },
+                }}
+                startIcon={<AlarmAddRoundedIcon sx={{ fontSize: '1rem !important' }} />}
+                onClick={() => setIsReminderModalOpen(true)}
+              >
+                New Alert
+              </Button>
+            </Box>
           </Box>
-        </Box>
+        )}
 
         {/* Form Actions */}
         <Box
@@ -305,7 +375,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSubmit }: CreateTaskModalPr
               '&:active': { transform: 'scale(0.98)' },
             }}
           >
-            Initialize Task
+            {isEditMode ? 'Save Changes' : 'Initialize Task'}
           </Button>
           <Button
             onClick={handleClose}

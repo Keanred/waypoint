@@ -29,7 +29,7 @@ describe('EmailService', () => {
     id: '00000000-0000-0000-0000-000000000010',
     title: 'Submit quarterly report',
     description: 'Include final KPI chart',
-    priority: 'medium' as const,
+    priority: 'Medium' as const,
     dueDate: new Date('2026-03-30T14:00:00.000Z'),
   };
 
